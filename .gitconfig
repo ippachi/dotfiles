@@ -1,0 +1,15 @@
+[color]
+	ui = true
+[user]
+	name = ippachi
+	email = ivalice1218@gmail.com
+[alias]
+  st = status
+  ci = commit
+  co = checkout
+  br = branch
+  one = log --oneline
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = true
