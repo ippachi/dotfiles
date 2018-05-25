@@ -1,0 +1,1 @@
+/home/vagrant/.config/fisherman/simple/functions/fish_right_prompt.fish
