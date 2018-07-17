@@ -1,1 +1,0 @@
-/home/vagrant/.config/fisherman/pwd_info/pwd_info.fish

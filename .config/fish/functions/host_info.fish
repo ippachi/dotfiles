@@ -1,1 +1,0 @@
-/home/vagrant/.config/fisherman/host_info/host_info.fish
