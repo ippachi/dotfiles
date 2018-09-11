@@ -1,0 +1,42 @@
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+hook_add = 'let g:deoplete#enable_at_startup = 1'
+on_i = 1
+
+[[plugins]]
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'eruby']
+on_i = 1
+
+[[plugins]]
+repo = 'tpope/vim-surround'
+on_i = 1
+
+[[plugins]]
+repo = 'zchee/deoplete-go'
+on_ft = ['go']
+on_i = 1
+buid = 'make'
+hook_add = '''
+  let g:deoplete#sources#go#gocode_binary = "$GOPATH.'/bin/gocode'"
+'''
+
+[[plugins]]
+repo = 'fatih/vim-go'
+on_ft = ['go']
+
+[[plugins]]
+repo = 'posva/vim-vue'
+on_ft = ['vue']
+
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+on_ft = ['python']
+on_i = 1
+hook_add = '''
+  let g:deoplete#sources#jedi#show_docstring = 1
+'''
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown']
