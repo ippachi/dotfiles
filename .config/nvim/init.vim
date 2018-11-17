@@ -35,41 +35,54 @@ if dein#check_install()
   call dein#install()
 endif
 
-let g:python_host_prog = '/home/vagrant/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/home/vagrant/.pyenv/versions/neovim3/bin/python'
+let mapleader = ","
+
+let g:python_host_prog = '/home/ippachi/.pyenv/versions/neovim2/bin/python'
+let g:python3_host_prog = '/home/ippachi/.pyenv/versions/neovim3/bin/python'
 
 " general
 nnoremap j gj
 nnoremap k gk
+
 noremap <silent> <C-c> <C-[>
-inoremap <silent> <C-c> <C-[>
-vnoremap <silent> <C-c> <C-[>
+
 noremap <silent> <C-l> $
 noremap <silent> <C-h> 0
 
 " fzf
-nnoremap <silent> zj :Files <cr>
-nnoremap <silent> zk :Buffers <cr>
-
-" ale
-nnoremap <silent> <Space>s :ALEFix <cr>
+nnoremap <Leader>fz :Files <cr>
+nnoremap <Leader>fb :Buffers <cr>
 
 " easy align
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
+" rg
+nnoremap <Leader>rg :execute 'Rg' histget("search")<cr>
+
+" lsp
+nnoremap <Leader>gd :call LanguageClient#textDocument_definition()<cr>
+nnoremap <Leader>rf :call LanguageClient#textDocument_references()<cr>
+nnoremap <Leader>ho :call LanguageClient#textDocument_hover()<cr>
+
 " easy motion
-map  <Space>f <Plug>(easymotion-bd-f)
-nmap <Space>f <Plug>(easymotion-overwin-f)
-nmap s <Plug>(easymotion-overwin-f2)
-map <Space>L <Plug>(easymotion-bd-jk)
-nmap <Space>L <Plug>(easymotion-overwin-line)
-map  <Space>w <Plug>(easymotion-bd-w)
-nmap <Space>w <Plug>(easymotion-overwin-w)
+" map  <Leader>s <Plug>(easymotion-bd-f2)
+" nmap <Leader>s <Plug>(easymotion-overwin-f2)
+"
+" map  <Leader>f <Plug>(easymotion-bd-f1)
+" nmap <Leader>f <Plug>(easymotion-overwin-f1)
 
-" LSP
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Gif config
+map  <Leader>/ <Plug>(easymotion-sn)
+omap <Leader>/ <Plug>(easymotion-tn)
 
+" Gif config
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 
 syntax on
 set number
@@ -116,3 +129,5 @@ augroup END
 filetype indent on
 
 autocmd BufWritePre * :%s/\s\+$//ge
+
+let g:ale_virtualtext_cursor = 1

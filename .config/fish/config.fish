@@ -14,6 +14,8 @@ alias ce='composer exec'
 alias nvimf='nvim (fzf)'
 alias chc='sudo sysctl -w vm.drop_caches=3'
 alias lbe='env BUNDLE_GEMFILE="Gemfile.local" bundle exec'
+alias pyvir='status --is-interactive; and source (pyenv virtualenv-init -|psub)'
+alias nvimdf='~/squashfs-root/usr/bin/nvim (fzf)'
 
 set -x PYENV_ROOT $HOME/.pyenv
 set -x PATH $PYENV_ROOT/bin $PATH
@@ -22,18 +24,17 @@ set -x PATH /usr/local/go/bin $PATH
 set -x GOPATH $HOME/go
 set -x PATH $GOPATH/bin $PATH
 
+
+set -x PATH $HOME/.fzf/bin $PATH
 set -x FZF_DEFAULT_COMMAND 'fd --type f'
 set -x FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -x FZF_DEFAULT_OPTS '--height 40% --reverse --border'
 set -x FZF_ALT_C_OPTS "--preview 'tree -C {} | head -200'"
 
 if command -v pyenv 1>/dev/null 2>&1;
-  pyenv init - | source
+  pyenv init - --no-rehash | source
 end
 
-status --is-interactive; and source (pyenv virtualenv-init -|psub)
-
 set -x EDITOR nvim
-set -g theme_nerd_fonts yes
 
-direnv hook fish | source
+# direnv hook fish | source

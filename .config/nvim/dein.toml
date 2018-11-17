@@ -1,8 +1,10 @@
+
 [[plugins]]
-repo = 'w0ng/vim-hybrid'
+repo = 'kristijanhusak/vim-hybrid-material'
 hook_add = '''
-  colorscheme hybrid
+  colorscheme hybrid_material
   set background=dark
+  let g:hybrid_transparent_background = 1
 '''
 
 [[plugins]]
@@ -21,15 +23,19 @@ repo = "tpope/vim-fugitive"
 
 [[plugins]]
 repo = 'w0rp/ale'
+rev = "master"
 hook_add = '''
   let g:ale_lint_on_text_changed = 'never'
-  let g:ale_lint_on_enter = 0
+  let g:a11_lint_on_enter = 0
   let g:ale_fixers = {
   \   'ruby': [
   \       'rubocop',
   \   ],
   \}
 '''
+
+[[plugins]]
+repo = 'elzr/vim-json'
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
@@ -44,29 +50,56 @@ repo = 'tpope/vim-surround'
 repo = 'tpope/vim-repeat'
 
 [[plugins]]
+repo = 'Shougo/denite.nvim'
+hook_add = '''
+call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
+'''
+
+[[plugins]]
+repo = 'deris/vim-shot-f'
+
+[[plugins]]
+repo = 'machakann/vim-highlightedyank'
+hook_add = '''
+  hi MatchParen cterm=italic
+'''
+
+[[plugins]]
 repo = 'easymotion/vim-easymotion'
 
 [[plugins]]
-repo = 'tpope/vim-rails'
+repo = 'tpope/vim-rhubarb'
 
 [[plugins]]
-repo = 'Shougo/denite.nvim'
+repo = 'vim-airline/vim-airline'
 
 [[plugins]]
-repo = 'Shougo/defx.nvim'
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'eruby']
 
 [[plugins]]
-repo = 'roxma/nvim-yarp'
+repo = 'terryma/vim-multiple-cursors'
 
 [[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-
-[[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
+repo = 'Shougo/deoplete-tabnine'
 build = 'bash install.sh'
-hook_add = '''
-  let g:LanguageClient_serverCommands = {
-      \ 'ruby': ['solargraph', 'stdio'],
-      \ }
-'''
+
+# [[plugins]]
+# repo = 'Shougo/deoplete-lsp'
+# hook_add = '''
+#   call lsp#server#add('ruby', ['solargraph', 'stdio'])
+# '''
+
+# [[plugins]]
+# repo = 'autozimu/LanguageClient-neovim'
+# rev = 'next'
+# build = 'bash install.sh'
+# hook_add = '''
+#   let g:LanguageClient_settingsPath = '/home/ippachi/.config/nvim/settings.json'
+#   let g:LanguageClient_serverCommands = {
+#       \ 'ruby': ['solargraph', 'stdio'],
+#       \ 'python': ['pyls'],
+#       \ 'c': ['cquery', '--log-file=/tmp/cq.log'],
+#       \ 'cpp': ['cquery', '--log-file=/tmp/cq.log']
+#       \ }
+# '''
