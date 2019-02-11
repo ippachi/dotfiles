@@ -1,1 +1,0 @@
-/home/ippachi/.fzf/shell/key-bindings.fish
