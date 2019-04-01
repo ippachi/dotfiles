@@ -34,35 +34,67 @@ call plug#begin('~/.vim/plugged')
   Plug 'andymass/vim-matchup'
 
   Plug 'mattn/emmet-vim'
+
+  Plug 'thoughtbot/vim-rspec'
+  Plug 'tpope/vim-rails'
+
+  Plug 'mattn/sonictemplate-vim'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'tpope/vim-abolish'
+  Plug 'easymotion/vim-easymotion'
+
+  Plug 'zxqfl/tabnine-vim'
 call plug#end()
 
+let mapleader = ","
+
+" colorschema
 let g:loaded_matchit = 1
 augroup matchup_matchparen_highlight
   autocmd!
   autocmd ColorScheme * hi MatchWord guifg=lightblue cterm=italic gui=italic
 augroup end
+" end colorschema
 
+" snip
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+" end snip
 
-let g:deoplete#enable_at_startup = 1
-
+" theme
 set background=dark
 colorscheme hybrid_material
 set termguicolors
 let g:enable_italic_font = 1
+let g:hybrid_transparent_background = 1
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'hybrid'
+" end theme
 
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
+" ale
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_enter = 0
+let g:ale_linters = {
+\   'ruby': ['rubocop'],
+\}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'ruby': ['rubocop'],
+\   'javascript': ['eslint'],
+\   'vue': ['eslint'],
+\}
+" end ale
 
+" sonic template
+let g:sonictemplate_vim_template_dir = '$HOME/.vim/template'
+" end sonic template
 
+" lsp
 if executable('solargraph')
     " gem install solargraph
     au User lsp_setup call lsp#register_server({
@@ -92,10 +124,38 @@ endif
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:asyncomplete_smart_completion = 1
+" end lsp
+
+" easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+" end easy align
 
 nnoremap <space><space> :Files<cr>
 nnoremap - :Rg <c-r>=expand("<cword>")<cr><cr>
-nnoremap <space>/ :Rg
+nnoremap <space>/ :Rg<space>
+nnoremap <space>af :ALEFix<cr>
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+augroup Test
+  autocmd BufNewFile,BufRead *.rb nnoremap <space>tl :RspecCurrentLine<cr>
+  autocmd BufNewFile,BufRead *.rb nnoremap <space>tf :RspecCurrentFile<cr>
+augroup end
 
 nnoremap j gj
 nnoremap k gk
@@ -143,3 +203,6 @@ if has('vim_starting')
 endif
 
 autocmd BufWritePre * %s/\s\+$//e
+
+set rtp+=~/.vim/plugged/rspec-vim/
+let g:rspec_executable="bundle exec rspec"
