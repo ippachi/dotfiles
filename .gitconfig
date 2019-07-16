@@ -1,18 +1,31 @@
 [color]
-	ui = true
+  ui = true
 [user]
-	name = ippachi
-	email = ivalice1218@gmail.com
+  name = ippachi
+  email = ivalice1218@gmail.com
 [alias]
   st = status
   ci = commit
   co = checkout
   br = branch
+  fe = fetch
+  me = merge
+  pushh = push origin HEAD
   one = log --oneline
   pushf = push --force-with-lease
+  gr = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
 [merge]
   tool = vimdiff
 [mergetool]
   prompt = true
-[mergetool "vimdiff"]
-  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[core]
+  excludesfile = /Users/ippachi/.gitignore_global
+  editor = nvim
+[rerere]
+  enabled = true
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path =
+[mergetool "sourcetree"]
+  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

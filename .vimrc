@@ -49,8 +49,8 @@ call plug#begin('~/.vim/plugged')
   " Plug 'vim-airline/vim-airline-themes'
 
   " completion
-  Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
-  " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+  " Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+  Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
   if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   else
