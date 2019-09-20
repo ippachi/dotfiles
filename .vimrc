@@ -1,10 +1,11 @@
 " =======================================================================================
-" leader =======================================================================================
+" leader
+" =======================================================================================
 let mapleader = ","
 
+
 " =======================================================================================
-" Plugins
-" =======================================================================================
+" Plugins " =======================================================================================
 call plug#begin('~/.vim/plugged')
   Plug 'kristijanhusak/vim-hybrid-material'
   Plug 'morhetz/gruvbox'
@@ -49,19 +50,22 @@ call plug#begin('~/.vim/plugged')
   " Plug 'vim-airline/vim-airline-themes'
 
   " completion
-  " Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
-  Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-  if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-  endif
-  " Plug 'prabirshrestha/asyncomplete.vim'
-  "
+  Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+  Plug 'zxqfl/tabnine-vim'
+  " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+  " if has('nvim')
+  "   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " else
+  "   Plug 'Shougo/deoplete.nvim'
+  "   Plug 'roxma/nvim-yarp'
+  "   Plug 'roxma/vim-hug-neovim-rpc'
+  " endif
+
+  Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
+  Plug 'prabirshrestha/asyncomplete-lsp.vim'
+  Plug 'prabirshrestha/asyncomplete-buffer.vim'
 
   " snip
   if !has('nvim')
@@ -88,9 +92,20 @@ call plug#begin('~/.vim/plugged')
 
   " for ruby
   Plug 'tpope/vim-rails', { 'for': 'ruby' }
+  " Plug 'vim-ruby/vim-ruby'
+  Plug 'todesking/ruby_hl_lvar.vim', { 'for': 'ruby' }
+
+  " for golang
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
   " for vue
-  Plug 'posva/vim-vue', { 'for': 'vue' }
+  Plug 'posva/vim-vue', { 'for': 'vuejs' }
+
+  " for csv
+  Plug 'chrisbra/csv.vim'
+
+  Plug 'machakann/vim-sandwich'
+  Plug 'haya14busa/vim-asterisk'
 call plug#end()
 
 " =======================================================================================
@@ -108,18 +123,6 @@ let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
 
 " =======================================================================================
-" lsp
-" if executable('solargraph')
-"     " pip install python-language-server
-"     au User lsp_setup call lsp#register_server({
-"       \ 'name': 'solargraph',
-"       \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-"       \ 'initialization_options': {"diagnostics": "true"},
-"       \ 'whitelist': ['ruby'],
-"       \ })
-" endif
-
-" =======================================================================================
 " airline
 
 let g:airline_powerline_fonts = 1
@@ -132,6 +135,8 @@ let g:airline_theme = 'hybrid'
 " let g:ale_lint_on_enter = 0
 let g:ale_linters = {
 \   'ruby': ['rubocop'],
+\   'javascript': ['eslint'],
+\   'vue': ['eslint'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -212,7 +217,7 @@ call gina#custom#command#option('diff', '--opener', 'split')
 
 " =======================================================================================
 " deoplete
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 
 
 " =======================================================================================
@@ -225,6 +230,16 @@ call submode#map('winsize', 'n', '', '>', '<C-w>>')
 call submode#map('winsize', 'n', '', '<', '<C-w><')
 call submode#map('winsize', 'n', '', '+', '<C-w>+')
 call submode#map('winsize', 'n', '', '-', '<C-w>-')
+
+" nnoremap <expr> <Plug>RubyMethodMove b:ruby_method_move
+
+" augroup vimr-ruby-unmap
+"   autocmd!
+"   autocmd BufRead *.rb let b:ruby_method_move = matchlist(maparg('[m', 'n'), ':<C-U>call \(.*\)<CR>')[1]
+"   autocmd BufRead *.rb unmap <buffer>[m
+"   autocmd BufRead *.rb call submode#enter_with('move_method', 'n', '', '[m')
+"   autocmd BufRead *.rb call submode#map('move_method', 'n', 'r', '[', '<Plug>RubyMethodMove')
+" augroup END
 
 " =======================================================================================
 " coc-snippets
@@ -323,7 +338,7 @@ function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
-let g:vista_default_executive = 'coc'
+" let g:vista_default_executive = 'coc'
 let g:vista_fzf_preview = ['right:50%']
 nnoremap <Leader>v :Vista<CR>
 
@@ -390,6 +405,55 @@ let g:eskk#server = {
 \   'port': 55100,
 \}
 
+" =======================================================================================
+" indentLine.vim
+let g:indentLine_char_list = ['.', '|']
+
+" =======================================================================================
+" asyncomplete
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': [],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ 'config': {
+    \    'max_buffer_size': 5000000,
+    \  },
+    \ }))
+
+inoremap <expr> <CR> pumvisible() ? asyncomplete#close_popup() . "\<CR>" :  "\<CR>"
+
+" =======================================================================================
+" vim-lsp
+" augroup vimrc-lsp
+"   autocmd!
+"   if executable('solargraph')
+"       " gem install solargraph
+"       au User lsp_setup call lsp#register_server({
+"           \ 'name': 'solargraph',
+"           \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+"           \ 'initialization_options': {"diagnostics": "true"},
+"           \ 'whitelist': ['ruby'],
+"           \ })
+"   endif
+
+"   if executable('vls')
+"       au User lsp_setup call lsp#register_server({
+"           \ 'name': 'vls',
+"           \ 'cmd': {server_info->[&shell, &shellcmdflag, 'vls --stdio']},
+"           \ 'whitelist': ['vue'],
+"           \ })
+"   endif
+" augroup END
+
+let g:lsp_diagnostics_enabled = 0         " disable diagnostics support
+
+" =======================================================================================
+" ruby_hl_lvar.vim
+highlight link RubyLocalVariable GruvboxOrange
+let g:ruby_hl_lvar_hl_group = 'RubyLocalVariable'
+
+
 " plugend
 
 " =======================================================================================
@@ -397,15 +461,39 @@ let g:eskk#server = {
 " =======================================================================================
 " =======================================================================================
 " default mappings
-nnoremap j gj
-nnoremap k gk
+noremap j gj
+noremap k gk
+nnoremap Y y$
+nnoremap <C-w>* <C-w>s*
+nnoremap <C-w># <C-w>s#
+nnoremap <C-w><Space>s :sp<CR>:Files<CR>
+nnoremap <C-w><Space>v :vs<CR>:Files<CR>
+nnoremap / /\v
+nnoremap ? ?\v
+map *  <Plug>(asterisk-z*)
+map #  <Plug>(asterisk-z#)
+map g* <Plug>(asterisk-gz*)
+map g# <Plug>(asterisk-gz#)
+map z*  <Plug>(asterisk-z*)
+map gz* <Plug>(asterisk-gz*)
+map z#  <Plug>(asterisk-z#)
+map gz# <Plug>(asterisk-gz#)
+nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
+nnoremap <Left>  <C-w>h
+nnoremap <Down>  <C-w>j
+nnoremap <Up>    <C-w>k
+nnoremap <Right> <C-w>l
+nnoremap <S-Left>  <C-w>H
+nnoremap <S-Down>  <C-w>J
+nnoremap <S-Up>    <C-w>K
+nnoremap <S-Right> <C-w>L
+
 nnoremap <Leader>bn :bnext<CR>
 nnoremap <Leader>bp :bprev<CR>
 nnoremap <Leader>tn :tabnew<CR>
 nnoremap <Leader>tc :tabclose<CR>
 nnoremap <Leader>src :source $HOME/.vimrc<CR>
 nmap <Leader>ts ds'ds"i:<ESC>
-
 
 " =======================================================================================
 " default sets
@@ -443,6 +531,9 @@ set splitbelow
 set splitright
 set timeout ttimeout
 set timeout timeoutlen=3000 ttimeoutlen=100
+set clipboard=unnamedplus
+set autoread
+
 
 if has('nvim')
   set pumblend=10
@@ -609,6 +700,35 @@ if has('vim_starting')
 endif
 
 " =======================================================================================
+" Rubocop Disable
+command! DisableRubocop  call s:disable_rubocop()
+
+function! s:disable_rubocop()
+  let l:message = execute('1message')
+
+  if l:message == ''
+    return
+  endif
+
+  let l:disable_target = split(l:message, ':')[0]
+
+  call setline('.', getline('.') . ' # rubocop:disable ' . l:disable_target)
+endfunction
+
+" =======================================================================================
+" Rubocop Disable
+command! RubyLength call s:ruby_length_calc()
+
+function! s:ruby_length_calc()
+  let l:func_start = search('\sdef .*\((\|;\|\s\|\n\)', 'nb')
+  let l:func_end = search('\send\(\s\|\n\)', 'n')
+  echom l:func_end - l:func_start
+endfunction
+
+
+
+
+" =======================================================================================
 " augroup
 augroup vimrc-rm-whitespace
   autocmd BufWritePre * %s/\s\+$//e
@@ -647,6 +767,11 @@ augroup END
 augroup vimrc-file-type
   autocmd!
   autocmd BufNewFile,BufRead *.jbuilder setlocal filetype=ruby
+  autocmd BufNewFile,BufRead *.csv,*.dat  setlocal filetype=csv
+augroup END
+
+augroup vimrc-checktime
+  autocmd WinEnter,FocusGained * checktime
 augroup END
 
 let &t_ZH="\e[3m"
