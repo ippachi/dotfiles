@@ -50,8 +50,8 @@ call plug#begin('~/.vim/plugged')
   " Plug 'vim-airline/vim-airline-themes'
 
   " completion
-  Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
-  Plug 'zxqfl/tabnine-vim'
+  " Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+  " Plug 'zxqfl/tabnine-vim'
   " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
   " if has('nvim')
   "   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -106,6 +106,8 @@ call plug#begin('~/.vim/plugged')
 
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
+
+  Plug 'kkoomen/vim-doge'
 call plug#end()
 
 " =======================================================================================
@@ -325,6 +327,34 @@ function! s:defx_my_settings() abort
 endfunction
 
 " =======================================================================================
+" denite
+autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+  nnoremap <silent><buffer><expr> <CR>
+  \ denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> v
+  \ denite#do_map('do_action', 'vsplit')
+  nnoremap <silent><buffer><expr> s
+  \ denite#do_map('do_action', 'split')
+  nnoremap <silent><buffer><expr> d
+  \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+  \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> q
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> i
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <Space>
+  \ denite#do_map('toggle_select').'j'
+  call denite#custom#var('file/rec', 'command',
+  \ ['rg', '--files', '--glob', '!.git'])
+endfunction
+
+nnoremap <Leader>df :Denite -start-filter file/rec buffer<CR>
+nnoremap <Leader>dh :Denite help<CR>i
+nnoremap <Leader>ds :Denite tag<CR>i
+
+" =======================================================================================
 " previm
 let g:previm_open_cmd = 'open -a vivaldi'
 
@@ -340,7 +370,7 @@ endfunction
 
 " let g:vista_default_executive = 'coc'
 let g:vista_fzf_preview = ['right:50%']
-nnoremap <Leader>v :Vista<CR>
+nnoremap <Leader>v :Vista vim_lsp<CR>
 
 " =======================================================================================
 " lightline
@@ -425,26 +455,35 @@ inoremap <expr> <CR> pumvisible() ? asyncomplete#close_popup() . "\<CR>" :  "\<C
 
 " =======================================================================================
 " vim-lsp
-" augroup vimrc-lsp
-"   autocmd!
-"   if executable('solargraph')
-"       " gem install solargraph
-"       au User lsp_setup call lsp#register_server({
-"           \ 'name': 'solargraph',
-"           \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-"           \ 'initialization_options': {"diagnostics": "true"},
-"           \ 'whitelist': ['ruby'],
-"           \ })
-"   endif
+augroup vimrc-lsp
+  autocmd!
+  if executable('solargraph')
+      " gem install solargraph
+      au User lsp_setup call lsp#register_server({
+          \ 'name': 'solargraph',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+          \ 'initialization_options': {"diagnostics": "true"},
+          \ 'whitelist': ['ruby'],
+          \ })
+  endif
 
-"   if executable('vls')
-"       au User lsp_setup call lsp#register_server({
-"           \ 'name': 'vls',
-"           \ 'cmd': {server_info->[&shell, &shellcmdflag, 'vls --stdio']},
-"           \ 'whitelist': ['vue'],
-"           \ })
-"   endif
-" augroup END
+  " if executable('vls')
+  "     au User lsp_setup call lsp#register_server({
+  "         \ 'name': 'vls',
+  "         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'vls --stdio']},
+  "         \ 'whitelist': ['vue'],
+  "         \ })
+  " endif
+  if executable('ccls')
+     au User lsp_setup call lsp#register_server({
+        \ 'name': 'ccls',
+        \ 'cmd': {server_info->['ccls']},
+        \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+        \ 'initialization_options': {},
+        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+        \ })
+  endif
+augroup END
 
 let g:lsp_diagnostics_enabled = 0         " disable diagnostics support
 
@@ -479,14 +518,6 @@ map gz* <Plug>(asterisk-gz*)
 map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
 nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
-nnoremap <Left>  <C-w>h
-nnoremap <Down>  <C-w>j
-nnoremap <Up>    <C-w>k
-nnoremap <Right> <C-w>l
-nnoremap <S-Left>  <C-w>H
-nnoremap <S-Down>  <C-w>J
-nnoremap <S-Up>    <C-w>K
-nnoremap <S-Right> <C-w>L
 
 nnoremap <Leader>bn :bnext<CR>
 nnoremap <Leader>bp :bprev<CR>
@@ -494,6 +525,9 @@ nnoremap <Leader>tn :tabnew<CR>
 nnoremap <Leader>tc :tabclose<CR>
 nnoremap <Leader>src :source $HOME/.vimrc<CR>
 nmap <Leader>ts ds'ds"i:<ESC>
+
+nnoremap <Left> gT
+nnoremap <right> gt
 
 " =======================================================================================
 " default sets
@@ -768,6 +802,11 @@ augroup vimrc-file-type
   autocmd!
   autocmd BufNewFile,BufRead *.jbuilder setlocal filetype=ruby
   autocmd BufNewFile,BufRead *.csv,*.dat  setlocal filetype=csv
+augroup END
+
+augroup vimrc-file-indent
+  autocmd!
+  autocmd BufNewFile,BufRead *.gitconfig setlocal noexpandtab softtabstop=8 shiftwidth=8
 augroup END
 
 augroup vimrc-checktime
