@@ -21,7 +21,6 @@ call plug#begin('~/.vim/plugged')
   Plug 'w0rp/ale'
 
   Plug 'vim-scripts/matchit.zip'
-  " Plug 'andymass/vim-matchup'
   Plug 'mattn/emmet-vim'
 
   Plug 'junegunn/vim-easy-align'
@@ -48,8 +47,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
   Plug 'prabirshrestha/asyncomplete-buffer.vim'
 
-  Plug 'Shougo/neosnippet.vim'
-  Plug 'Shougo/neosnippet-snippets'
+  Plug 'mattn/efm-langserver'
+  Plug 'jiangmiao/auto-pairs'
 
   Plug 'edkolev/tmuxline.vim'
   Plug 'liuchengxu/vista.vim'
@@ -95,7 +94,6 @@ let g:hybrid_transparent_background = 1
 
 " =======================================================================================
 " airline
-
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'hybrid'
 
@@ -197,6 +195,17 @@ if executable('solargraph')
         \ 'whitelist': ['ruby'],
         \ })
     autocmd FileType ruby setlocal omnifunc=lsp#complete
+  augroup END
+endif
+
+if executable('efm-langserver')
+  augroup vimrc-efm
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'efm-langserver',
+        \ 'cmd': {server_info->['efm-langserver']},
+        \ 'whitelist': ['vim', 'eruby', 'markdown', 'yaml'],
+        \ })
   augroup END
 endif
 
