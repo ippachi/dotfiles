@@ -47,7 +47,6 @@ call plug#begin('~/.vim/plugged')
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
   Plug 'prabirshrestha/asyncomplete-buffer.vim'
 
-  Plug 'mattn/efm-langserver'
   Plug 'jiangmiao/auto-pairs'
 
   Plug 'edkolev/tmuxline.vim'
@@ -61,15 +60,15 @@ call plug#begin('~/.vim/plugged')
 
   Plug 'kkoomen/vim-doge'
 
+  Plug 'SirVer/ultisnips'
+  Plug 'thomasfaingnaert/vim-lsp-snippets'
+  Plug 'thomasfaingnaert/vim-lsp-ultisnips'
   Plug 'honza/vim-snippets'
 
   " language plugins
   " for ruby
   Plug 'tpope/vim-rails', { 'for': 'ruby' }
   Plug 'vim-ruby/vim-ruby'
-
-  " for golang
-  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
   " for vue
   Plug 'posva/vim-vue', { 'for': 'vuejs' }
@@ -185,7 +184,7 @@ let g:indentLine_char_list = ['.', '|']
 " =======================================================================================
 " vim-lsp
 if executable('solargraph')
-  augroup vimrc-solargraph
+  augroup vimrc-solargraph-ls
     autocmd!
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'solargraph',
@@ -198,16 +197,29 @@ if executable('solargraph')
   augroup END
 endif
 
-if executable('efm-langserver')
-  augroup vimrc-efm
+if executable('docker-langserver')
+  augroup vimrc-docker-ls
     autocmd!
     autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'efm-langserver',
-        \ 'cmd': {server_info->['efm-langserver']},
-        \ 'whitelist': ['vim', 'eruby', 'markdown', 'yaml'],
+        \ 'name': 'docker-langserver',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
+        \ 'whitelist': ['dockerfile'],
         \ })
   augroup END
 endif
+
+if executable('html-languageserver')
+  augroup vimrc-html-ls
+  autocmd!
+  autocmd User lsp_setup call lsp#register_server({
+	\ 'name': 'html-languageserver',
+	\ 'cmd': {server_info->[&shell, &shellcmdflag, 'html-languageserver --stdio']},
+	\ 'whitelist': ['html', 'eruby'],
+	\ })
+  augroup END
+endif
+
+let g:lsp_diagnostics_echo_cursor = 1
 
 nnoremap <leader>ld :<C-u>LspDefinition<CR>
 nnoremap <leader>lr :<C-u>LspReferences<CR>
