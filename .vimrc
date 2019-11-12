@@ -41,19 +41,23 @@ call plug#begin('~/.vim/plugged')
   Plug 'shinchu/lightline-gruvbox.vim'
 
   " completion
-  Plug 'prabirshrestha/asyncomplete.vim'
+  if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  else
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
+  endif
+
+  Plug 'lighttiger2505/deoplete-vim-lsp'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
-  Plug 'prabirshrestha/asyncomplete-lsp.vim'
-  Plug 'prabirshrestha/asyncomplete-buffer.vim'
 
-  Plug 'jiangmiao/auto-pairs'
 
   Plug 'edkolev/tmuxline.vim'
   Plug 'liuchengxu/vista.vim'
   Plug 'RRethy/vim-illuminate'
   Plug 'rhysd/try-colorscheme.vim'
-  Plug 'tyru/eskk.vim'
 
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
@@ -61,9 +65,9 @@ call plug#begin('~/.vim/plugged')
   Plug 'kkoomen/vim-doge'
 
   Plug 'SirVer/ultisnips'
-  Plug 'thomasfaingnaert/vim-lsp-snippets'
-  Plug 'thomasfaingnaert/vim-lsp-ultisnips'
   Plug 'honza/vim-snippets'
+
+  Plug 'kana/vim-smartinput'
 
   " language plugins
   " for ruby
@@ -124,7 +128,7 @@ nmap ga <Plug>(EasyAlign)
 
 " =======================================================================================
 " fzf
-nnoremap <space><space> :<C-u>Files<cr>
+nnoremap <space><space> :<C-u>GFiles<cr>
 nnoremap <space>fb :<C-u>Buffers<cr>
 nnoremap <space>ft :<C-u>Tags<cr>
 nnoremap - :Rg <c-r>=expand("<cword>")<cr><cr>
@@ -182,6 +186,12 @@ let g:eskk#server = {
 let g:indentLine_char_list = ['.', '|']
 
 " =======================================================================================
+" deoplete.nvim
+let g:deoplete#enable_at_startup = 1
+
+set completeopt-=preview
+
+" =======================================================================================
 " vim-lsp
 if executable('solargraph')
   augroup vimrc-solargraph-ls
@@ -219,10 +229,10 @@ if executable('html-languageserver')
   augroup END
 endif
 
-let g:lsp_diagnostics_echo_cursor = 1
-
 nnoremap <leader>ld :<C-u>LspDefinition<CR>
 nnoremap <leader>lr :<C-u>LspReferences<CR>
+
+let g:lsp_fold_enabled = 0
 
 " =======================================================================================
 " General settings
@@ -302,7 +312,6 @@ set timeout ttimeout
 set timeout timeoutlen=3000 ttimeoutlen=100
 set clipboard=unnamedplus
 set autoread
-
 
 if has('nvim')
   set pumblend=10
