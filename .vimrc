@@ -40,19 +40,12 @@ call plug#begin('~/.vim/plugged')
   Plug 'itchyny/lightline.vim'
   Plug 'shinchu/lightline-gruvbox.vim'
 
-  " completion
-  if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-  endif
-
-  Plug 'lighttiger2505/deoplete-vim-lsp'
+  Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
-
+  Plug 'prabirshrestha/asyncomplete-lsp.vim'
+  Plug 'prabirshrestha/asyncomplete-buffer.vim'
+  Plug 'prabirshrestha/asyncomplete-file.vim'
 
   Plug 'edkolev/tmuxline.vim'
   Plug 'liuchengxu/vista.vim'
@@ -64,8 +57,11 @@ call plug#begin('~/.vim/plugged')
 
   Plug 'kkoomen/vim-doge'
 
-  Plug 'SirVer/ultisnips'
-  Plug 'honza/vim-snippets'
+  if has('python3')
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
+    Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+  endif
 
   Plug 'kana/vim-smartinput'
 
@@ -79,6 +75,10 @@ call plug#begin('~/.vim/plugged')
 
   " for csv
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
+
+  Plug 'jparise/vim-graphql'
+  Plug 'ryanolsonx/vim-lsp-python'
+  Plug 'ryanolsonx/vim-lsp-typescript'
 call plug#end()
 
 " =======================================================================================
@@ -186,10 +186,45 @@ let g:eskk#server = {
 let g:indentLine_char_list = ['.', '|']
 
 " =======================================================================================
-" deoplete.nvim
-let g:deoplete#enable_at_startup = 1
+" asyncomplete.vim
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
-set completeopt-=preview
+augroup vimrc-comple-buffer
+  autocmd!
+  autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+        \ 'name': 'buffer',
+        \ 'whitelist': ['*'],
+        \ 'completor': function('asyncomplete#sources#buffer#completor'),
+        \ 'config': {
+        \    'max_buffer_size': 5000000,
+        \  },
+        \ }))
+augroup END
+
+augroup vimrc-comple-file
+  autocmd!
+  autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+      \ 'name': 'file',
+      \ 'whitelist': ['*'],
+      \ 'priority': 10,
+      \ 'completor': function('asyncomplete#sources#file#completor')
+      \ }))
+augroup END
+
+if has('python3')
+  let g:UltiSnipsExpandTrigger="<C-l>"
+  augroup vimrc-comple-snippet
+    autocmd!
+    autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+            \ 'name': 'ultisnips',
+            \ 'whitelist': ['*'],
+            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+            \ }))
+  augroup END
+endif
+
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,popup
 
 " =======================================================================================
 " vim-lsp
@@ -199,8 +234,6 @@ if executable('solargraph')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'solargraph',
         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Rakefile'))},
-        \ 'workspace_config':{'logLevel': 'debug'},
         \ 'whitelist': ['ruby'],
         \ })
     autocmd FileType ruby setlocal omnifunc=lsp#complete
@@ -229,10 +262,28 @@ if executable('html-languageserver')
   augroup END
 endif
 
+if executable('pyls')
+  au User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+endif
+
+if executable('typescript-language-server')
+  au User lsp_setup call lsp#register_server({
+          \ 'name': 'typescript-language-server',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+          \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+          \ 'whitelist': ['typescript', 'typescript.tsx', 'javascript'],
+          \ })
+endif
+
+let g:lsp_preview_keep_focus = 1
+let g:lsp_highlight_references_enabled = 1
+
 nnoremap <leader>ld :<C-u>LspDefinition<CR>
 nnoremap <leader>lr :<C-u>LspReferences<CR>
-
-let g:lsp_fold_enabled = 0
 
 " =======================================================================================
 " General settings
@@ -471,6 +522,7 @@ augroup END
 augroup vimrc-file-indent
   autocmd!
   autocmd BufNewFile,BufRead *.gitconfig setlocal noexpandtab softtabstop=8 shiftwidth=8
+  autocmd BufNewFile,BufRead *.php setlocal expandtab softtabstop=4 shiftwidth=4
 augroup END
 
 augroup vimrc-checktime
