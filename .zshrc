@@ -1,7 +1,16 @@
-# Created by newuser for 5.5.1
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
 
-source /home/vagrant/.zprezto/init.zsh
-source /usr/share/zsh/scripts/zplug/init.zsh
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+source ~/.zplug/init.zsh
 
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
@@ -10,6 +19,9 @@ export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 export PATH="$HOME/.yarn/bin:$PATH"
+export PATH="$HOME/.yarn/bin:$PATH"
+
+export LANG=en_US.UTF-8
 
 export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
@@ -47,3 +59,5 @@ export PATH="$HOME/.nodenv/bin:$PATH"
 eval "$(nodenv init -)"
 
 neofetch
+
+# Customize to your needs...
