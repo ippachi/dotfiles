@@ -77,8 +77,10 @@ call plug#begin('~/.vim/plugged')
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
 
   Plug 'jparise/vim-graphql'
-  Plug 'ryanolsonx/vim-lsp-python'
-  Plug 'ryanolsonx/vim-lsp-typescript'
+  Plug 'ryanolsonx/vim-lsp-python', { 'for': 'python' }
+  Plug 'ryanolsonx/vim-lsp-typescript', { 'for': 'typescript' }
+
+  Plug 'tyru/eskk.vim'
 call plug#end()
 
 " =======================================================================================
@@ -131,6 +133,7 @@ nmap ga <Plug>(EasyAlign)
 nnoremap <space><space> :<C-u>GFiles<cr>
 nnoremap <space>fb :<C-u>Buffers<cr>
 nnoremap <space>ft :<C-u>Tags<cr>
+nnoremap <space>fs :<C-u>GFiles?<cr>
 nnoremap - :Rg <c-r>=expand("<cword>")<cr><cr>
 
 " [[B]Commits] Customize the options used by 'git log':
@@ -196,7 +199,7 @@ augroup vimrc-comple-buffer
         \ 'whitelist': ['*'],
         \ 'completor': function('asyncomplete#sources#buffer#completor'),
         \ 'config': {
-        \    'max_buffer_size': 5000000,
+        \    'max_buffer_size': -1,
         \  },
         \ }))
 augroup END
@@ -228,17 +231,17 @@ set completeopt=menuone,noinsert,noselect,popup
 
 " =======================================================================================
 " vim-lsp
-if executable('solargraph')
-  augroup vimrc-solargraph-ls
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'whitelist': ['ruby'],
-        \ })
-    autocmd FileType ruby setlocal omnifunc=lsp#complete
-  augroup END
-endif
+" if executable('solargraph')
+"   augroup vimrc-solargraph-ls
+"     autocmd!
+"     autocmd User lsp_setup call lsp#register_server({
+"         \ 'name': 'solargraph',
+"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+"         \ 'whitelist': ['ruby'],
+"         \ })
+"     autocmd FileType ruby setlocal omnifunc=lsp#complete
+"   augroup END
+" endif
 
 if executable('docker-langserver')
   augroup vimrc-docker-ls
@@ -324,6 +327,8 @@ nnoremap <C-k> 3k
 
 vnoremap <C-j> 3j
 vnoremap <C-k> 3k
+
+imap <C-j> <Plug>(eskk:toggle)
 
 " =======================================================================================
 " default sets
