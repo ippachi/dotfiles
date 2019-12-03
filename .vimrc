@@ -7,54 +7,37 @@ let mapleader = ","
 " Plugins
 " =======================================================================================
 call plug#begin('~/.vim/plugged')
-
-  Plug 'kristijanhusak/vim-hybrid-material'
   Plug 'morhetz/gruvbox'
-  Plug 'Yggdroot/indentLine'
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-surround'
   Plug 'airblade/vim-gitgutter'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-repeat'
-
   Plug 'w0rp/ale'
-
   Plug 'vim-scripts/matchit.zip'
-  Plug 'mattn/emmet-vim'
-
   Plug 'junegunn/vim-easy-align'
-  Plug 'tpope/vim-abolish'
   Plug 'easymotion/vim-easymotion'
-
-  Plug 'vim-jp/vimdoc-ja'
-  Plug 'kana/vim-altr'
-
-  Plug 'kana/vim-submode'
   Plug 'rhysd/clever-f.vim'
+  Plug 'vim-jp/vimdoc-ja'
+  Plug 'kana/vim-submode'
+  Plug 'tyru/nextfile.vim'
   Plug 'tpope/vim-commentary'
   Plug 'thinca/vim-quickrun'
   Plug 'mbbill/undotree'
-
-  " status line
   Plug 'itchyny/lightline.vim'
   Plug 'shinchu/lightline-gruvbox.vim'
-
   Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
   Plug 'prabirshrestha/asyncomplete-buffer.vim'
   Plug 'prabirshrestha/asyncomplete-file.vim'
-
-  Plug 'edkolev/tmuxline.vim'
   Plug 'liuchengxu/vista.vim'
   Plug 'RRethy/vim-illuminate'
   Plug 'rhysd/try-colorscheme.vim'
-
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
-
   Plug 'kkoomen/vim-doge'
 
   if has('python3')
@@ -64,22 +47,13 @@ call plug#begin('~/.vim/plugged')
   endif
 
   Plug 'kana/vim-smartinput'
-
-  " language plugins
-  " for ruby
+  Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
   Plug 'tpope/vim-rails', { 'for': 'ruby' }
-  Plug 'vim-ruby/vim-ruby'
-
-  " for vue
-  Plug 'posva/vim-vue', { 'for': 'vuejs' }
-
-  " for csv
+  Plug 'posva/vim-vue', { 'for': 'vue' }
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
-
-  Plug 'jparise/vim-graphql'
   Plug 'ryanolsonx/vim-lsp-python', { 'for': 'python' }
   Plug 'ryanolsonx/vim-lsp-typescript', { 'for': 'typescript' }
-
+  Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'vue'] }
   Plug 'tyru/eskk.vim'
 call plug#end()
 
@@ -96,6 +70,13 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
+
+" =======================================================================================
+" submode
+call submode#enter_with('nextfile', 'n', 'r', '<Leader>n', '<Plug>(nextfile-next)')
+call submode#enter_with('nextfile', 'n', 'r', '<Leader>p', '<Plug>(nextfile-previous)')
+call submode#map('nextfile', 'n', 'r', 'n', '<Plug>(nextfile-next)')
+call submode#map('nextfile', 'n', 'r', 'p', '<Plug>(nextfile-previous)')
 
 " =======================================================================================
 " airline
@@ -185,10 +166,6 @@ let g:eskk#server = {
 \}
 
 " =======================================================================================
-" indentLine.vim
-let g:indentLine_char_list = ['.', '|']
-
-" =======================================================================================
 " asyncomplete.vim
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
@@ -231,17 +208,17 @@ set completeopt=menuone,noinsert,noselect,popup
 
 " =======================================================================================
 " vim-lsp
-" if executable('solargraph')
-"   augroup vimrc-solargraph-ls
-"     autocmd!
-"     autocmd User lsp_setup call lsp#register_server({
-"         \ 'name': 'solargraph',
-"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-"         \ 'whitelist': ['ruby'],
-"         \ })
-"     autocmd FileType ruby setlocal omnifunc=lsp#complete
-"   augroup END
-" endif
+if executable('solargraph')
+  augroup vimrc-solargraph-ls
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'solargraph',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+        \ 'whitelist': ['ruby'],
+        \ })
+    autocmd FileType ruby setlocal omnifunc=lsp#complete
+  augroup END
+endif
 
 if executable('docker-langserver')
   augroup vimrc-docker-ls
@@ -366,8 +343,11 @@ set splitbelow
 set splitright
 set timeout ttimeout
 set timeout timeoutlen=3000 ttimeoutlen=100
-set clipboard=unnamedplus
+set clipboard+=unnamed
 set autoread
+set list listchars=tab:^\ ,trail:_,extends:>,precedes:<
+set backspace=indent,eol,start
+set breakindent
 
 if has('nvim')
   set pumblend=10

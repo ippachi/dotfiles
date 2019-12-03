@@ -19,8 +19,8 @@ export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 export PATH="$HOME/.yarn/bin:$PATH"
-export PATH="$HOME/.yarn/bin:$PATH"
 
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export LANG=en_US.UTF-8
 
 export HISTFILE=~/.zsh_history
