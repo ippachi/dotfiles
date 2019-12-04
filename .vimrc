@@ -27,14 +27,14 @@ call plug#begin('~/.vim/plugged')
   Plug 'mbbill/undotree'
   Plug 'itchyny/lightline.vim'
   Plug 'shinchu/lightline-gruvbox.vim'
-  Plug 'prabirshrestha/asyncomplete.vim'
+  " Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp'
-  Plug 'prabirshrestha/asyncomplete-lsp.vim'
-  Plug 'prabirshrestha/asyncomplete-buffer.vim'
-  Plug 'prabirshrestha/asyncomplete-file.vim'
+  " Plug 'prabirshrestha/asyncomplete-lsp.vim'
+  " Plug 'prabirshrestha/asyncomplete-buffer.vim'
+  " Plug 'prabirshrestha/asyncomplete-file.vim'
   Plug 'liuchengxu/vista.vim'
-  Plug 'RRethy/vim-illuminate'
+  " Plug 'RRethy/vim-illuminate'
   Plug 'rhysd/try-colorscheme.vim'
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
@@ -43,10 +43,19 @@ call plug#begin('~/.vim/plugged')
   if has('python3')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
-    Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+    " Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
   endif
 
-  Plug 'kana/vim-smartinput'
+  if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  else
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
+  endif
+  Plug 'lighttiger2505/deoplete-vim-lsp'
+
+  " Plug 'kana/vim-smartinput'
   Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
   Plug 'tpope/vim-rails', { 'for': 'ruby' }
   Plug 'posva/vim-vue', { 'for': 'vue' }
@@ -55,6 +64,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'ryanolsonx/vim-lsp-typescript', { 'for': 'typescript' }
   Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'vue'] }
   Plug 'tyru/eskk.vim'
+  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 call plug#end()
 
 " =======================================================================================
@@ -70,6 +80,10 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
+
+" =======================================================================================
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
 " =======================================================================================
 " submode
@@ -110,11 +124,22 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " =======================================================================================
+" Leaderf
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 1
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+
+" =======================================================================================
 " fzf
-nnoremap <space><space> :<C-u>GFiles<cr>
-nnoremap <space>fb :<C-u>Buffers<cr>
-nnoremap <space>ft :<C-u>Tags<cr>
-nnoremap <space>fs :<C-u>GFiles?<cr>
+
+nnoremap <space><space> :<C-u>Leaderf file<cr>
+noremap <space>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <space>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 nnoremap - :Rg <c-r>=expand("<cword>")<cr><cr>
 
 " [[B]Commits] Customize the options used by 'git log':
@@ -135,7 +160,7 @@ endfunction
 
 " let g:vista_default_executive = 'coc'
 let g:vista_fzf_preview = ['right:50%']
-nnoremap <Leader>v :Vista vim_lsp<CR>
+nnoremap <Leader>v :Vista vim_lsp<CR> 
 
 " =======================================================================================
 " lightline
@@ -169,42 +194,43 @@ let g:eskk#server = {
 " asyncomplete.vim
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
-augroup vimrc-comple-buffer
-  autocmd!
-  autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-        \ 'name': 'buffer',
-        \ 'whitelist': ['*'],
-        \ 'completor': function('asyncomplete#sources#buffer#completor'),
-        \ 'config': {
-        \    'max_buffer_size': -1,
-        \  },
-        \ }))
-augroup END
+" augroup vimrc-comple-buffer
+"   autocmd!
+"   autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+"         \ 'name': 'buffer',
+"         \ 'whitelist': ['*'],
+"         \ 'completor': function('asyncomplete#sources#buffer#completor'),
+"         \ 'config': {
+"         \    'max_buffer_size': -1,
+"         \  },
+"         \ }))
+" augroup END
 
-augroup vimrc-comple-file
-  autocmd!
-  autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-      \ 'name': 'file',
-      \ 'whitelist': ['*'],
-      \ 'priority': 10,
-      \ 'completor': function('asyncomplete#sources#file#completor')
-      \ }))
-augroup END
+" augroup vimrc-comple-file
+"   autocmd!
+"   autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+"       \ 'name': 'file',
+"       \ 'whitelist': ['*'],
+"       \ 'priority': 10,
+"       \ 'completor': function('asyncomplete#sources#file#completor')
+"       \ }))
+" augroup END
 
-if has('python3')
-  let g:UltiSnipsExpandTrigger="<C-l>"
-  augroup vimrc-comple-snippet
-    autocmd!
-    autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-            \ 'name': 'ultisnips',
-            \ 'whitelist': ['*'],
-            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-            \ }))
-  augroup END
-endif
+" if has('python3')
+"   let g:UltiSnipsExpandTrigger="<C-l>"
+"   augroup vimrc-comple-snippet
+"     autocmd!
+"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+"             \ 'name': 'ultisnips',
+"             \ 'whitelist': ['*'],
+"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+"             \ }))
+"   augroup END
+" endif
 
-let g:asyncomplete_auto_completeopt = 0
-set completeopt=menuone,noinsert,noselect,popup
+" let g:asyncomplete_auto_completeopt = 0
+" set completeopt=menuone,noinsert,noselect,popup
+set completeopt=menuone,noinsert,noselect,preview
 
 " =======================================================================================
 " vim-lsp
@@ -215,8 +241,10 @@ if executable('solargraph')
         \ 'name': 'solargraph',
         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
         \ 'whitelist': ['ruby'],
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Rakefile'))},
         \ })
     autocmd FileType ruby setlocal omnifunc=lsp#complete
+    autocmd FileType ruby setlocal keywordprg=:LspHover
   augroup END
 endif
 
@@ -243,11 +271,14 @@ if executable('html-languageserver')
 endif
 
 if executable('pyls')
+  autocmd!
   au User lsp_setup call lsp#register_server({
           \ 'name': 'pyls',
           \ 'cmd': {server_info->['pyls']},
           \ 'whitelist': ['python'],
           \ })
+    autocmd FileType python setlocal omnifunc=lsp#complete
+    autocmd FileType python setlocal keywordprg=:LspHover
 endif
 
 if executable('typescript-language-server')
@@ -348,6 +379,7 @@ set autoread
 set list listchars=tab:^\ ,trail:_,extends:>,precedes:<
 set backspace=indent,eol,start
 set breakindent
+set signcolumn=yes
 
 if has('nvim')
   set pumblend=10
@@ -464,9 +496,9 @@ endif
 
 " =======================================================================================
 " augroup
-augroup vimrc-rm-whitespace
-  autocmd BufWritePre * %s/\s\+$//e
-augroup END
+" augroup vimrc-rm-whitespace
+"   autocmd BufWritePre * %s/\s\+$//e
+" augroup END
 
 augroup vimrc-auto-cursorline
   autocmd!
