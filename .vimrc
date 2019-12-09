@@ -71,6 +71,44 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
 " =======================================================================================
+" coc.nvim
+
+let g:coc_global_extensions = [
+\ 'coc-dictionary',
+\ 'coc-tag',
+\ 'coc-word',
+\ 'coc-json',
+\ 'coc-html',
+\ 'coc-css',
+\ 'coc-snippets',
+\ 'coc-vetur',
+\ 'coc-solargraph',
+\ 'coc-yaml',
+\ 'coc-highlight',
+\ 'coc-yank',
+\ ]
+" let g:terminal_ansi_colors = [
+" \ '#073642',
+" \ '#dc322f',
+" \ '#859900',
+" \ '#b58900',
+" \ '#268bd2',
+" \ '#d33682',
+" \ '#2aa198',
+" \ '#eee8d5',
+" \ '#002b36',
+" \ '#cb4b16',
+" \ '#586e75',
+" \ '#657b83',
+" \ '#839496',
+" \ '#6c71c4',
+" \ '#93a1a1',
+" \ '#fdf6e3',
+" \ ]
+
+
+
+" =======================================================================================
 " defx
 autocmd FileType defx call s:defx_my_settings()
 function! s:defx_my_settings() abort
