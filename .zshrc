@@ -10,7 +10,8 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-source ~/.zplug/init.zsh
+source /usr/share/zsh/scripts/zplug/init.zsh
+
 
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
@@ -61,3 +62,14 @@ eval "$(nodenv init -)"
 neofetch
 
 # Customize to your needs...
+source /usr/share/nvm/init-nvm.sh
+
+function fzf-ghq() {
+  local dir
+  dir="$(ghq root)/$(ghq list | fzf --height 40% --reverse)"
+  BUFFER="$BUFFER$dir"
+  CURSOR+=${#dir}
+  zle redisplay
+}
+zle -N fzf-ghq
+bindkey "^g" fzf-ghq
