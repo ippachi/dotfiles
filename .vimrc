@@ -27,14 +27,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'mbbill/undotree'
   Plug 'itchyny/lightline.vim'
   Plug 'shinchu/lightline-gruvbox.vim'
-  " Plug 'prabirshrestha/asyncomplete.vim'
-  Plug 'prabirshrestha/async.vim'
-  Plug 'prabirshrestha/vim-lsp'
-  " Plug 'prabirshrestha/asyncomplete-lsp.vim'
-  " Plug 'prabirshrestha/asyncomplete-buffer.vim'
-  " Plug 'prabirshrestha/asyncomplete-file.vim'
   Plug 'liuchengxu/vista.vim'
-  " Plug 'RRethy/vim-illuminate'
   Plug 'rhysd/try-colorscheme.vim'
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
@@ -43,28 +36,25 @@ call plug#begin('~/.vim/plugged')
   if has('python3')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
-    " Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
   endif
 
   if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
   else
-    Plug 'Shougo/deoplete.nvim'
+    Plug 'Shougo/defx.nvim'
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
   endif
-  Plug 'lighttiger2505/deoplete-vim-lsp'
 
-  " Plug 'kana/vim-smartinput'
   Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
   Plug 'tpope/vim-rails', { 'for': 'ruby' }
   Plug 'posva/vim-vue', { 'for': 'vue' }
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
-  Plug 'ryanolsonx/vim-lsp-python', { 'for': 'python' }
-  Plug 'ryanolsonx/vim-lsp-typescript', { 'for': 'typescript' }
   Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'vue'] }
   Plug 'tyru/eskk.vim'
   Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'jwalton512/vim-blade'
 call plug#end()
 
 " =======================================================================================
@@ -80,10 +70,78 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
+" =======================================================================================
+" defx
+autocmd FileType defx call s:defx_my_settings()
+function! s:defx_my_settings() abort
+  " Define mappings
+  nnoremap <silent><buffer><expr> <CR>
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> c
+  \ defx#do_action('copy')
+  nnoremap <silent><buffer><expr> m
+  \ defx#do_action('move')
+  nnoremap <silent><buffer><expr> p
+  \ defx#do_action('paste')
+  nnoremap <silent><buffer><expr> l
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> E
+  \ defx#do_action('open', 'vsplit')
+  nnoremap <silent><buffer><expr> P
+  \ defx#do_action('open', 'pedit')
+  nnoremap <silent><buffer><expr> o
+  \ defx#do_action('open_or_close_tree')
+  nnoremap <silent><buffer><expr> K
+  \ defx#do_action('new_directory')
+  nnoremap <silent><buffer><expr> N
+  \ defx#do_action('new_file')
+  nnoremap <silent><buffer><expr> M
+  \ defx#do_action('new_multiple_files')
+  nnoremap <silent><buffer><expr> C
+  \ defx#do_action('toggle_columns',
+  \                'mark:indent:icon:filename:type:size:time')
+  nnoremap <silent><buffer><expr> S
+  \ defx#do_action('toggle_sort', 'time')
+  nnoremap <silent><buffer><expr> d
+  \ defx#do_action('remove')
+  nnoremap <silent><buffer><expr> r
+  \ defx#do_action('rename')
+  nnoremap <silent><buffer><expr> !
+  \ defx#do_action('execute_command')
+  nnoremap <silent><buffer><expr> x
+  \ defx#do_action('execute_system')
+  nnoremap <silent><buffer><expr> yy
+  \ defx#do_action('yank_path')
+  nnoremap <silent><buffer><expr> .
+  \ defx#do_action('toggle_ignored_files')
+  nnoremap <silent><buffer><expr> ;
+  \ defx#do_action('repeat')
+  nnoremap <silent><buffer><expr> h
+  \ defx#do_action('cd', ['..'])
+  nnoremap <silent><buffer><expr> ~
+  \ defx#do_action('cd')
+  nnoremap <silent><buffer><expr> q
+  \ defx#do_action('quit')
+  nnoremap <silent><buffer><expr> <Space>
+  \ defx#do_action('toggle_select') . 'j'
+  nnoremap <silent><buffer><expr> *
+  \ defx#do_action('toggle_select_all')
+  nnoremap <silent><buffer><expr> j
+  \ line('.') == line('$') ? 'gg' : 'j'
+  nnoremap <silent><buffer><expr> k
+  \ line('.') == 1 ? 'G' : 'k'
+  nnoremap <silent><buffer><expr> <C-l>
+  \ defx#do_action('redraw')
+  nnoremap <silent><buffer><expr> <C-g>
+  \ defx#do_action('print')
+  nnoremap <silent><buffer><expr> cd
+  \ defx#do_action('change_vim_cwd')
+endfunction
+
 
 " =======================================================================================
 " deoplete
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 
 " =======================================================================================
 " submode
@@ -133,6 +191,7 @@ let g:Lf_WindowPosition = 'popup'
 let g:Lf_PreviewInPopup = 1
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
 let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+let g:Lf_ExternalCommand = 'rg --files "%s"'
 
 " =======================================================================================
 " fzf
@@ -193,108 +252,7 @@ let g:eskk#server = {
 " =======================================================================================
 " asyncomplete.vim
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-
-" augroup vimrc-comple-buffer
-"   autocmd!
-"   autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-"         \ 'name': 'buffer',
-"         \ 'whitelist': ['*'],
-"         \ 'completor': function('asyncomplete#sources#buffer#completor'),
-"         \ 'config': {
-"         \    'max_buffer_size': -1,
-"         \  },
-"         \ }))
-" augroup END
-
-" augroup vimrc-comple-file
-"   autocmd!
-"   autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-"       \ 'name': 'file',
-"       \ 'whitelist': ['*'],
-"       \ 'priority': 10,
-"       \ 'completor': function('asyncomplete#sources#file#completor')
-"       \ }))
-" augroup END
-
-" if has('python3')
-"   let g:UltiSnipsExpandTrigger="<C-l>"
-"   augroup vimrc-comple-snippet
-"     autocmd!
-"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-"             \ 'name': 'ultisnips',
-"             \ 'whitelist': ['*'],
-"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-"             \ }))
-"   augroup END
-" endif
-
-" let g:asyncomplete_auto_completeopt = 0
-" set completeopt=menuone,noinsert,noselect,popup
 set completeopt=menuone,noinsert,noselect,preview
-
-" =======================================================================================
-" vim-lsp
-if executable('solargraph')
-  augroup vimrc-solargraph-ls
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'whitelist': ['ruby'],
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Rakefile'))},
-        \ })
-    autocmd FileType ruby setlocal omnifunc=lsp#complete
-    autocmd FileType ruby setlocal keywordprg=:LspHover
-  augroup END
-endif
-
-if executable('docker-langserver')
-  augroup vimrc-docker-ls
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'docker-langserver',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
-        \ 'whitelist': ['dockerfile'],
-        \ })
-  augroup END
-endif
-
-if executable('html-languageserver')
-  augroup vimrc-html-ls
-  autocmd!
-  autocmd User lsp_setup call lsp#register_server({
-	\ 'name': 'html-languageserver',
-	\ 'cmd': {server_info->[&shell, &shellcmdflag, 'html-languageserver --stdio']},
-	\ 'whitelist': ['html', 'eruby'],
-	\ })
-  augroup END
-endif
-
-if executable('pyls')
-  autocmd!
-  au User lsp_setup call lsp#register_server({
-          \ 'name': 'pyls',
-          \ 'cmd': {server_info->['pyls']},
-          \ 'whitelist': ['python'],
-          \ })
-    autocmd FileType python setlocal omnifunc=lsp#complete
-    autocmd FileType python setlocal keywordprg=:LspHover
-endif
-
-if executable('typescript-language-server')
-  au User lsp_setup call lsp#register_server({
-          \ 'name': 'typescript-language-server',
-          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-          \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-          \ 'whitelist': ['typescript', 'typescript.tsx', 'javascript'],
-          \ })
-endif
-
-let g:lsp_preview_keep_focus = 1
-let g:lsp_highlight_references_enabled = 1
-
-nnoremap <leader>ld :<C-u>LspDefinition<CR>
-nnoremap <leader>lr :<C-u>LspReferences<CR>
 
 " =======================================================================================
 " General settings
@@ -380,6 +338,8 @@ set list listchars=tab:^\ ,trail:_,extends:>,precedes:<
 set backspace=indent,eol,start
 set breakindent
 set signcolumn=yes
+set colorcolumn=80
+highlight ColorColumn ctermbg=9
 
 if has('nvim')
   set pumblend=10
