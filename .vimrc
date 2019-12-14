@@ -32,6 +32,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
   Plug 'kkoomen/vim-doge'
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
 
   if has('python3')
     Plug 'SirVer/ultisnips'
@@ -52,8 +54,10 @@ call plug#begin('~/.vim/plugged')
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
   Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'vue'] }
   Plug 'tyru/eskk.vim'
-  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'whiteinge/diffconflicts'
+  Plug 'AndrewRadev/linediff.vim'
+  Plug 'terryma/vim-expand-region'
 call plug#end()
 
 " =======================================================================================
@@ -69,10 +73,16 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
+
+
+" =======================================================================================
+" ultisnips
+let g:UltiSnipsExpandTrigger="<C-l>"
+
 " =======================================================================================
 " coc.nvim
-
 let g:coc_global_extensions = [
+\ 'coc-marketplace',
 \ 'coc-dictionary',
 \ 'coc-tag',
 \ 'coc-word',
@@ -85,27 +95,15 @@ let g:coc_global_extensions = [
 \ 'coc-yaml',
 \ 'coc-highlight',
 \ 'coc-yank',
+\ 'coc-list',
 \ ]
-" let g:terminal_ansi_colors = [
-" \ '#073642',
-" \ '#dc322f',
-" \ '#859900',
-" \ '#b58900',
-" \ '#268bd2',
-" \ '#d33682',
-" \ '#2aa198',
-" \ '#eee8d5',
-" \ '#002b36',
-" \ '#cb4b16',
-" \ '#586e75',
-" \ '#657b83',
-" \ '#839496',
-" \ '#6c71c4',
-" \ '#93a1a1',
-" \ '#fdf6e3',
-" \ ]
 
-
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " =======================================================================================
 " defx
@@ -187,13 +185,22 @@ call submode#enter_with('nextfile', 'n', 'r', '<Leader>p', '<Plug>(nextfile-prev
 call submode#map('nextfile', 'n', 'r', 'n', '<Plug>(nextfile-next)')
 call submode#map('nextfile', 'n', 'r', 'p', '<Plug>(nextfile-previous)')
 
+call submode#enter_with('winsize', 'n', '', '<C-w>-', '<C-w>-')
+call submode#enter_with('winsize', 'n', '', '<C-w>+', '<C-w>+')
+call submode#enter_with('winsize', 'n', '', '<C-w>>', '<C-w>>')
+call submode#enter_with('winsize', 'n', '', '<C-w><', '<C-w><')
+call submode#map('winsize', 'n', '', '-', '<C-w>-')
+call submode#map('winsize', 'n', '', '+', '<C-w>+')
+call submode#map('winsize', 'n', '', '>', '<C-w>>')
+call submode#map('winsize', 'n', '', '<', '<C-w><')
+
 " =======================================================================================
 " airline
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'hybrid'
 
 " =======================================================================================
-" ale
+" " ale
 let g:ale_linters = {
 \   'ruby': ['rubocop'],
 \   'javascript': ['eslint'],
@@ -219,30 +226,21 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " =======================================================================================
-" Leaderf
-let g:Lf_HideHelp = 1
-let g:Lf_UseCache = 0
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 1
-" let g:Lf_WindowPosition = 'popup'
-let g:Lf_PreviewInPopup = 1
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
-let g:Lf_ExternalCommand = 'rg --files "%s"'
-
-" =======================================================================================
 " fzf
 
-nnoremap <space><space> :<C-u>Leaderf file<cr>
-noremap <space>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-noremap <space>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-nnoremap - :Rg <c-r>=expand("<cword>")<cr><cr>
+nnoremap <space><space> :<C-u>Files<cr>
+noremap <space>fb :<C-U>Buffers<CR>
+
+let g:fzf_buffers_jump = 1
 
 " [[B]Commits] Customize the options used by 'git log':
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " =======================================================================================
 " easy motion
@@ -288,7 +286,7 @@ let g:eskk#server = {
 
 " =======================================================================================
 " asyncomplete.vim
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+inoremap <expr><cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 set completeopt=menuone,noinsert,noselect,preview
 
 " =======================================================================================
@@ -537,6 +535,11 @@ augroup vimrc-file-indent
   autocmd!
   autocmd BufNewFile,BufRead *.gitconfig setlocal noexpandtab softtabstop=8 shiftwidth=8
   autocmd BufNewFile,BufRead *.php setlocal expandtab softtabstop=4 shiftwidth=4
+augroup END
+
+augroup vimrc-set-regexpengine
+  autocmd!
+  autocmd BufNewFile,BufReadPre *.rb,*.erb,Schemafile setlocal regexpengine=1
 augroup END
 
 augroup vimrc-checktime
