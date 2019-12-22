@@ -1,7 +1,7 @@
 " =======================================================================================
 " leader
-" =======================================================================================
 let mapleader = ","
+" =======================================================================================
 
 " =======================================================================================
 " Plugins
@@ -17,35 +17,20 @@ call plug#begin('~/.vim/plugged')
   Plug 'w0rp/ale'
   Plug 'vim-scripts/matchit.zip'
   Plug 'junegunn/vim-easy-align'
-  Plug 'easymotion/vim-easymotion'
-  Plug 'rhysd/clever-f.vim'
   Plug 'vim-jp/vimdoc-ja'
   Plug 'kana/vim-submode'
-  Plug 'tyru/nextfile.vim'
   Plug 'tpope/vim-commentary'
   Plug 'thinca/vim-quickrun'
   Plug 'mbbill/undotree'
   Plug 'itchyny/lightline.vim'
   Plug 'shinchu/lightline-gruvbox.vim'
-  Plug 'liuchengxu/vista.vim'
   Plug 'rhysd/try-colorscheme.vim'
   Plug 'machakann/vim-sandwich'
   Plug 'haya14busa/vim-asterisk'
-  Plug 'kkoomen/vim-doge'
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
 
   if has('python3')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
-  endif
-
-  if has('nvim')
-    Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-  else
-    Plug 'Shougo/defx.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
   endif
 
   Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
@@ -53,11 +38,21 @@ call plug#begin('~/.vim/plugged')
   Plug 'posva/vim-vue', { 'for': 'vue' }
   Plug 'chrisbra/csv.vim', { 'for': 'csv' }
   Plug 'mattn/emmet-vim', { 'for': ['html', 'eruby', 'vue'] }
-  Plug 'tyru/eskk.vim'
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
   Plug 'whiteinge/diffconflicts'
   Plug 'AndrewRadev/linediff.vim'
-  Plug 'terryma/vim-expand-region'
+
+  Plug 'ruby-formatter/rufo-vim'
+
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp'
+
+  Plug 'prabirshrestha/asyncomplete.vim'
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp'
+  Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+  Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 " =======================================================================================
@@ -74,109 +69,17 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
 
+" =======================================================================================
+" vim-lsp-settings
+let g:lsp_settings = {
+\  'solargraph': {'initialization_options': {}}
+\}
+
+let g:lsp_async_completion = 1
 
 " =======================================================================================
 " ultisnips
 let g:UltiSnipsExpandTrigger="<C-l>"
-
-" =======================================================================================
-" coc.nvim
-let g:coc_global_extensions = [
-\ 'coc-marketplace',
-\ 'coc-dictionary',
-\ 'coc-tag',
-\ 'coc-word',
-\ 'coc-json',
-\ 'coc-html',
-\ 'coc-css',
-\ 'coc-snippets',
-\ 'coc-vetur',
-\ 'coc-solargraph',
-\ 'coc-yaml',
-\ 'coc-highlight',
-\ 'coc-yank',
-\ 'coc-list',
-\ ]
-
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" =======================================================================================
-" defx
-autocmd FileType defx call s:defx_my_settings()
-function! s:defx_my_settings() abort
-  " Define mappings
-  nnoremap <silent><buffer><expr> <CR>
-  \ defx#do_action('open')
-  nnoremap <silent><buffer><expr> c
-  \ defx#do_action('copy')
-  nnoremap <silent><buffer><expr> m
-  \ defx#do_action('move')
-  nnoremap <silent><buffer><expr> p
-  \ defx#do_action('paste')
-  nnoremap <silent><buffer><expr> l
-  \ defx#do_action('open')
-  nnoremap <silent><buffer><expr> E
-  \ defx#do_action('open', 'vsplit')
-  nnoremap <silent><buffer><expr> P
-  \ defx#do_action('open', 'pedit')
-  nnoremap <silent><buffer><expr> o
-  \ defx#do_action('open_or_close_tree')
-  nnoremap <silent><buffer><expr> K
-  \ defx#do_action('new_directory')
-  nnoremap <silent><buffer><expr> N
-  \ defx#do_action('new_file')
-  nnoremap <silent><buffer><expr> M
-  \ defx#do_action('new_multiple_files')
-  nnoremap <silent><buffer><expr> C
-  \ defx#do_action('toggle_columns',
-  \                'mark:indent:icon:filename:type:size:time')
-  nnoremap <silent><buffer><expr> S
-  \ defx#do_action('toggle_sort', 'time')
-  nnoremap <silent><buffer><expr> d
-  \ defx#do_action('remove')
-  nnoremap <silent><buffer><expr> r
-  \ defx#do_action('rename')
-  nnoremap <silent><buffer><expr> !
-  \ defx#do_action('execute_command')
-  nnoremap <silent><buffer><expr> x
-  \ defx#do_action('execute_system')
-  nnoremap <silent><buffer><expr> yy
-  \ defx#do_action('yank_path')
-  nnoremap <silent><buffer><expr> .
-  \ defx#do_action('toggle_ignored_files')
-  nnoremap <silent><buffer><expr> ;
-  \ defx#do_action('repeat')
-  nnoremap <silent><buffer><expr> h
-  \ defx#do_action('cd', ['..'])
-  nnoremap <silent><buffer><expr> ~
-  \ defx#do_action('cd')
-  nnoremap <silent><buffer><expr> q
-  \ defx#do_action('quit')
-  nnoremap <silent><buffer><expr> <Space>
-  \ defx#do_action('toggle_select') . 'j'
-  nnoremap <silent><buffer><expr> *
-  \ defx#do_action('toggle_select_all')
-  nnoremap <silent><buffer><expr> j
-  \ line('.') == line('$') ? 'gg' : 'j'
-  nnoremap <silent><buffer><expr> k
-  \ line('.') == 1 ? 'G' : 'k'
-  nnoremap <silent><buffer><expr> <C-l>
-  \ defx#do_action('redraw')
-  nnoremap <silent><buffer><expr> <C-g>
-  \ defx#do_action('print')
-  nnoremap <silent><buffer><expr> cd
-  \ defx#do_action('change_vim_cwd')
-endfunction
-
-
-" =======================================================================================
-" deoplete
-" let g:deoplete#enable_at_startup = 1
 
 " =======================================================================================
 " submode
@@ -195,11 +98,6 @@ call submode#map('winsize', 'n', '', '>', '<C-w>>')
 call submode#map('winsize', 'n', '', '<', '<C-w><')
 
 " =======================================================================================
-" airline
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'hybrid'
-
-" =======================================================================================
 " " ale
 let g:ale_linters = {
 \   'ruby': ['rubocop'],
@@ -212,11 +110,7 @@ let g:ale_fixers = {
 \   'javascript': ['eslint'],
 \   'vue': ['eslint'],
 \}
-nnoremap <space>af :ALEFix<cr>
-
-if has('nvim')
-  let g:ale_virtualtext_cursor = 1
-endif
+nnoremap <leader>af :ALEFix<cr>
 
 " =======================================================================================
 " easy align
@@ -243,20 +137,6 @@ let g:fzf_tags_command = 'ctags -R'
 let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " =======================================================================================
-" easy motion
-nmap <Leader>f <Plug>(easymotion-overwin-f2)
-
-" =======================================================================================
-" vista
-function! NearestMethodOrFunction() abort
-  return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
-
-" let g:vista_default_executive = 'coc'
-let g:vista_fzf_preview = ['right:50%']
-nnoremap <Leader>v :Vista vim_lsp<CR> 
-
-" =======================================================================================
 " lightline
 let g:lightline = {
       \ 'colorscheme': 'gruvbox',
@@ -271,23 +151,6 @@ let g:lightline = {
       \   'method': 'NearestMethodOrFunction'
       \ },
       \ }
-
-
-" =======================================================================================
-" eskk.vim
-let g:eskk#directory = "~/.eskk"
-let g:eskk#dictionary = { 'path': "~/.skk-jisyo", 'sorted': 0, 'encoding': 'utf-8', }
-let g:eskk#large_dictionary = { 'path': "~/.eskk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
-let g:eskk#enable_completion = 1
-let g:eskk#server = {
-\   'host': 'localhost',
-\   'port': 55100,
-\}
-
-" =======================================================================================
-" asyncomplete.vim
-inoremap <expr><cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-set completeopt=menuone,noinsert,noselect,preview
 
 " =======================================================================================
 " General settings
@@ -313,23 +176,12 @@ map z#  <Plug>(asterisk-z#)
 map gz# <Plug>(asterisk-gz#)
 nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 
-nnoremap <Leader>bn :bnext<CR>
-nnoremap <Leader>bp :bprev<CR>
 nnoremap <Leader>tn :tabnew<CR>
 nnoremap <Leader>tc :tabclose<CR>
 nnoremap <Leader>src :source $HOME/.vimrc<CR>
-nmap <Leader>ts ds'ds"i:<ESC>
 
 nnoremap <Left> gT
 nnoremap <right> gt
-
-nnoremap <C-j> 3j
-nnoremap <C-k> 3k
-
-vnoremap <C-j> 3j
-vnoremap <C-k> 3k
-
-imap <C-j> <Plug>(eskk:toggle)
 
 " =======================================================================================
 " default sets
@@ -374,35 +226,14 @@ set backspace=indent,eol,start
 set breakindent
 set signcolumn=yes
 set colorcolumn=80
-highlight ColorColumn ctermbg=9
+set completeopt=menuone,noselect,noinsert,preview
 
-if has('nvim')
-  set pumblend=10
-endif
+highlight ColorColumn ctermbg=9
 
 set t_ZH=^[[3m
 set t_ZR=^[[23m
 
-" temr color
-let g:terminal_ansi_colors = [
-\ '#073642',
-\ '#dc322f',
-\ '#859900',
-\ '#b58900',
-\ '#268bd2',
-\ '#d33682',
-\ '#2aa198',
-\ '#eee8d5',
-\ '#002b36',
-\ '#cb4b16',
-\ '#586e75',
-\ '#657b83',
-\ '#839496',
-\ '#6c71c4',
-\ '#93a1a1',
-\ '#fdf6e3',
-\ ]
-
+let g:mucomplete#enable_auto_at_startup = 1
 
 " =======================================================================================
 " backup.
@@ -433,31 +264,6 @@ call mkdir(expand('~/.cache/vim/swap'), 'p')
 call mkdir(expand('~/.cache/vim/undo'), 'p')
 
 " =======================================================================================
-" profile cursor move
-function! ProfileCursorMove() abort
-  let profile_file = expand('~/work/log/vim-profile.log')
-  if filereadable(profile_file)
-    call delete(profile_file)
-  endif
-
-  normal! gg
-  normal! zR
-
-  execute 'profile start ' . profile_file
-  profile func *
-  profile file *
-
-  augroup ProfileCursorMove
-    autocmd!
-    autocmd CursorHold <buffer> profile pause | q
-  augroup END
-
-  for i in range(100)
-    call feedkeys('j')
-  endfor
-endfunction
-
-" =======================================================================================
 " profile
 command! ProfileStart call s:profile_start()
 command! ProfilePause call s:profile_pause()
@@ -472,22 +278,6 @@ function! s:profile_pause()
   profile pause
   noautocmd qall!
 endfunction
-
-" =======================================================================================
-" Rename
-command! -nargs=1 Rename call s:rename(<q-args>)
-
-function! s:rename(new_filename)
-  execute('!mv % %:h/' . a:new_filename)
-  execute('e %:h/' . a:new_filename)
-endfunction
-
-if has('vim_starting')
-  let &t_SI .= "\e[6 q"
-  let &t_EI .= "\e[2 q"
-  let &t_SR .= "\e[4 q"
-endif
-
 
 " =======================================================================================
 " augroup
@@ -542,9 +332,34 @@ augroup vimrc-set-regexpengine
   autocmd BufNewFile,BufReadPre *.rb,*.erb,Schemafile setlocal regexpengine=1
 augroup END
 
+augroup vimrc-set-regexpengine
+  autocmd!
+  autocmd BufNewFile,BufReadPre *.rb,*.erb,Schemafile setlocal regexpengine=1
+augroup END
+
 augroup vimrc-checktime
+  autocmd!
   autocmd WinEnter,FocusGained * checktime
+augroup END
+
+augroup vimrc-ruby
+  autocmd!
+  autocmd FileType ruby setlocal iskeyword+=?
+  autocmd FileType ruby setlocal iskeyword+=@-@
+  autocmd FileType ruby nnoremap <leader>af :<C-u>Rufo<cr>
+augroup END
+
+augroup vimrc-trim-whitespace
+  autocmd!
+  autocmd BufWritePre * :%s/\s\+$//ge
 augroup END
 
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
+
+if has('vim_starting')
+  let &t_SI .= "\e[6 q"
+  let &t_EI .= "\e[2 q"
+  let &t_SR .= "\e[4 q"
+endif
+
