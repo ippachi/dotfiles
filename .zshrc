@@ -1,5 +1,4 @@
-#
-# Executes commands at the start of an interactive session.
+# # Executes commands at the start of an interactive session.
 #
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
@@ -28,6 +27,8 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
 export SAVEHIST=100000
 
+export FZF_DEFAULT_COMMAND='fd --type f'
+
 setopt share_history
 setopt hist_reduce_blanks
 setopt hist_ignore_all_dups
@@ -40,6 +41,7 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/docker-compose", from:oh-my-zsh
 zplug "plugins/z", from:oh-my-zsh
+zplug "momo-lab/zsh-abbrev-alias"
 
 zplug load --verbose
 
@@ -56,8 +58,6 @@ alias cat="bat"
 alias t="trans"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export PATH="$HOME/.nodenv/bin:$PATH"
-eval "$(nodenv init -)"
 
 neofetch
 
@@ -73,3 +73,15 @@ function fzf-ghq() {
 }
 zle -N fzf-ghq
 bindkey "^g" fzf-ghq
+
+abbrev-alias -g dc="docker-compose"
+abbrev-alias -g be="bundle exec"
+abbrev-alias -g tns="tmux new-session -s"
+abbrev-alias -g berd="bundle exec rails db"
+abbrev-alias -g berc="bundle exec rails console"
+abbrev-alias -g bers="bundle exec rails server"
+abbrev-alias -g gst="git status"
+abbrev-alias -g gbr="git branch"
+abbrev-alias -g gco="git checkout"
+abbrev-alias -g gci="git commit"
+abbrev-alias -g gfe="git fetch"

@@ -53,6 +53,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
   Plug 'mattn/vim-lsp-settings'
+  Plug 'yami-beta/asyncomplete-omni.vim'
+  Plug 'prabirshrestha/asyncomplete-buffer.vim'
 call plug#end()
 
 " =======================================================================================
@@ -68,18 +70,37 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
+" =======================================================================================
+" asyncomplete.vim
+
+call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
+\ 'name': 'omni',
+\ 'whitelist': ['*'],
+\ 'completor': function('asyncomplete#sources#omni#completor')
+\  }))
+
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ 'config': {
+    \    'max_buffer_size': 5000000,
+    \  },
+    \ }))
 
 " =======================================================================================
 " vim-lsp-settings
 let g:lsp_settings = {
-\  'solargraph': {'initialization_options': {}}
-\}
+\  'solargraph': {'initialization_options': {}},
+\  }
 
 let g:lsp_async_completion = 1
 
+nnoremap gd :<C-u>LspDefinition<cr>
+
 " =======================================================================================
 " ultisnips
-let g:UltiSnipsExpandTrigger="<C-l>"
+let g:UltiSnipsExpandTrigger="<C-j>"
 
 " =======================================================================================
 " submode
@@ -182,6 +203,7 @@ nnoremap <Leader>src :source $HOME/.vimrc<CR>
 
 nnoremap <Left> gT
 nnoremap <right> gt
+inoremap <expr><cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
 " =======================================================================================
 " default sets
@@ -362,4 +384,3 @@ if has('vim_starting')
   let &t_EI .= "\e[2 q"
   let &t_SR .= "\e[4 q"
 endif
-
