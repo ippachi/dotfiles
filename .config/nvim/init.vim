@@ -44,19 +44,15 @@ call plug#begin('~/.vim/plugged')
 
   Plug 'ruby-formatter/rufo-vim'
 
-  Plug 'prabirshrestha/async.vim'
-  Plug 'prabirshrestha/vim-lsp'
-
   Plug 'pbogut/fzf-mru.vim'
   Plug 'justinmk/vim-dirvish'
   Plug 'tpope/vim-eunuch'
-  Plug 'lilydjwg/colorizer'
   Plug 'rhysd/reply.vim'
   Plug 'tyru/eskk.vim'
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-  " Plug 'lighttiger2505/deoplete-vim-lsp'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'rhysd/git-messenger.vim'
+  Plug 'rhysd/clever-f.vim'
+  Plug 'easymotion/vim-easymotion'
 call plug#end()
 
 " =======================================================================================
@@ -74,10 +70,46 @@ let g:enable_italic_font = 1
 let g:hybrid_transparent_background = 1
 
 " =======================================================================================
-" deoplete.nvim
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('auto_complete_delay', 0)
-let g:lsp_preview_autoclose = 1
+" easymotion.nvim
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+nmap s <Plug>(easymotion-overwin-f2)
+
+" =======================================================================================
+" coc.nvim
+let g:coc_global_extensions = [
+      \ 'coc-json',
+      \ 'coc-html',
+      \ 'coc-css',
+      \ 'coc-solargraph',
+      \ 'coc-vetur',
+      \ 'coc-yaml',
+      \ 'coc-highlight',
+      \ 'coc-yank',
+      \ 'coc-vimlsp',
+      \ 'coc-dictionary',
+      \ 'coc-word',
+      \ 'coc-emoji',
+      \ 'coc-ultisnips',
+      \]
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+augroup vimrc-coc
+  autocmd!
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup END
 
 " =======================================================================================
 " eskk.vim
@@ -85,34 +117,6 @@ let g:eskk#directory = "~/.eskk"
 let g:eskk#dictionary = "~/.eskk/eskk-jisyo"
 let g:eskk#large_dictionary = { 'path': "~/.eskk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp' }
 let g:eskk#start_completion_length = 1
-
-augroup vimrc-lsp-clangd
-  if executable('clangd')
-    au!
-    au User lsp_setup call lsp#register_server({
-            \ 'name': 'clangd',
-            \ 'cmd': {server_info->['clangd', '-background-index']},
-            \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-            \ })
-  endif
-augroup END
-
-augroup vimrc-lsp-solargraph
-  if executable('solargraph')
-      " gem install solargraph
-      au!
-      au User lsp_setup call lsp#register_server({
-          \ 'name': 'solargraph',
-          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-          \ 'whitelist': ['ruby'],
-          \ })
-      autocmd FileType ruby setlocal omnifunc=lsp#complete
-  endif
-augroup END
-
-let g:lsp_async_completion = 1
-
-nnoremap gd :<C-u>LspDefinition<cr>
 
 " =======================================================================================
 " ultisnips
@@ -225,7 +229,7 @@ map gz# <Plug>(asterisk-gz#)
 nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
 
 nnoremap <Leader>tn :tabnew<CR>
-nnoremap <Leader>src :source $HOME/.vimrc<CR>
+nnoremap <Leader>src :source $HOME/.config/nvim/init.vim<CR>
 
 nnoremap <Left> gT
 nnoremap <right> gt
@@ -274,7 +278,9 @@ set backspace=indent,eol,start
 set breakindent
 set signcolumn=yes
 set colorcolumn=80
-set completeopt=menuone,noselect,noinsert,popup
+set completeopt=menuone,noselect,noinsert
+set fileencodings=utf-8,cp932,shift-jis
+set pumblend=20
 
 highlight ColorColumn ctermbg=9
 
@@ -363,35 +369,6 @@ augroup vimrc-auto-cursorline
   endfunction
 augroup END
 
-augroup vimrc-session
-  autocmd!
-  autocmd VimLeave * call s:make_session()
-  autocmd VimEnter * call s:restore_session()
-
-  function! s:make_session()
-    let l:path = split(getcwd(), '/')
-    let l:filename = l:path[l:path->len() - 1] . '_session.vim'
-    let l:dirpath = filter(l:path, 'v:key !=# l:path->len() - 1')
-    let l:session_dir_path = $HOME . '/.vim/sessions/' . join(l:dirpath, '/')
-    call mkdir(l:session_dir_path, 'p')
-    execute 'mksession! ' . l:session_dir_path . '/' . l:filename
-  endfunction
-
-  function! s:restore_session()
-    if v:argv->len() > 1
-      return
-    endif
-
-    let l:path = split(getcwd(), '/')
-    let l:filename = l:path[l:path->len() - 1] . '_session.vim'
-    let l:dirpath = filter(l:path, 'v:key !=# l:path->len() - 1')
-    let l:session_dir_path = $HOME . '/.vim/sessions/' . join(l:dirpath, '/')
-    if filereadable(l:session_dir_path . '/' . l:filename)
-      execute 'source ' . l:session_dir_path . '/' . l:filename
-    endif
-  endfunction
-augroup END
-
 augroup vimrc-file-type
   autocmd!
   autocmd BufNewFile,BufRead *.jbuilder setlocal filetype=ruby
@@ -402,11 +379,6 @@ augroup vimrc-file-indent
   autocmd!
   autocmd BufNewFile,BufRead *.gitconfig setlocal noexpandtab softtabstop=8 shiftwidth=8
   autocmd BufNewFile,BufRead *.php setlocal expandtab softtabstop=4 shiftwidth=4
-augroup END
-
-augroup vimrc-set-regexpengine
-  autocmd!
-  autocmd BufNewFile,BufReadPre *.rb,*.erb,Schemafile setlocal regexpengine=1
 augroup END
 
 augroup vimrc-set-regexpengine
@@ -429,7 +401,6 @@ augroup vimrc-trim-whitespace
   autocmd!
   autocmd BufWritePre * :%s/\s\+$//ge
 augroup END
-
 
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
