@@ -1,4 +1,6 @@
-source /usr/share/zsh/scripts/zplug/init.zsh
+[ -f ~/.zshrc_local  ] && . ~/.zshrc_local
+
+source $ZPLUG_HOME/init.zsh
 source $HOME/.asdf/asdf.sh
 source /usr/share/fzf/key-bindings.zsh
 
