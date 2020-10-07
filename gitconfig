@@ -34,3 +34,4 @@
 	br = branch
 	me = merge
 	ph = push origin HEAD
+	st = status

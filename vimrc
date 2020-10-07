@@ -146,10 +146,6 @@ Plug 'itchyny/lightline.vim'
 " fizzy finder
 Plug 'junegunn/fzf.vim'
 
-" auto complete
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-
 " git diff
 Plug 'airblade/vim-gitgutter'
 
@@ -176,6 +172,12 @@ Plug 'nelstrom/vim-textobj-rubyblock'
 
 " extend match
 Plug 'andymass/vim-matchup'
+
+" go test file faster
+Plug 'kana/vim-altr'
+
+" surround
+Plug 'tpope/vim-surround'
 call plug#end()
 
 set background=dark
@@ -198,10 +200,18 @@ let g:lightline = {
 
 " vim-test
 let test#strategy = 'dispatch'
+
+let test#ruby#rspec#options = {
+  \ 'nearest': '--backtrace',
+  \ 'file':    '--format failures --no-profile --deprecation-out /dev/null',
+  \ 'suite':   '--tag ~slow',
+  \}
+
 nnoremap <leader>tn :<c-u>TestNearest<cr>
+nnoremap <leader>tf :<c-u>TestFile<cr>
 
 " vim-dispatch
-let g:dispatch_compilers = {'bundle exec': ''}
+let g:dispatch_compilers = {'bundle exec': 'rake'}
 
 " fzf
 nnoremap <c-p> :<c-u>Files<cr>
@@ -217,3 +227,9 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " lexima
 let g:lexima_ctrlh_as_backspace = 1
+
+" vim-altr
+call altr#define('app/%/%.rb', 'spec/%/%_spec.rb')
+
+nmap <F2>  <Plug>(altr-forward)
+nmap <S-F2>  <Plug>(altr-back)
