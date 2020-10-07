@@ -1,8 +1,17 @@
 [ -f ~/.zshrc_local  ] && . ~/.zshrc_local
 
 source /usr/share/zsh/scripts/zplug/init.zsh
-source $HOME/.asdf/asdf.sh
-source /usr/share/fzf/key-bindings.zsh
+
+case $OSTYPE in
+  linux*)
+    source $HOME/.asdf/asdf.sh
+    source /usr/share/fzf/key-bindings.zsh
+    ;;
+  darwin*)
+    export ZPLUG_HOME=/usr/local/opt/zplug
+    source $ZPLUG_HOME/init.zsh
+    ;;
+esac
 
 zplug "zsh-users/zsh-completions"
 zplug "momo-lab/zsh-abbrev-alias"
@@ -42,7 +51,6 @@ abbrev-alias -g dcd="sudo docker-compose down"
 
 abbrev-alias -g mux="tmuxinator"
 abbrev-alias -g lg="lazygit"
-abbrev-alias -g wt="watson"
 
 function ghq-fzf() {
   local src=$(ghq list | fzf --height 20 --reverse)
@@ -56,7 +64,6 @@ zle -N ghq-fzf
 bindkey '^g' ghq-fzf
 
 eval "$(starship init zsh)"
-eval "$(gh completion -s zsh)"
 
 autoload -Uz edit-command-line
 
@@ -64,7 +71,5 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 
 autoload -Uz compinit && compinit
-source /usr/share/zsh/site-functions/_watson
 
 neofetch
-
