@@ -1,0 +1,36 @@
+[user]
+	email = ippachi1018@gmail.com
+	name = ippachi
+[core]
+	excludesfile = /home/vagrant/.gitignore_global
+	pager = delta
+
+[merge]
+	tool = vimdiff
+[mergetool]
+	prompt = true
+[mergetool "vimdiff"]
+	cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[pull]
+	rebase = false
+	ff = only
+[delta]
+	side-by-side = true
+	features = side-by-side line-numbers decorations
+	whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
+
+[interactive]
+	diffFilter = delta --color-only
+
+[alias]
+	fe = fetch
+	co = checkout
+	ci = commit
+	br = branch
+	me = merge
+	ph = push origin HEAD
