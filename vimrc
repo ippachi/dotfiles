@@ -42,7 +42,8 @@ set autoread
 set list listchars=tab:^\ ,trail:_,extends:>,precedes:<
 set backspace=indent,eol,start
 set breakindent
-set signcolumn=yes
+set number
+set signcolumn=number
 set colorcolumn=100
 set completeopt=menuone,noselect,noinsert
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
@@ -97,6 +98,11 @@ cnoremap <C-x> <C-r>=expand('%')<cr>
 cnoremap <C-a> **/*
 noremap \ ,
 
+nnoremap <silent> ]t :tnext<cr>
+nnoremap <silent> [t :tprev<cr>
+nnoremap <silent> ]q :cnext<cr>
+nnoremap <silent> [q :cprev<cr>
+
 augroup vimrc-file-type
   autocmd!
   autocmd BufNewFile,BufRead *.jbuilder,*.jb setlocal filetype=ruby
@@ -144,13 +150,10 @@ Plug 'junegunn/seoul256.vim'
 Plug 'itchyny/lightline.vim'
 
 " fizzy finder
-Plug 'junegunn/fzf.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " git diff
 Plug 'airblade/vim-gitgutter'
-
-" test
-Plug 'vim-test/vim-test'
 
 " quickrun
 Plug 'thinca/vim-quickrun'
@@ -178,6 +181,9 @@ Plug 'kana/vim-altr'
 
 " surround
 Plug 'tpope/vim-surround'
+
+" asyncrun
+Plug 'skywind3000/asyncrun.vim'
 call plug#end()
 
 set background=dark
@@ -198,26 +204,29 @@ let g:lightline = {
   \ }
 \ }
 
-" vim-test
-let test#strategy = 'dispatch'
+" asyncrun
+nnoremap <leader>tn :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec %:p:<c-r>=line('.')<cr><cr>
+nnoremap <leader>tf :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec %:p --format failures<cr>
+nnoremap <leader>tl :<c-u>AsyncRun bundle exec rubocop --format emacs<cr>
 
-let test#ruby#rspec#options = {
-  \ 'nearest': '--backtrace',
-  \ 'file':    '--format failures --no-profile --deprecation-out /dev/null',
-  \ 'suite':   '--tag ~slow',
-  \}
+hi TestRed term=reverse ctermfg=252 ctermbg=52 guifg=#D9D9D9 guibg=#730B00
+hi TestGreen term=bold ctermbg=22 guibg=#006F00
 
-nnoremap <leader>tn :<c-u>TestNearest<cr>
-nnoremap <leader>tf :<c-u>TestFile<cr>
+let s:on_asyncrun_exit =<< trim END
+  call popup_close(get(g:, 'test_bar_popup'), 0)
+  if g:asyncrun_status == "failure"
+    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, time: 10000, highlight: 'TestRed'})
+  else
+    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, time: 10000, highlight: 'TestGreen'})
+  endif
+END
+
+let g:asyncrun_exit = join(s:on_asyncrun_exit, "\n")
 
 " vim-dispatch
 let g:dispatch_compilers = {'bundle exec': 'rake'}
 
-" fzf
-nnoremap <c-p> :<c-u>Files<cr>
-nnoremap <leader><c-p> :<c-u>GFiles?<cr>
-
-" " smartinput
+" smartinput
 call smartinput#clear_rules()
 
 " ultisnip
@@ -233,3 +242,7 @@ call altr#define('app/%/%.rb', 'spec/%/%_spec.rb')
 
 nmap <F2>  <Plug>(altr-forward)
 nmap <S-F2>  <Plug>(altr-back)
+
+" ctrlp
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_types = ['mru', 'fil', 'buf']

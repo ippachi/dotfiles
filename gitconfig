@@ -35,3 +35,5 @@
 	me = merge
 	ph = push origin HEAD
 	st = status
+[init]
+	templatedir = ~/.git_template
