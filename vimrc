@@ -44,7 +44,6 @@ set backspace=indent,eol,start
 set breakindent
 set number
 set signcolumn=number
-set colorcolumn=100
 set completeopt=menuone,noselect,noinsert
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set encoding=utf-8
@@ -58,7 +57,6 @@ set backupdir=~/.cache/vim/backup/
 set directory=~/.cache/vim/swap/
 set undodir=~/.cache/vim/undo/
 set scroll=20
-set iskeyword+=-
 
 if has('vim_starting')
   let &t_SI .= "\e[6 q"
@@ -102,6 +100,8 @@ nnoremap <silent> ]t :tnext<cr>
 nnoremap <silent> [t :tprev<cr>
 nnoremap <silent> ]q :cnext<cr>
 nnoremap <silent> [q :cprev<cr>
+nnoremap <silent> ]l :lnext<cr>
+nnoremap <silent> [l :lprev<cr>
 
 augroup vimrc-file-type
   autocmd!
@@ -129,8 +129,6 @@ augroup END
 
 augroup vimrc-ruby
   autocmd!
-  autocmd FileType ruby setlocal iskeyword+=?
-  autocmd FileType ruby setlocal iskeyword+=@-@
   autocmd FileType ruby setlocal regexpengine=1
   autocmd FileType eruby setlocal regexpengine=1
 augroup END
@@ -205,19 +203,52 @@ let g:lightline = {
 \ }
 
 " asyncrun
-nnoremap <leader>tn :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec %:p:<c-r>=line('.')<cr><cr>
-nnoremap <leader>tf :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec %:p --format failures<cr>
-nnoremap <leader>tl :<c-u>AsyncRun bundle exec rubocop --format emacs<cr>
+nnoremap <leader>tn :<c-u>call AsyncTestNearest()<cr>
+nnoremap <leader>tf :<c-u>call AsyncTestFile()<cr>
+nnoremap <leader>ta :<c-u>call AsyncTestAll()<cr>
+nnoremap <leader>tla :<c-u>call AsyncTestLint()<cr>
+nnoremap <leader>tll :<c-u>call AsyncTestLintLocal()<cr>
+
+nnoremap <leader>t<space> :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec<space>
+nnoremap <leader>tc :<c-u>botright cw 20<cr>
 
 hi TestRed term=reverse ctermfg=252 ctermbg=52 guifg=#D9D9D9 guibg=#730B00
 hi TestGreen term=bold ctermbg=22 guibg=#006F00
 
+function! AsyncTestNearest() abort
+  call popup_close(get(g:, 'test_bar_popup', 0))
+  exec "AsyncRun bundle exec rspec -b %:p:" . line(".")
+endfunction
+
+function! AsyncTestFile() abort
+  call popup_close(get(g:, 'test_bar_popup', 0))
+  exec "AsyncRun bundle exec rspec %:p"
+endfunction
+
+function! AsyncTestAll() abort
+  call popup_close(get(g:, 'test_bar_popup', 0))
+  exec "AsyncRun bundle exec rspec"
+endfunction
+
+function! AsyncTestLint() abort
+  call popup_close(get(g:, 'test_bar_popup', 0))
+  exec "AsyncRun bundle exec rubocop"
+endfunction
+
+function! AsyncTestLintLocal() abort
+  call popup_close(get(g:, 'test_bar_popup', 0))
+  exec "AsyncRun bundle exec rubocop %:p"
+endfunction
+
 let s:on_asyncrun_exit =<< trim END
-  call popup_close(get(g:, 'test_bar_popup'), 0)
+  cclose
+  call popup_close(get(g:, 'test_bar_popup', 0))
   if g:asyncrun_status == "failure"
-    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, time: 10000, highlight: 'TestRed'})
+    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, highlight: 'TestRed'})
+    botright cwindow 15
+    execute "normal \<c-w>p"
   else
-    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, time: 10000, highlight: 'TestGreen'})
+    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, highlight: 'TestGreen'})
   endif
 END
 

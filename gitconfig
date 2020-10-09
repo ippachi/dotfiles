@@ -9,8 +9,6 @@
 	tool = vimdiff
 [mergetool]
 	prompt = true
-[mergetool "vimdiff"]
-	cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [pull]
 	rebase = false
 	ff = only
@@ -35,5 +33,6 @@
 	me = merge
 	ph = push origin HEAD
 	st = status
+	pu = pull
 [init]
 	templatedir = ~/.git_template
