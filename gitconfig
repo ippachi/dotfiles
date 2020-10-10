@@ -3,7 +3,7 @@
 	name = ippachi
 [core]
 	excludesfile = /home/vagrant/.gitignore_global
-	pager = delta
+	# pager = delta
 
 [merge]
 	tool = vimdiff

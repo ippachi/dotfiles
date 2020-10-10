@@ -138,6 +138,30 @@ augroup vimrc-trim-whitespace
   autocmd BufWritePre * :%s/\s\+$//ge
 augroup END
 
+function s:new_memo(filename)
+  let today = trim(system('date -u +"%Y-%m-%d"'))
+  let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
+
+  exec 'edit ' . memo_path . '/' . today . '-' . a:filename . '.md'
+endfunction
+
+function s:search_memo()
+  let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
+
+  exec 'edit ' . memo_path
+endfunction
+
+function s:memo(filename)
+  " remove ^@
+  if strlen(a:filename)
+    call s:new_memo(a:filename)
+  else
+    call s:search_memo()
+  endif
+endfunction
+
+command! -nargs=? Memo call s:memo(<q-args>)
+
 " =======================================================================================
 " plugins
 " =======================================================================================
@@ -160,7 +184,6 @@ Plug 'thinca/vim-quickrun'
 Plug 'tpope/vim-dispatch'
 
 " autoclose
-Plug 'kana/vim-smartinput'
 Plug 'cohama/lexima.vim'
 
 " snippet
@@ -257,9 +280,6 @@ let g:asyncrun_exit = join(s:on_asyncrun_exit, "\n")
 " vim-dispatch
 let g:dispatch_compilers = {'bundle exec': 'rake'}
 
-" smartinput
-call smartinput#clear_rules()
-
 " ultisnip
 let g:UltiSnipsExpandTrigger="<c-l>"
 let g:UltiSnipsJumpForwardTrigger="<c-l>"
@@ -277,3 +297,4 @@ nmap <S-F2>  <Plug>(altr-back)
 " ctrlp
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let g:ctrlp_types = ['mru', 'fil', 'buf']
+
