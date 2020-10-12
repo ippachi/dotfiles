@@ -31,7 +31,7 @@ zplug load --verbose
 
 export HISTSIZE=10000
 export SAVEHIST=1000000
-export EDITOR=nvim
+export EDITOR=vim
 
 export PATH=$HOME/go/bin:$PATH
 

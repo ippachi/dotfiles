@@ -98,8 +98,8 @@ noremap \ ,
 
 nnoremap <silent> ]t :tnext<cr>
 nnoremap <silent> [t :tprev<cr>
-nnoremap <silent> ]q :cnext<cr>
-nnoremap <silent> [q :cprev<cr>
+nnoremap <silent> ]c :cnext<cr>
+nnoremap <silent> [c :cprev<cr>
 nnoremap <silent> ]l :lnext<cr>
 nnoremap <silent> [l :lprev<cr>
 
@@ -108,6 +108,7 @@ augroup vimrc-file-type
   autocmd BufNewFile,BufRead *.jbuilder,*.jb setlocal filetype=ruby
   autocmd BufNewFile,BufRead *.csv,*.dat  setlocal filetype=csv
   autocmd BufNewFile,BufRead *.es6  setlocal filetype=javascript
+  autocmd BufNewFile,BufRead *.blade.php  setlocal filetype=blade
 augroup END
 
 augroup vimrc-file-indent
@@ -205,6 +206,20 @@ Plug 'tpope/vim-surround'
 
 " asyncrun
 Plug 'skywind3000/asyncrun.vim'
+
+" filer
+Plug 'justinmk/vim-dirvish'
+
+" for-ruby
+Plug 'vim-ruby/vim-ruby'
+
+" autocomplete
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+
+" alignment
+Plug 'junegunn/vim-easy-align'
 call plug#end()
 
 set background=dark
@@ -239,31 +254,41 @@ hi TestRed term=reverse ctermfg=252 ctermbg=52 guifg=#D9D9D9 guibg=#730B00
 hi TestGreen term=bold ctermbg=22 guibg=#006F00
 
 function! AsyncTestNearest() abort
+  let g:async_test_running = 1
   call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rspec -b %:p:" . line(".")
+  exec "AsyncRun bundle exec rspec -b %:p:'" . line(".") . "'"
 endfunction
 
 function! AsyncTestFile() abort
+  let g:async_test_running = 1
   call popup_close(get(g:, 'test_bar_popup', 0))
   exec "AsyncRun bundle exec rspec %:p"
 endfunction
 
 function! AsyncTestAll() abort
+  let g:async_test_running = 1
   call popup_close(get(g:, 'test_bar_popup', 0))
   exec "AsyncRun bundle exec rspec"
 endfunction
 
 function! AsyncTestLint() abort
+  let g:async_test_running = 1
   call popup_close(get(g:, 'test_bar_popup', 0))
   exec "AsyncRun bundle exec rubocop"
 endfunction
 
 function! AsyncTestLintLocal() abort
+  let g:async_test_running = 1
   call popup_close(get(g:, 'test_bar_popup', 0))
   exec "AsyncRun bundle exec rubocop %:p"
 endfunction
 
 let s:on_asyncrun_exit =<< trim END
+  if !get(g:, 'async_test_running', 0)
+    return
+  endif
+
+  let g:async_test_running = 0
   cclose
   call popup_close(get(g:, 'test_bar_popup', 0))
   if g:asyncrun_status == "failure"
@@ -298,3 +323,14 @@ nmap <S-F2>  <Plug>(altr-back)
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let g:ctrlp_types = ['mru', 'fil', 'buf']
 
+" deopletel
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('auto_complete_delay', 200)
+
+" gitgutter
+let g:gitgutter_map_keys = 0
+nmap <leader>hp <Plug>(GitGutterPreviewHunk)
+nmap <leader>hu <Plug>(GitGutterUndoHunk)
+
+" vim-easy-align
+xmap ga <Plug>(EasyAlign)
