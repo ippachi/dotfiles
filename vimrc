@@ -35,6 +35,7 @@ set helplang=ja,en
 set splitbelow
 set splitright
 set timeout ttimeout
+set wildignore+=*/node_modules/*,*/tmp/cache/*,*/tmp/storage/*,*/log*
 
 set timeout timeoutlen=3000 ttimeoutlen=100
 " set clipboard=unnamedplus
@@ -139,6 +140,27 @@ augroup vimrc-trim-whitespace
   autocmd BufWritePre * :%s/\s\+$//ge
 augroup END
 
+augroup vimrc-lint
+  autocmd!
+  autocmd BufWritePre *.rb call s:exec_lint()
+augroup END
+
+function! s:exec_lint() abort
+  let s:async_test_error_list = []
+  let g:async_test_job = job_start('bundle exec rubocop --format emacs ' . expand('%'),
+        \ #{
+        \ out_cb: function('s:proccess_line'),
+        \ exit_cb: function('s:on_finished_lint')})
+endfunction
+
+function! s:proccess_line(a, error_content) abort
+  call add(s:async_test_error_list, a:error_content)
+endfunction
+
+function! s:on_finished_lint(a, error_content) abort
+  call setqflist([], ' ', #{ lines: s:async_test_error_list })
+endfunction
+
 function s:new_memo(filename)
   let today = trim(system('date -u +"%Y-%m-%d"'))
   let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
@@ -171,6 +193,8 @@ call plug#begin('~/.vim/plugged')
 " theme
 Plug 'junegunn/seoul256.vim'
 Plug 'itchyny/lightline.vim'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'karoliskoncevicius/oldbook-vim'
 
 " fizzy finder
 Plug 'ctrlpvim/ctrlp.vim'
@@ -210,16 +234,10 @@ Plug 'skywind3000/asyncrun.vim'
 " filer
 Plug 'justinmk/vim-dirvish'
 
-" for-ruby
-Plug 'vim-ruby/vim-ruby'
-
-" autocomplete
-Plug 'Shougo/deoplete.nvim'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
-
 " alignment
 Plug 'junegunn/vim-easy-align'
+
+
 call plug#end()
 
 set background=dark
@@ -292,11 +310,11 @@ let s:on_asyncrun_exit =<< trim END
   cclose
   call popup_close(get(g:, 'test_bar_popup', 0))
   if g:asyncrun_status == "failure"
-    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, highlight: 'TestRed'})
+    let g:test_bar_popup = popup_create("", #{line: 0, col: 1, minwidth: 1, minheight: 20, highlight: 'TestRed'})
     botright cwindow 15
     execute "normal \<c-w>p"
   else
-    let g:test_bar_popup = popup_create("", #{line: 10000, minwidth: 10000, highlight: 'TestGreen'})
+    let g:test_bar_popup = popup_create("", #{line: 0, col: 1, minwidth: 1, minheight: 20, highlight: 'TestGreen'})
   endif
 END
 
@@ -322,10 +340,6 @@ nmap <S-F2>  <Plug>(altr-back)
 " ctrlp
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let g:ctrlp_types = ['mru', 'fil', 'buf']
-
-" deopletel
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('auto_complete_delay', 200)
 
 " gitgutter
 let g:gitgutter_map_keys = 0

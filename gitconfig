@@ -7,6 +7,7 @@
 
 [merge]
 	tool = vimdiff
+	conflictstyle = diff3
 [mergetool]
 	prompt = true
 [pull]
@@ -32,7 +33,7 @@
 	br = branch
 	me = merge
 	ph = push origin HEAD
-	st = status
+	st = status -s -b
 	pu = pull
 [init]
 	templatedir = ~/.git_template
