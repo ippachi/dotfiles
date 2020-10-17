@@ -140,27 +140,6 @@ augroup vimrc-trim-whitespace
   autocmd BufWritePre * :%s/\s\+$//ge
 augroup END
 
-augroup vimrc-lint
-  autocmd!
-  autocmd BufWritePre *.rb call s:exec_lint()
-augroup END
-
-function! s:exec_lint() abort
-  let s:async_test_error_list = []
-  let g:async_test_job = job_start('bundle exec rubocop --format emacs ' . expand('%'),
-        \ #{
-        \ out_cb: function('s:proccess_line'),
-        \ exit_cb: function('s:on_finished_lint')})
-endfunction
-
-function! s:proccess_line(a, error_content) abort
-  call add(s:async_test_error_list, a:error_content)
-endfunction
-
-function! s:on_finished_lint(a, error_content) abort
-  call setqflist([], ' ', #{ lines: s:async_test_error_list })
-endfunction
-
 function s:new_memo(filename)
   let today = trim(system('date -u +"%Y-%m-%d"'))
   let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
@@ -237,7 +216,13 @@ Plug 'justinmk/vim-dirvish'
 " alignment
 Plug 'junegunn/vim-easy-align'
 
+" lint
+Plug 'dense-analysis/ale'
 
+" auto complete
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
 call plug#end()
 
 set background=dark
@@ -348,3 +333,6 @@ nmap <leader>hu <Plug>(GitGutterUndoHunk)
 
 " vim-easy-align
 xmap ga <Plug>(EasyAlign)
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
