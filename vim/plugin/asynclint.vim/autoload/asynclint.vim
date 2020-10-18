@@ -14,7 +14,13 @@ function! s:collect_message(bufnr, _, error_content) abort
 endfunction
 
 function! s:on_finished_lint(bufnr, _, code) abort
-  let asynclint_errors = s:format_error_for_sign(a:bufnr, b:async_lint_error_content)
+  let async_lint_error_content = getbufvar(a:bufnr, "async_lint_error_content")
+
+  if !async_lint_error_content
+    return
+  endif
+
+  let asynclint_errors = s:format_error_for_sign(a:bufnr, getbufvar(a:bufnr, "async_lint_error_content"))
   call s:sign_place(a:bufnr, asynclint_errors)
 endfunction
 
