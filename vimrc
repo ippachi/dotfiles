@@ -4,7 +4,6 @@
 
 filetype plugin indent on
 syntax enable
-
 set title
 set expandtab
 set tabstop=4
@@ -45,7 +44,7 @@ set backspace=indent,eol,start
 set breakindent
 set number
 set signcolumn=number
-set completeopt=menuone,noselect,noinsert
+set completeopt=menu,menuone,popup,noinsert,noselect
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set encoding=utf-8
 set shortmess+=c
@@ -188,7 +187,7 @@ Plug 'thinca/vim-quickrun'
 Plug 'tpope/vim-dispatch'
 
 " autoclose
-Plug 'cohama/lexima.vim'
+" Plug 'cohama/lexima.vim'
 
 " snippet
 Plug 'sirver/UltiSnips'
@@ -216,14 +215,20 @@ Plug 'justinmk/vim-dirvish'
 " alignment
 Plug 'junegunn/vim-easy-align'
 
-" lint
-Plug 'dense-analysis/ale'
+" for golang
+" Plug 'govim/govim'
+Plug 'fatih/vim-go'
 
-" auto complete
-Plug 'Shougo/deoplete.nvim'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
+" for ruby
+Plug 'vim-ruby/vim-ruby'
+
+" diffline
+Plug 'AndrewRadev/linediff.vim'
+
+" for writing
+Plug 'junegunn/goyo.vim'
 call plug#end()
+
 
 set background=dark
 let g:seoul256_background = 236
@@ -334,5 +339,22 @@ nmap <leader>hu <Plug>(GitGutterUndoHunk)
 " vim-easy-align
 xmap ga <Plug>(EasyAlign)
 
-" deoplete
-let g:deoplete#enable_at_startup = 1
+" ale
+let g:ale_linters = {
+      \ "markdown": ["textlint"]
+      \ }
+
+let g:ale_fixers = {
+\   'ruby': [
+\       'rubocop',
+\  ],
+\}
+let g:ale_fix_on_save = 1
+
+" vim-ruby
+let g:rubycomplete_buffer_loading = 1
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_rails = 1
+let g:rubycomplete_load_gemfile = 1
+let g:rubycomplete_gemfile_path = 'Gemfile'
+let g:rubycomplete_use_bundler = 1

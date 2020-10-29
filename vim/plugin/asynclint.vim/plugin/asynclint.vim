@@ -9,10 +9,10 @@ call sign_define([
       \ #{name: "AsynctestErrorSign", text: ">>"}
       \ ])
 
-augroup asynclint
-  autocmd!
-  autocmd BufWritePre *.rb call asynclint#run()
-augroup END
+" augroup asynclint
+"   autocmd!
+"   autocmd BufWritePre *.rb call asynclint#run()
+" augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
