@@ -39,7 +39,7 @@ set wildignore+=*/node_modules/*,*/tmp/cache/*,*/tmp/storage/*,*/log*
 set timeout timeoutlen=3000 ttimeoutlen=100
 " set clipboard=unnamedplus
 set autoread
-set list listchars=tab:^\ ,trail:_,extends:>,precedes:<
+set list listchars=tab:^\ ,trail:_,extends:>,precedes:<,eol:$
 set backspace=indent,eol,start
 set breakindent
 set number
@@ -89,7 +89,7 @@ noremap k gk
 nnoremap Y y$
 nnoremap <Left> gT
 nnoremap <right> gt
-nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR>
+nnoremap <silent> <Esc><Esc> <cmd>nohlsearch<CR>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <C-x> <C-r>=expand('%')<cr>
@@ -137,6 +137,12 @@ augroup END
 augroup vimrc-trim-whitespace
   autocmd!
   autocmd BufWritePre * :%s/\s\+$//ge
+augroup END
+
+augroup vimrc-zennkaku
+  autocmd!
+  autocmd ColorScheme * highlight ZenkakuSpace ctermfg=12 ctermbg=12
+  autocmd VimEnter * match ZenkakuSpace /　/
 augroup END
 
 function s:new_memo(filename)
@@ -233,6 +239,7 @@ call plug#end()
 set background=dark
 let g:seoul256_background = 236
 colorscheme seoul256
+
 
 " lightline
 let g:lightline = {

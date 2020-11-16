@@ -31,9 +31,10 @@ zplug load --verbose
 
 export HISTSIZE=10000
 export SAVEHIST=1000000
-export EDITOR=vim
+export EDITOR=nvim
 
 export PATH=$HOME/go/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
