@@ -6,15 +6,11 @@
 
 - link:
     ~/.vimrc: vimrc
-    ~/.config/nvim/init.vim: config/nvim/init.vim
     ~/.zshrc: zshrc
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.git_template: git_template
     ~/.tmux.conf: tmux.conf
-    ~/.vim/:
-      path: vim/*
-      glob: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

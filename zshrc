@@ -1,37 +1,13 @@
-[ -f ~/.zshrc_local  ] && . ~/.zshrc_local
-
-source /usr/share/zsh/scripts/zplug/init.zsh
-
-case $OSTYPE in
-  linux*)
-    source $HOME/.asdf/asdf.sh
-    source /usr/share/fzf/key-bindings.zsh
-    ;;
-  darwin*)
-    export ZPLUG_HOME=/usr/local/opt/zplug
-    source $ZPLUG_HOME/init.zsh
-    ;;
-esac
-
-zplug "zsh-users/zsh-completions"
-zplug "momo-lab/zsh-abbrev-alias"
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "mollifier/cd-gitroot"
-
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
-# Then, source plugins and add commands to $PATH
-zplug load --verbose
 
 export HISTSIZE=10000
 export SAVEHIST=1000000
-export EDITOR=nvim
+export EDITOR=vim
 
 export PATH=$HOME/go/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
@@ -42,16 +18,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export GOPATH="$HOME/go"
 
 setopt hist_ignore_dups
-
-abbrev-alias -g be="bundle exec"
-abbrev-alias -g ber="bundle exec rails"
-
-abbrev-alias -g dc="sudo docker-compose"
-abbrev-alias -g dcu="sudo docker-compose up"
-abbrev-alias -g dcd="sudo docker-compose down"
-
-abbrev-alias -g mux="tmuxinator"
-abbrev-alias -g lg="lazygit"
 
 function ghq-fzf() {
   local src=$(ghq list | fzf --height 20 --reverse)
@@ -64,13 +30,7 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey '^g' ghq-fzf
 
-eval "$(starship init zsh)"
+source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
 
-autoload -Uz edit-command-line
-
-zle -N edit-command-line
-bindkey '^xe' edit-command-line
-
-autoload -Uz compinit && compinit
-
-neofetch
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
