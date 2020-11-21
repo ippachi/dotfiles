@@ -49,7 +49,6 @@ set completeopt=menuone,noinsert,noselect
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set shortmess+=c
 set nocursorline
-
 set backup
 set swapfile
 set undofile
@@ -186,7 +185,10 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'airblade/vim-gitgutter'
 
 " surround
-Plug 'tpope/vim-surround'
+Plug 'machakann/vim-sandwich'
+Plug 'machakann/vim-swap'
+Plug 'machakann/vim-highlightedyank'
+Plug 'machakann/vim-textobj-delimited'
 
 " alignment
 Plug 'junegunn/vim-easy-align'
@@ -199,10 +201,6 @@ Plug 'junegunn/goyo.vim'
 
 " treesitter
 Plug 'nvim-treesitter/nvim-treesitter'
-" Plug 'nvim-treesitter/completion-treesitter'
-
-" auto completion
-Plug 'nvim-lua/completion-nvim'
 
 " lsp
 Plug 'neovim/nvim-lspconfig'
@@ -217,8 +215,6 @@ Plug 'honza/vim-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
-Plug 'aca/completion-tabnine', { 'do': './install.sh' }
-
 " spell checker
 Plug 'kamykn/spelunker.vim'
 
@@ -229,9 +225,11 @@ Plug 'neomake/neomake'
 
 Plug 'vim-ruby/vim-ruby'
 
+" auto completion
+Plug 'nvim-lua/completion-nvim'
 Plug 'steelsojka/completion-buffers'
+Plug 'aca/completion-tabnine', { 'do': './install.sh' }
 call plug#end()
-
 
 set background=dark
 let g:seoul256_background = 236
@@ -254,7 +252,7 @@ let g:lightline = {
   \ }
 \ }
 
-" ctrlp
+  " ctrlp
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let g:ctrlp_types = ['mru', 'fil', 'buf']
 
@@ -275,34 +273,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOS
-
-" completion-nvim
-let g:completion_chain_complete_list = {
-      \'default' : {
-      \ 'default' : [
-      \  {'complete_items' : ['lsp', 'snippet']},
-      \  {'mode' : 'file'}
-      \ ],
-      \ 'comment' : [],
-      \ 'string' : []
-      \ },
-      \ 'go': [
-      \   {'complete_items' : ['lsp', 'snippet']}
-      \ ],
-      \ 'ruby': [
-      \   {'complete_items' : ['lsp', 'snippet', 'buffers']}
-      \ ]
-      \}
-
-augroup completion-nvim
-  autocmd!
-  autocmd BufEnter * lua require'completion'.on_attach()
-augroup END
-
-let g:completion_confirm_key = "\<c-y>"
-
-inoremap <cr> <c-x><cr>
-
 
 " lsp
 lua <<EOS
@@ -414,7 +384,7 @@ EOS
 
 command! Format lua vim.lsp.buf.formatting()
 
-nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 
 augroup vimrc-auto-format
@@ -437,3 +407,28 @@ smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l
 nnoremap <silent> <leader>tn :TestNearest<cr>
 nnoremap <silent> <leader>tl :TestLast<cr>
 nnoremap <silent> <leader>tf :TestFile<cr>
+
+" completion-nvim
+augroup vimrc-completion-nvim
+  autocmd!
+  autocmd BufEnter * lua require'completion'.on_attach()
+augroup END
+
+let g:completion_chain_complete_list = {
+      \ 'default' : {
+      \   'default': [
+      \       {'complete_items': ['lsp', 'snippet']},
+      \    ],
+      \   'comment': [
+      \     {'complete_items': ['buffers']}
+      \   ],
+      \   'string': [
+      \     {'complete_items': ['buffers']}
+      \   ],
+      \ },
+      \ 'ruby': {
+      \   'default': [
+      \       {'complete_items': ['lsp', 'snippet', 'buffers', 'tabnine']},
+      \    ],
+      \ }
+      \}

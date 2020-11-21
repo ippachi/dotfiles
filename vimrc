@@ -177,11 +177,11 @@ call plug#begin('~/.vim/plugged')
 " theme
 Plug 'junegunn/seoul256.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'ghifarit53/tokyonight-vim'
-Plug 'karoliskoncevicius/oldbook-vim'
 
 " fizzy finder
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " git diff
 Plug 'airblade/vim-gitgutter'
@@ -189,50 +189,42 @@ Plug 'airblade/vim-gitgutter'
 " quickrun
 Plug 'thinca/vim-quickrun'
 
-" asyncrun
-Plug 'tpope/vim-dispatch'
-
-" autoclose
-" Plug 'cohama/lexima.vim'
-
 " snippet
-Plug 'sirver/UltiSnips'
-Plug 'honza/vim-snippets'
-
-" custom text obj
-Plug 'kana/vim-textobj-user'
-Plug 'nelstrom/vim-textobj-rubyblock'
+" Plug 'sirver/UltiSnips'
+" Plug 'honza/vim-snippets'
 
 " extend match
 Plug 'andymass/vim-matchup'
 
-" go test file faster
-Plug 'kana/vim-altr'
-
-" surround
-Plug 'tpope/vim-surround'
-
-" asyncrun
-Plug 'skywind3000/asyncrun.vim'
-
-" filer
-Plug 'justinmk/vim-dirvish'
-
 " alignment
 Plug 'junegunn/vim-easy-align'
-
-" for golang
-" Plug 'govim/govim'
-Plug 'fatih/vim-go'
-
-" for ruby
-Plug 'vim-ruby/vim-ruby'
 
 " diffline
 Plug 'AndrewRadev/linediff.vim'
 
 " for writing
 Plug 'junegunn/goyo.vim'
+
+" lsp
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+
+" autocomplete
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': './install.sh' }
+
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
+Plug 'rubyide/vscode-ruby'
+
+Plug 'machakann/vim-sandwich'
+Plug 'machakann/vim-swap'
+Plug 'machakann/vim-textobj-delimited'
+
+" test
+Plug 'vim-test/vim-test'
 call plug#end()
 
 
@@ -255,88 +247,15 @@ let g:lightline = {
   \ }
 \ }
 
-" asyncrun
-nnoremap <leader>tn :<c-u>call AsyncTestNearest()<cr>
-nnoremap <leader>tf :<c-u>call AsyncTestFile()<cr>
-nnoremap <leader>ta :<c-u>call AsyncTestAll()<cr>
-nnoremap <leader>tla :<c-u>call AsyncTestLint()<cr>
-nnoremap <leader>tll :<c-u>call AsyncTestLintLocal()<cr>
-
-nnoremap <leader>t<space> :<c-u>AsyncRun RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec<space>
-nnoremap <leader>tc :<c-u>botright cw 20<cr>
-
-hi TestRed term=reverse ctermfg=252 ctermbg=52 guifg=#D9D9D9 guibg=#730B00
-hi TestGreen term=bold ctermbg=22 guibg=#006F00
-
-function! AsyncTestNearest() abort
-  let g:async_test_running = 1
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rspec -b %:p:'" . line(".") . "'"
-endfunction
-
-function! AsyncTestFile() abort
-  let g:async_test_running = 1
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rspec %:p"
-endfunction
-
-function! AsyncTestAll() abort
-  let g:async_test_running = 1
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rspec"
-endfunction
-
-function! AsyncTestLint() abort
-  let g:async_test_running = 1
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rubocop"
-endfunction
-
-function! AsyncTestLintLocal() abort
-  let g:async_test_running = 1
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  exec "AsyncRun bundle exec rubocop %:p"
-endfunction
-
-let s:on_asyncrun_exit =<< trim END
-  if !get(g:, 'async_test_running', 0)
-    return
-  endif
-
-  let g:async_test_running = 0
-  cclose
-  call popup_close(get(g:, 'test_bar_popup', 0))
-  if g:asyncrun_status == "failure"
-    let g:test_bar_popup = popup_create("", #{line: 0, col: 1, minwidth: 1, minheight: 20, highlight: 'TestRed'})
-    botright cwindow 15
-    execute "normal \<c-w>p"
-  else
-    let g:test_bar_popup = popup_create("", #{line: 0, col: 1, minwidth: 1, minheight: 20, highlight: 'TestGreen'})
-  endif
-END
-
-let g:asyncrun_exit = join(s:on_asyncrun_exit, "\n")
-
-" vim-dispatch
-let g:dispatch_compilers = {'bundle exec': 'rake'}
-
-" ultisnip
-let g:UltiSnipsExpandTrigger="<c-l>"
-let g:UltiSnipsJumpForwardTrigger="<c-l>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-" lexima
-let g:lexima_ctrlh_as_backspace = 1
-
-" vim-altr
-call altr#define('app/%/%.rb', 'spec/%/%_spec.rb')
-
-nmap <F2>  <Plug>(altr-forward)
-nmap <S-F2>  <Plug>(altr-back)
+" " ultisnip
+" let g:UltiSnipsExpandTrigger="<c-l>"
+" let g:UltiSnipsJumpForwardTrigger="<c-l>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " ctrlp
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-let g:ctrlp_types = ['mru', 'fil', 'buf']
+" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+" let g:ctrlp_types = ['mru', 'fil', 'buf']
+nnoremap <c-p> <cmd>FZF<cr>
 
 " gitgutter
 let g:gitgutter_map_keys = 0
@@ -346,22 +265,57 @@ nmap <leader>hu <Plug>(GitGutterUndoHunk)
 " vim-easy-align
 xmap ga <Plug>(EasyAlign)
 
-" ale
-let g:ale_linters = {
-      \ "markdown": ["textlint"]
-      \ }
+" vim-lsp
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gt <plug>(lsp-type-definition)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
+  nmap <buffer> K <plug>(lsp-hover)
 
-let g:ale_fixers = {
-\   'ruby': [
-\       'rubocop',
-\  ],
-\}
-let g:ale_fix_on_save = 1
+  " refer to doc to add more commands
+endfunction
 
-" vim-ruby
-let g:rubycomplete_buffer_loading = 1
-let g:rubycomplete_classes_in_global = 1
-let g:rubycomplete_rails = 1
-let g:rubycomplete_load_gemfile = 1
-let g:rubycomplete_gemfile_path = 'Gemfile'
-let g:rubycomplete_use_bundler = 1
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+let g:lsp_diagnostics_float_cursor = 1
+
+let g:lsp_settings = {
+      \  'solargraph': {'initialization_options': { 'diagnostics' : v:false }},
+      \  'efm-langserver': {'disabled': v:false}
+      \  }
+
+highlight link LspErrorText Exception
+let g:lsp_textprop_enabled = 0
+
+" asyncomplete
+call asyncomplete#register_source(asyncomplete#sources#tabnine#get_source_options({
+  \ 'name': 'tabnine',
+  \ 'allowlist': ['*'],
+  \ 'completor': function('asyncomplete#sources#tabnine#completor'),
+  \ 'config': {
+  \   'line_limit': 1000,
+  \   'max_num_result': 20,
+  \  },
+  \ }))
+
+inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
+
+" vim-vsnip
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+
+" vim-test
+nmap <silent> <leader>tn <cmd>TestNearest<CR>
+nmap <silent> <leader>tf <cmd>TestFile<CR>
+nmap <silent> <leader>tl :TestLast<CR>
