@@ -5,12 +5,22 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+source /usr/share/zsh/scripts/zplug/init.zsh
+zplug romkatv/powerlevel10k, as:theme, depth:1
+zplug zsh-users/zsh-autosuggestions
+zplug zsh-users/zsh-syntax-highlighting
+zplug load
+
 export HISTSIZE=10000
 export SAVEHIST=1000000
 export EDITOR=vim
 
 export PATH=$HOME/go/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+
+# asdf
+export PATH=$HOME/.asdf/bin:$PATH
+source $HOME/.asdf/asdf.sh
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -30,24 +40,5 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey '^g' ghq-fzf
 
-source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-syntax-highlighting"
-
-# Install plugins if there are plugins that have not been installed
-# if ! zplug check --verbose; then
-#     printf "Install? [y/N]: "
-#     if read -q; then
-#         echo; zplug install
-#     fi
-# fi
-
-# Then, source plugins and add commands to $PATH
-zplug load

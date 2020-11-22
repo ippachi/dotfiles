@@ -11,6 +11,8 @@
     ~/.gitignore_global: gitignore_global
     ~/.git_template: git_template
     ~/.tmux.conf: tmux.conf
+    ~/.asdfrc: asdfrc
+    ~/.p10k.zsh: p10k.zsh
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
