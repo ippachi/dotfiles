@@ -11,8 +11,16 @@ zplug zsh-users/zsh-autosuggestions
 zplug zsh-users/zsh-syntax-highlighting
 zplug load
 
-export HISTSIZE=10000
-export SAVEHIST=1000000
+# zsh history
+export HISTFILE=~/.zsh_history
+export SAVEHIST=1000000000
+export HISTSIZE=1000000000
+
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+
 export EDITOR=vim
 
 export PATH=$HOME/go/bin:$PATH
@@ -22,12 +30,13 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.asdf/bin:$PATH
 source $HOME/.asdf/asdf.sh
 
+# fzf
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export GOPATH="$HOME/go"
-
-setopt hist_ignore_dups
 
 function ghq-fzf() {
   local src=$(ghq list | fzf --height 20 --reverse)
