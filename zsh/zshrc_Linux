@@ -1,0 +1,4 @@
+source /usr/share/zsh/scripts/zplug/init.zsh
+
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh

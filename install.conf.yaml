@@ -13,6 +13,10 @@
     ~/.tmux.conf: tmux.conf
     ~/.asdfrc: asdfrc
     ~/.p10k.zsh: p10k.zsh
+    ~/.zsh/:
+      glob: true
+      path: zsh/*
+      create: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

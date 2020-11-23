@@ -5,7 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source /usr/share/zsh/scripts/zplug/init.zsh
+export ZDOTDIR=$HOME/.zsh
+
+[ -f $ZDOTDIR/zshrc_`uname` ] && source $ZDOTDIR/zshrc_`uname`
+
 zplug romkatv/powerlevel10k, as:theme, depth:1
 zplug zsh-users/zsh-autosuggestions
 zplug zsh-users/zsh-syntax-highlighting
@@ -27,12 +30,11 @@ export PATH=$HOME/go/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
 # asdf
-export PATH=$HOME/.asdf/bin:$PATH
-source $HOME/.asdf/asdf.sh
+if [[ -f $HOME/.asdf/asdf.sh ]]; then
+  export PATH=$HOME/.asdf/bin:$PATH
+  source $HOME/.asdf/asdf.sh
+fi
 
-# fzf
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
