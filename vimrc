@@ -1,7 +1,4 @@
-" =======================================================================================
-" vim-default-settings
-" =======================================================================================
-
+" vim-default-settings {{{1
 filetype plugin indent on
 syntax enable
 set title
@@ -78,16 +75,13 @@ if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case
 endif
 
-" =======================================================================================
-" mappings and commands
-" =======================================================================================
-
+" mappings and commands {{{1
 noremap j gj
 noremap k gk
 nnoremap Y y$
 nnoremap <Left> gT
 nnoremap <right> gt
-nnoremap <silent> <Esc><Esc> <cmd>nohlsearch<CR>
+nnoremap <silent> <Esc><Esc> <Cmd>nohlsearch<CR>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <C-x> <C-r>=expand('%')<cr>
@@ -143,6 +137,12 @@ augroup vimrc-zennkaku
   autocmd VimEnter * match ZenkakuSpace /　/
 augroup END
 
+augroup vimrc-foldmethod
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+  autocmd FileType zsh setlocal foldmethod=marker
+augroup END
+
 function s:new_memo(filename)
   let today = trim(system('date -u +"%Y-%m-%d"'))
   let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
@@ -167,10 +167,7 @@ endfunction
 
 command! -nargs=? Memo call s:memo(<q-args>)
 
-" =======================================================================================
-" plugins
-" =======================================================================================
-
+" plugins {{{1
 call plug#begin('~/.vim/plugged')
 " theme
 Plug 'junegunn/seoul256.vim'
@@ -223,6 +220,9 @@ Plug 'machakann/vim-textobj-delimited'
 
 " test
 Plug 'vim-test/vim-test'
+
+" sudo edit
+Plug 'lambdalisue/suda.vim'
 call plug#end()
 
 
@@ -290,8 +290,10 @@ let g:lsp_diagnostics_float_cursor = 1
 
 let g:lsp_settings = {
       \  'solargraph': {'initialization_options': { 'diagnostics' : v:false }},
-      \  'efm-langserver': {'disabled': v:false}
+      \  'efm-langserver': {'disabled': v:false},
+      \  'gopls': { 'initialization_options': { 'diagnostics': v:true, 'completeUnimported': v:true, 'matcher': 'fuzzy', 'usePlaceholders': v:true } }
       \  }
+
 
 highlight link LspErrorText Exception
 let g:lsp_textprop_enabled = 0
@@ -299,7 +301,7 @@ let g:lsp_textprop_enabled = 0
 " asyncomplete
 call asyncomplete#register_source(asyncomplete#sources#tabnine#get_source_options({
   \ 'name': 'tabnine',
-  \ 'allowlist': ['*'],
+  \ 'allowlist': ['ruby'],
   \ 'completor': function('asyncomplete#sources#tabnine#completor'),
   \ 'config': {
   \   'line_limit': 1000,
