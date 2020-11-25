@@ -6,6 +6,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+
+bindkey -e
 # local file setting {{{1
 export ZDOTDIR=$HOME/.zsh
 [ -f $ZDOTDIR/zshrc_`uname` ] && source $ZDOTDIR/zshrc_`uname`
@@ -15,6 +17,7 @@ zplug romkatv/powerlevel10k, as:theme, depth:1
 zplug zsh-users/zsh-autosuggestions
 zplug zsh-users/zsh-syntax-highlighting
 zplug olets/zsh-abbr
+zplug zsh-users/zsh-completions
 zplug load
 
 # zsh history {{{1
@@ -57,3 +60,14 @@ abbr --quiet mux="tmuxinator"
 # p10k finish config {{{1
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
+autoload -U compinit
+compinit
+
+
+LS_COLORS='no=00;37:fi=00:di=00;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
+export LS_COLORS
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+alias ls="lsd"

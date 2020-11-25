@@ -81,7 +81,7 @@ noremap k gk
 nnoremap Y y$
 nnoremap <Left> gT
 nnoremap <right> gt
-nnoremap <silent> <Esc><Esc> <Cmd>nohlsearch<CR>
+nnoremap <silent> <c-[><c-[> <Cmd>nohlsearch<CR>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <C-x> <C-r>=expand('%')<cr>
@@ -172,6 +172,8 @@ call plug#begin('~/.vim/plugged')
 " theme
 Plug 'junegunn/seoul256.vim'
 Plug 'itchyny/lightline.vim'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'morhetz/gruvbox'
 
 " fizzy finder
 " Plug 'ctrlpvim/ctrlp.vim'
@@ -208,6 +210,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': './install.sh' }
+Plug 'prabirshrestha/asyncomplete-file.vim'
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -227,13 +230,12 @@ call plug#end()
 
 
 set background=dark
-let g:seoul256_background = 236
-colorscheme seoul256
+colorscheme gruvbox
 
 
 " lightline
 let g:lightline = {
-  \ 'colorscheme': 'seoul256',
+  \ 'colorscheme': 'gruvbox',
   \ 'active': {
   \   'left': [
   \     [ 'mode', 'paste' ],
@@ -266,7 +268,6 @@ xmap ga <Plug>(EasyAlign)
 " vim-lsp
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
-  setlocal signcolumn=yes
   if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> gr <plug>(lsp-references)
@@ -308,6 +309,16 @@ call asyncomplete#register_source(asyncomplete#sources#tabnine#get_source_option
   \   'max_num_result': 20,
   \  },
   \ }))
+
+augroup vimrc-aysncomplete-setup
+  autocmd!
+  autocmd! User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+      \ 'name': 'file',
+      \ 'whitelist': ['*'],
+      \ 'priority': 10,
+      \ 'completor': function('asyncomplete#sources#file#completor')
+      \ }))
+augroup END
 
 inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
 
