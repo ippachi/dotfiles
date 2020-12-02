@@ -3,6 +3,7 @@
 	name = ippachi
 [core]
 	excludesfile = /home/vagrant/.gitignore_global
+	editor = vim
 	# pager = delta
 
 [merge]

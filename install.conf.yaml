@@ -12,12 +12,6 @@
     ~/.git_template: git_template
     ~/.tmux.conf: tmux.conf
     ~/.asdfrc: asdfrc
-    ~/.p10k.zsh: p10k.zsh
-    ~/.zsh/:
-      glob: true
-      path: zsh/*
-      create: true
-    ~/.zsh/.zshrc: zshrc
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

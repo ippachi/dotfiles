@@ -36,7 +36,7 @@ set wildignore+=*/node_modules/*,*/tmp/cache/*,*/tmp/storage/*,*/log*
 set timeout timeoutlen=3000 ttimeoutlen=100
 " set clipboard=unnamedplus
 set autoread
-set list listchars=tab:^\ ,trail:_,extends:>,precedes:<,eol:$
+set list listchars=tab:>.,trail:_,extends:>,precedes:<,eol:$
 set backspace=indent,eol,start
 set breakindent
 set number
@@ -81,7 +81,7 @@ noremap k gk
 nnoremap Y y$
 nnoremap <Left> gT
 nnoremap <right> gt
-nnoremap <silent> <c-[><c-[> <Cmd>nohlsearch<CR>
+nnoremap <silent> <esc><esc> <Cmd>nohlsearch<CR>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <C-x> <C-r>=expand('%')<cr>
@@ -190,9 +190,6 @@ Plug 'thinca/vim-quickrun'
 " Plug 'sirver/UltiSnips'
 " Plug 'honza/vim-snippets'
 
-" extend match
-Plug 'andymass/vim-matchup'
-
 " alignment
 Plug 'junegunn/vim-easy-align'
 
@@ -209,7 +206,6 @@ Plug 'mattn/vim-lsp-settings'
 " autocomplete
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': './install.sh' }
 Plug 'prabirshrestha/asyncomplete-file.vim'
 
 Plug 'hrsh7th/vim-vsnip'
@@ -226,12 +222,14 @@ Plug 'vim-test/vim-test'
 
 " sudo edit
 Plug 'lambdalisue/suda.vim'
+Plug 'golang/vscode-go'
 call plug#end()
 
 
 set background=dark
+let g:gruvbox_italic = 1
+let g:gruvbox_invert_selection = 0
 colorscheme gruvbox
-
 
 " lightline
 let g:lightline = {
@@ -246,6 +244,7 @@ let g:lightline = {
   \   ],
   \ }
 \ }
+
 
 " " ultisnip
 " let g:UltiSnipsExpandTrigger="<c-l>"
@@ -288,6 +287,7 @@ augroup lsp_install
 augroup END
 
 let g:lsp_diagnostics_float_cursor = 1
+let g:lsp_signs_priority = 20
 
 let g:lsp_settings = {
       \  'solargraph': {'initialization_options': { 'diagnostics' : v:false }},
@@ -300,16 +300,6 @@ highlight link LspErrorText Exception
 let g:lsp_textprop_enabled = 0
 
 " asyncomplete
-call asyncomplete#register_source(asyncomplete#sources#tabnine#get_source_options({
-  \ 'name': 'tabnine',
-  \ 'allowlist': ['ruby'],
-  \ 'completor': function('asyncomplete#sources#tabnine#completor'),
-  \ 'config': {
-  \   'line_limit': 1000,
-  \   'max_num_result': 20,
-  \  },
-  \ }))
-
 augroup vimrc-aysncomplete-setup
   autocmd!
   autocmd! User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
@@ -322,9 +312,15 @@ augroup END
 
 inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
 
+let g:asyncomplete_popup_delay = 200
+
 " vim-vsnip
 imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
 smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+
+let g:vsnip_snippet_dirs = [
+      \ "~/.vim/plugged/vscode-ruby/packages/vscode-ruby/snippets"
+      \ ]
 
 " vim-test
 nmap <silent> <leader>tn <cmd>TestNearest<CR>
