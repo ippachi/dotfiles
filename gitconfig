@@ -4,7 +4,12 @@
 [core]
 	excludesfile = /home/vagrant/.gitignore_global
 	editor = vim
-	# pager = delta
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	syntax-theme = gruvbox
 
 [merge]
 	tool = vimdiff
@@ -14,18 +19,6 @@
 [pull]
 	rebase = false
 	ff = only
-[delta]
-	side-by-side = true
-	features = side-by-side line-numbers decorations
-	whitespace-error-style = 22 reverse
-
-[delta "decorations"]
-	commit-decoration-style = bold yellow box ul
-	file-style = bold yellow ul
-	file-decoration-style = none
-
-[interactive]
-	diffFilter = delta --color-only
 
 [alias]
 	fe = fetch
@@ -36,5 +29,3 @@
 	ph = push origin HEAD
 	st = status -s -b
 	pu = pull
-[init]
-	templatedir = ~/.git_template

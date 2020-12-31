@@ -36,7 +36,7 @@ set wildignore+=*/node_modules/*,*/tmp/cache/*,*/tmp/storage/*,*/log*
 set timeout timeoutlen=3000 ttimeoutlen=100
 " set clipboard=unnamedplus
 set autoread
-set list listchars=tab:>.,trail:_,extends:>,precedes:<,eol:$
+set nolist listchars=tab:>.,trail:_,extends:>,precedes:<,eol:$
 set backspace=indent,eol,start
 set breakindent
 set number
@@ -137,12 +137,6 @@ augroup vimrc-zennkaku
   autocmd VimEnter * match ZenkakuSpace /　/
 augroup END
 
-augroup vimrc-foldmethod
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker
-  autocmd FileType zsh setlocal foldmethod=marker
-augroup END
-
 function s:new_memo(filename)
   let today = trim(system('date -u +"%Y-%m-%d"'))
   let memo_path = get(g:, 'memo_path', '~/.config/memo/_posts')
@@ -186,10 +180,6 @@ Plug 'airblade/vim-gitgutter'
 " quickrun
 Plug 'thinca/vim-quickrun'
 
-" snippet
-" Plug 'sirver/UltiSnips'
-" Plug 'honza/vim-snippets'
-
 " alignment
 Plug 'junegunn/vim-easy-align'
 
@@ -205,6 +195,7 @@ Plug 'mattn/vim-lsp-settings'
 
 " autocomplete
 Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete-file.vim'
 
@@ -223,8 +214,16 @@ Plug 'vim-test/vim-test'
 " sudo edit
 Plug 'lambdalisue/suda.vim'
 Plug 'golang/vscode-go'
-call plug#end()
 
+" undotree
+Plug 'simnalamburt/vim-mundo'
+
+" terraform
+Plug 'hashivim/vim-terraform'
+
+" indentline
+Plug 'Yggdroot/indentLine'
+call plug#end()
 
 set background=dark
 let g:gruvbox_italic = 1
@@ -276,6 +275,7 @@ function! s:on_lsp_buffer_enabled() abort
   nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
   nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
   nmap <buffer> K <plug>(lsp-hover)
+  nmap <buffer> <leader>af <Cmd>LspDocumentFormat<cr>
 
   " refer to doc to add more commands
 endfunction
@@ -284,6 +284,11 @@ augroup lsp_install
     au!
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+augroup vimrc-lsp-go
+  autocmd!
+  autocmd BufWritePre *.go LspDocumentFormatSync
 augroup END
 
 let g:lsp_diagnostics_float_cursor = 1
@@ -310,6 +315,16 @@ augroup vimrc-aysncomplete-setup
       \ }))
 augroup END
 
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'allowlist': ['*'],
+    \ 'blocklist': ['go'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ 'config': {
+    \    'max_buffer_size': 5000000,
+    \  },
+    \ }))
+
 inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
 
 let g:asyncomplete_popup_delay = 200
@@ -322,7 +337,13 @@ let g:vsnip_snippet_dirs = [
       \ "~/.vim/plugged/vscode-ruby/packages/vscode-ruby/snippets"
       \ ]
 
+let g:vsnip_filetypes = {}
+
 " vim-test
 nmap <silent> <leader>tn <cmd>TestNearest<CR>
 nmap <silent> <leader>tf <cmd>TestFile<CR>
 nmap <silent> <leader>tl :TestLast<CR>
+let test#strategy = "basic"
+
+" indentline
+let g:indentLine_faster = 1

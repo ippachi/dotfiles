@@ -46,5 +46,10 @@ bindkey '^g' ghq-fzf
 # abbr {{{1
 abbr --quiet be="bundle exec"
 abbr --quiet mux="tmuxinator"
+abbr --quiet dc="sudo docker-compose"
+abbr --quiet lg="lazygit"
 
 eval "$(gh completion -s zsh)"
+
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
