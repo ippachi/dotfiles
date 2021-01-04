@@ -190,14 +190,7 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'junegunn/goyo.vim'
 
 " lsp
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
-
-" autocomplete
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-file.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -244,15 +237,7 @@ let g:lightline = {
   \ }
 \ }
 
-
-" " ultisnip
-" let g:UltiSnipsExpandTrigger="<c-l>"
-" let g:UltiSnipsJumpForwardTrigger="<c-l>"
-" let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-" ctrlp
-" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-" let g:ctrlp_types = ['mru', 'fil', 'buf']
+" fzf
 nnoremap <c-p> <cmd>FZF<cr>
 
 " gitgutter
@@ -262,72 +247,6 @@ nmap <leader>hu <Plug>(GitGutterUndoHunk)
 
 " vim-easy-align
 xmap ga <Plug>(EasyAlign)
-
-" vim-lsp
-function! s:on_lsp_buffer_enabled() abort
-  setlocal omnifunc=lsp#complete
-  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-  nmap <buffer> gd <plug>(lsp-definition)
-  nmap <buffer> gr <plug>(lsp-references)
-  nmap <buffer> gi <plug>(lsp-implementation)
-  nmap <buffer> gt <plug>(lsp-type-definition)
-  nmap <buffer> <leader>rn <plug>(lsp-rename)
-  nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
-  nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
-  nmap <buffer> K <plug>(lsp-hover)
-  nmap <buffer> <leader>af <Cmd>LspDocumentFormat<cr>
-
-  " refer to doc to add more commands
-endfunction
-
-augroup lsp_install
-    au!
-    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
-
-augroup vimrc-lsp-go
-  autocmd!
-  autocmd BufWritePre *.go LspDocumentFormatSync
-augroup END
-
-let g:lsp_diagnostics_float_cursor = 1
-let g:lsp_signs_priority = 20
-
-let g:lsp_settings = {
-      \  'solargraph': {'initialization_options': { 'diagnostics' : v:false }},
-      \  'efm-langserver': {'disabled': v:false},
-      \  'gopls': { 'initialization_options': { 'diagnostics': v:true, 'completeUnimported': v:true, 'matcher': 'fuzzy', 'usePlaceholders': v:true } }
-      \  }
-
-
-highlight link LspErrorText Exception
-let g:lsp_textprop_enabled = 0
-
-" asyncomplete
-augroup vimrc-aysncomplete-setup
-  autocmd!
-  autocmd! User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-      \ 'name': 'file',
-      \ 'whitelist': ['*'],
-      \ 'priority': 10,
-      \ 'completor': function('asyncomplete#sources#file#completor')
-      \ }))
-augroup END
-
-call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-    \ 'name': 'buffer',
-    \ 'allowlist': ['*'],
-    \ 'blocklist': ['go'],
-    \ 'completor': function('asyncomplete#sources#buffer#completor'),
-    \ 'config': {
-    \    'max_buffer_size': 5000000,
-    \  },
-    \ }))
-
-inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
-
-let g:asyncomplete_popup_delay = 200
 
 " vim-vsnip
 imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
