@@ -4,12 +4,6 @@
 [core]
 	excludesfile = /home/vagrant/.gitignore_global
 	editor = vim
-	pager = delta
-
-[interactive]
-	diffFilter = delta --color-only
-[delta]
-	syntax-theme = gruvbox
 
 [merge]
 	tool = vimdiff

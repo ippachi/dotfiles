@@ -97,7 +97,7 @@ nnoremap <silent> [l :lprev<cr>
 
 augroup vimrc-file-type
   autocmd!
-  autocmd BufNewFile,BufRead *.jbuilder,*.jb setlocal filetype=ruby
+  autocmd BufNewFile,BufRead *.jbuilder,*.jb,Steepfile setlocal filetype=ruby
   autocmd BufNewFile,BufRead *.csv,*.dat  setlocal filetype=csv
   autocmd BufNewFile,BufRead *.es6  setlocal filetype=javascript
   autocmd BufNewFile,BufRead *.blade.php  setlocal filetype=blade
@@ -325,3 +325,15 @@ let g:coc_snippet_next = '<c-y>'
 let g:coc_snippet_prev = '<c-k>'
 
 inoremap <silent><expr> <c-q> coc#refresh()
+
+inoremap <silent><expr> <c-y>
+  \ pumvisible() ? coc#_select_confirm() :
+  \ coc#expandableOrJumpable() ?
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+  \ <SID>check_back_space() ? "\<c-y>" :
+  \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
