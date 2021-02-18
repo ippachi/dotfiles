@@ -13,7 +13,7 @@ set showcmd
 set cmdheight=2
 set showmatch
 set laststatus=2
-set wildmode=longest,list,full
+set wildmenu wildmode=list:longest,full
 set ignorecase
 set smartcase
 set incsearch
@@ -34,7 +34,7 @@ set timeout ttimeout
 set wildignore+=*/node_modules/*,*/tmp/cache/*,*/tmp/storage/*,*/log*
 
 set timeout timeoutlen=3000 ttimeoutlen=100
-" set clipboard=unnamedplus
+set clipboard=unnamed
 set autoread
 set nolist listchars=tab:>.,trail:_,extends:>,precedes:<,eol:$
 set backspace=indent,eol,start
@@ -67,7 +67,7 @@ let mapleader = ","
 
 let g:ruby_path = []
 
-set termguicolors
+" set termguicolors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
@@ -160,6 +160,7 @@ function s:memo(filename)
 endfunction
 
 command! -nargs=? Memo call s:memo(<q-args>)
+command! -nargs=0 CopyPath let @*=expand("%")
 
 " plugins {{{1
 call plug#begin('~/.vim/plugged')
@@ -170,9 +171,7 @@ Plug 'ghifarit53/tokyonight-vim'
 Plug 'morhetz/gruvbox'
 
 " fizzy finder
-" Plug 'ctrlpvim/ctrlp.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " git diff
 Plug 'airblade/vim-gitgutter'
@@ -190,7 +189,7 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'junegunn/goyo.vim'
 
 " lsp
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -220,6 +219,16 @@ Plug 'Yggdroot/indentLine'
 Plug 'honza/vim-snippets'
 Plug 'sirver/UltiSnips'
 
+Plug 'ruby-formatter/rufo-vim'
+
+Plug 'sheerun/vim-polyglot'
+
+Plug 'vim-jp/vimdoc-ja'
+
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 
 set background=dark
@@ -228,21 +237,26 @@ let g:gruvbox_invert_selection = 0
 colorscheme gruvbox
 
 " lightline
-let g:lightline = {
-  \ 'colorscheme': 'gruvbox',
-  \ 'active': {
-  \   'left': [
-  \     [ 'mode', 'paste' ],
-  \     [ 'ctrlpmark', 'git', 'diagnostic', 'cocstatus', 'filename', 'method' ]
-  \   ],
-  \   'right':[
-  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ]
-  \   ],
-  \ }
-\ }
-
-" fzf
-nnoremap <c-p> <cmd>FZF<cr>
+" let g:lightline = {
+"   \ 'colorscheme': 'gruvbox',
+"   \ 'active': {
+"   \   'left': [
+"   \     [ 'mode', 'paste' ],
+"   \     [ 'cocstatus', 'readonly', 'filename', 'modified' ]
+"   \   ],
+"   \   'right':[
+"   \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ]
+"   \   ],
+"   \ },
+"   \ 'component_function': {
+"   \    'cocstatus': 'coc#status'
+"   \ }
+"   \ }
+"
+" augroup vimrc-coc-status
+"   autocmd!
+"   autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+" augroup END
 
 " gitgutter
 let g:gitgutter_map_keys = 0
@@ -266,38 +280,38 @@ let g:vsnip_filetypes = {}
 nmap <silent> <leader>tn <cmd>TestNearest<CR>
 nmap <silent> <leader>tf <cmd>TestFile<CR>
 nmap <silent> <leader>tl :TestLast<CR>
-let test#strategy = "basic"
+let test#strategy = "vimterminal"
 
 " indentline
 let g:indentLine_faster = 1
 
 " coc
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-nmap <leader>rn <Plug>(coc-rename)
-
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+"
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
+"
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   elseif (coc#rpc#ready())
+"     call CocActionAsync('doHover')
+"   else
+"     execute '!' . &keywordprg . " " . expand('<cword>')
+"   endif
+" endfunction
+"
+" autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+" nmap <leader>rn <Plug>(coc-rename)
+"
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
+"
+" xmap <leader>a  <Plug>(coc-codeaction-selected)
+" nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 xmap if <Plug>(coc-funcobj-i)
 omap if <Plug>(coc-funcobj-i)
@@ -321,7 +335,7 @@ command! -nargs=0 Format :call CocAction('format')
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-let g:coc_snippet_next = '<c-y>'
+let g:coc_snippet_next = '<c-l>'
 let g:coc_snippet_prev = '<c-k>'
 
 inoremap <silent><expr> <c-q> coc#refresh()
@@ -337,3 +351,13 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+let g:UltiSnipsExpandTrigger = '<c-l>'
+let g:UltiSnipsJumpForwardTrigger = '<c-l>'
+
+" polyglot
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+
+" ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']

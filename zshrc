@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 bindkey -e
 
 # local file setting {{{1
@@ -8,7 +15,16 @@ zplug zsh-users/zsh-autosuggestions
 zplug zsh-users/zsh-syntax-highlighting
 zplug olets/zsh-abbr
 zplug zsh-users/zsh-completions
+zplug mollifier/cd-gitroot
 zplug load
+
+source ~/ghq/github.com/rupa/z/z.sh
+
+zstyle ':completion:*:default' list-colors ''
+
+autoload -U compinit
+compinit
+
 
 # zsh history {{{1
 export SAVEHIST=1000000000
@@ -49,7 +65,24 @@ abbr --quiet mux="tmuxinator"
 abbr --quiet dc="sudo docker-compose"
 abbr --quiet lg="lazygit"
 
-eval "$(gh completion -s zsh)"
-
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
+
+export PATH=$HOME/.local/bin:$PATH
+
+export PATH=$HOME/bin:$PATH
+
+export CLICOLOR=1
+
+export LANG=en_US.UTF-8
+
+export PROMPT="%n@%m %~ %# "
+
+# . $(brew --prefix asdf)/asdf.sh
+. /usr/local/opt/asdf/asdf.sh
+source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+eval "$(direnv hook zsh)"

@@ -2,7 +2,7 @@
 	email = ippachi1018@gmail.com
 	name = ippachi
 [core]
-	excludesfile = /home/vagrant/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = vim
 
 [merge]
@@ -31,4 +31,4 @@
 	allowed = AKIAIOSFODNN7EXAMPLE
 	allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 [init]
-	templateDir = /home/vagrant/.git-templates/git-secrets
+	templateDir = /Users/ippachi/.git-templates/git-secrets
