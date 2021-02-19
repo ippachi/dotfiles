@@ -237,21 +237,21 @@ let g:gruvbox_invert_selection = 0
 colorscheme gruvbox
 
 " lightline
-" let g:lightline = {
-"   \ 'colorscheme': 'gruvbox',
-"   \ 'active': {
-"   \   'left': [
-"   \     [ 'mode', 'paste' ],
-"   \     [ 'cocstatus', 'readonly', 'filename', 'modified' ]
-"   \   ],
-"   \   'right':[
-"   \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ]
-"   \   ],
-"   \ },
-"   \ 'component_function': {
-"   \    'cocstatus': 'coc#status'
-"   \ }
-"   \ }
+let g:lightline = {
+  \ 'colorscheme': 'gruvbox',
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste' ],
+  \     [ 'readonly', 'filename', 'modified' ]
+  \   ],
+  \   'right':[
+  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent' ]
+  \   ],
+  \ },
+  \ 'component_function': {
+  \    'cocstatus': 'coc#status'
+  \ }
+  \ }
 "
 " augroup vimrc-coc-status
 "   autocmd!
@@ -361,3 +361,34 @@ let g:vim_markdown_conceal_code_blocks = 0
 
 " ctrlp
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
+" vim-lsp
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=number
+    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
+    nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+
+    let g:lsp_format_sync_timeout = 1000
+    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
