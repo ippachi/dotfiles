@@ -86,3 +86,6 @@ source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 eval "$(direnv hook zsh)"
+
+source /Users/ippachi/.asdf/installs/rust/stable/env
+

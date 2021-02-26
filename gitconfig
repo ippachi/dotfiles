@@ -23,6 +23,7 @@
 	ph = push origin HEAD
 	st = status -s -b
 	pu = pull
+	df = diff --word-diff=color
 [secrets]
 	providers = git secrets --aws-provider
 	patterns = (A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}
@@ -32,3 +33,6 @@
 	allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 [init]
 	templateDir = /Users/ippachi/.git-templates/git-secrets
+[diff]
+	tool = vimdiff
+	algorithm = histogram
