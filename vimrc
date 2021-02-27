@@ -169,6 +169,8 @@ Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 Plug 'hashivim/vim-terraform'
+
+Plug 'thinca/vim-themis'
 call plug#end()
 
 set background=dark
