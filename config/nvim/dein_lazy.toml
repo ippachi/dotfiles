@@ -1,0 +1,414 @@
+[[plugins]]
+repo = 'kana/vim-altr'
+on_map = { n = '<Plug>' }
+hook_source = '''
+  call altr#remove_all()
+  call altr#define('app/controllers/%_controller.rb', 'spec/requests/%_spec.rb')
+  " call altr#define('app/%.rb', 'spec/%_spec.rb')
+  call altr#define('app/%.rb', 'lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
+  " call altr#define('apps/%.rb', 'spec/%_spec.rb')
+'''
+hook_add = '''
+  nmap ]t <Plug>(altr-forward)
+  nmap [t <Plug>(altr-back)
+'''
+
+[[plugins]]
+repo = 'junegunn/vim-easy-align'
+on_map = { x = '<Plug>(EasyAlign)' }
+hook_add = '''
+  xmap ga <Plug>(EasyAlign)
+'''
+[[plugins]]
+repo = 'vim-test/vim-test'
+on_cmd = ['TestNearest', 'TestLast', 'TestFile', 'TestRunnerMinitest']
+hook_source = '''
+  let test#ruby#minitest#executable = 'bundle exec rake test VIM=1'
+  let g:dispatch_compilers = {'bundle exec': ''}
+  command! -nargs=0 TestRunnerMinitest let test#ruby#minitest#file_pattern = '_spec\.rb'
+'''
+hook_add = '''
+  nnoremap <leader>tn <cmd>TestNearest<cr>
+  nnoremap <leader>tl <cmd>TestLast<cr>
+  nnoremap <leader>tf <cmd>TestFile<cr>
+'''
+
+[[plugins]]
+repo = 'thinca/vim-quickrun'
+on_cmd = ['QuickRun']
+
+[[plugins]]
+repo = 'tyru/eskk.vim'
+on_map = { ic = '<Plug>' }
+hook_add = '''
+  imap <C-j> <Plug>(eskk:toggle)
+  cmap <C-j> <Plug>(eskk:toggle)
+'''
+hook_source = '''
+  let g:eskk#dictionary = {
+  \	'path': "~/.local/share/skk/skk-jisyo",
+  \	'sorted': 0,
+  \	'encoding': 'utf-8',
+  \}
+
+  let g:eskk#large_dictionary = {
+  \	'path': "~/.local/share/skk/SKK-JISYO.L",
+  \	'sorted': 1,
+  \	'encoding': 'euc-jp',
+  \}
+
+  augroup vimrc-eskk
+    autocmd!
+    autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
+  augroup END
+'''
+
+[[plugins]]
+repo = 'AndrewRadev/linediff.vim'
+on_cmd = ['Linediff']
+
+[[plugins]]
+repo = 'nvim-lua/plenary.nvim'
+
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+on_event = 'BufRead'
+hook_post_update = 'TSUpdate'
+hook_source = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  highlight = { enable = true }
+}
+EOF
+'''
+
+[[plugins]]
+repo = 'lewis6991/gitsigns.nvim'
+on_event = 'BufRead'
+depends = ['plenary.nvim']
+hook_source = '''
+lua << EOS
+require('gitsigns').setup()
+EOS
+'''
+
+[[plugins]]
+repo = 'folke/todo-comments.nvim'
+on_event = 'BufRead'
+depends = ['plenary.nvim']
+hook_source = '''
+lua << EOS
+require('todo-comments').setup()
+EOS
+'''
+
+[[plugins]]
+repo = 'vim-ruby/vim-ruby'
+on_ft = 'ruby'
+
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+depends = ['lsp_signature.nvim', 'lsp-colors.nvim', 'null-ls.nvim', 'nvim-lsp-ts-utils']
+# on_event = 'BufRead'
+hook_source = '''
+luafile ~/.config/nvim/rc/nvim-lspconfig.lua
+'''
+
+[[plugins]]
+repo = 'vim-denops/denops.vim'
+
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+# on_event = 'InsertEnter'
+hook_source = '''
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function() abort
+  return deoplete#close_popup() . "\<CR>"
+endfunction
+
+call deoplete#custom#option({
+  \ 'num_processes': 4,
+  \ 'refresh_always': v:false,
+  \ 'auto_complete_delay': 20,
+  \ 'smart_case': v:true,
+  \ })
+call deoplete#enable()
+'''
+
+[[plugins]]
+repo = 'deoplete-plugins/deoplete-lsp'
+on_source = 'deoplete.nvim'
+
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+on_source = 'CompleteDone'
+hook_source = '''
+let g:echodoc#type = 'virtual'
+call echodoc#enable()
+'''
+
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+depends = ['denops.vim']
+on_event = 'InsertEnter'
+hook_source = '''
+call ddc#custom#patch_global({
+      \   'sources': ['around'],
+      \   'sourceOptions': {
+      \     '_': {
+      \       'matchers': ['matcher_head'],
+      \       'sorters': ['sorter_rank']
+      \     },
+      \     'around': { 'mark': 'A' }
+      \   },
+      \   'autoCompleteDelay': 200,
+      \   'smartCase': v:true,
+      \   'keyword_pattern': '@?\w+'
+      \ })
+
+call ddc#custom#patch_filetype(['c', 'cpp'], 'sources', ['around'])
+" call ddc#enable()
+'''
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+depends = ['vim-clap']
+on_cmd = 'Denite'
+hook_add = '''
+  nnoremap <c-p> <cmd>Denite -match-highlight -start-filter -unique -floating-border=rounded -split=floating -matchers=matcher/clap,matcher/project_files -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr file/rec<cr>
+  nnoremap <leader>dg <cmd>Denite -floating-border=rounded -split=floating -matchers=matcher/clap grep<cr>
+  nnoremap <leader>dr <cmd>Denite -resume<cr>
+  nnoremap <leader>dn <cmd>Denite -resume -immediately -cursor-pos=+1<cr>
+  nnoremap <leader>dp <cmd>Denite -resume -immediately -cursor-pos=-1<cr>
+'''
+hook_source = '''
+  call denite#custom#var('file/rec', 'command',
+  \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
+
+  call denite#custom#filter('matcher/clap',
+        \ 'clap_path', expand('~/.cache/dein/repos/github.com/liuchengxu/vim-clap'))
+
+  call denite#custom#var('grep', {
+          \ 'command': ['rg'],
+          \ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
+          \ 'recursive_opts': [],
+          \ 'pattern_opt': ['--regexp'],
+          \ 'separator': ['--'],
+          \ 'final_opts': [],
+          \ })
+
+  call denite#custom#source('grep',
+  \ 'converters', ['converter/abbr_word'])
+
+  function! s:candidate_file_rec(context)
+    let sources_queue = a:context['sources_queue'] + [[
+          \ {'name': 'file/rec', 'args': []},
+          \ ]]
+    return {'sources_queue': sources_queue}
+  endfunction
+  call denite#custom#action('buffer,directory,file,openable',
+          \ 'candidate_file_rec', function('s:candidate_file_rec'))
+'''
+[plugins.ftplugin]
+denite-filter = '''
+  imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
+  imap <silent><buffer><expr> <c-e> '<esc>ggdG' . denite#do_map('do_action', 'candidate_file_rec') . '<c-r>.'
+'''
+
+denite = '''
+  nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> d
+  \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+  \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> q
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> i
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <Space>
+  \ denite#do_map('toggle_select').'j'
+  nnoremap <silent><buffer><expr> <c-e>
+  \ denite#do_map('do_action', 'candidate_file_rec') . '<c-r>.'
+'''
+
+[[plugins]]
+repo = 'Shougo/defx.nvim'
+on_cmd = 'Defx'
+hook_add = '''
+nnoremap <leader>df <cmd>Defx -toggle -split=vertical -direction=topleft -winwidth=30<cr>
+'''
+
+[plugins.ftplugin]
+defx = '''
+  nnoremap <silent><buffer><expr> <CR>
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> c
+  \ defx#do_action('copy')
+  nnoremap <silent><buffer><expr> m
+  \ defx#do_action('move')
+  nnoremap <silent><buffer><expr> p
+  \ defx#do_action('paste')
+  nnoremap <silent><buffer><expr> l
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> E
+  \ defx#do_action('open', 'vsplit')
+  nnoremap <silent><buffer><expr> P
+  \ defx#do_action('preview')
+  nnoremap <silent><buffer><expr> o
+  \ defx#do_action('open_tree', 'toggle')
+  nnoremap <silent><buffer><expr> K
+  \ defx#do_action('new_directory')
+  nnoremap <silent><buffer><expr> N
+  \ defx#do_action('new_file')
+  nnoremap <silent><buffer><expr> M
+  \ defx#do_action('new_multiple_files')
+  nnoremap <silent><buffer><expr> C
+  \ defx#do_action('toggle_columns',
+  \                'mark:indent:icon:filename:type:size:time')
+  nnoremap <silent><buffer><expr> S
+  \ defx#do_action('toggle_sort', 'time')
+  nnoremap <silent><buffer><expr> d
+  \ defx#do_action('remove')
+  nnoremap <silent><buffer><expr> r
+  \ defx#do_action('rename')
+  nnoremap <silent><buffer><expr> !
+  \ defx#do_action('execute_command')
+  nnoremap <silent><buffer><expr> x
+  \ defx#do_action('execute_system')
+  nnoremap <silent><buffer><expr> yy
+  \ defx#do_action('yank_path')
+  nnoremap <silent><buffer><expr> .
+  \ defx#do_action('toggle_ignored_files')
+  nnoremap <silent><buffer><expr> ;
+  \ defx#do_action('repeat')
+  nnoremap <silent><buffer><expr> h
+  \ defx#do_action('cd', ['..'])
+  nnoremap <silent><buffer><expr> ~
+  \ defx#do_action('cd')
+  nnoremap <silent><buffer><expr> q
+  \ defx#do_action('quit')
+  nnoremap <silent><buffer><expr> <Space>
+  \ defx#do_action('toggle_select') . 'j'
+  nnoremap <silent><buffer><expr> *
+  \ defx#do_action('toggle_select_all')
+  nnoremap <silent><buffer><expr> j
+  \ line('.') == line('$') ? 'gg' : 'j'
+  nnoremap <silent><buffer><expr> k
+  \ line('.') == 1 ? 'G' : 'k'
+  nnoremap <silent><buffer><expr> <C-l>
+  \ defx#do_action('redraw')
+  nnoremap <silent><buffer><expr> <C-g>
+  \ defx#do_action('print')
+  nnoremap <silent><buffer><expr> cd
+  \ defx#do_action('change_vim_cwd')
+'''
+
+[[plugins]]
+repo = 'AndrewRadev/splitjoin.vim'
+on_cmd = ['SplitjoinJoin', 'SplitjoinSplit']
+hook_add = '''
+let g:splitjoin_split_mapping = ''
+let g:splitjoin_join_mapping = ''
+
+nmap sj :SplitjoinJoin<cr>
+nmap sk :SplitjoinSplit<cr>
+'''
+
+[[plugins]]
+repo = 'Shougo/deol.nvim'
+on_cmd = ['Deol']
+
+[[plugins]]
+repo = 'Shougo/deoppet.nvim'
+depends = ['neosnippet-snippets']
+on_event = 'InsertEnter'
+hook_add = '''
+imap <expr><c-l>  deoppet#expandable() ?
+\ "\<Plug>(deoppet_expand)" : "\<Plug>(deoppet_jump_forward)"
+imap <C-k>  <Plug>(deoppet_jump_backward)
+xmap <C-l>  <Plug>(deoppet_select_text)
+xmap <C-x>  <Plug>(deoppet_cut_text)
+'''
+hook_source = '''
+call deoppet#initialize()
+call deoppet#custom#option('snippets',
+        \ [{'path': expand('~/.config/nvim/my-snippets')}],
+        \ map(globpath(&runtimepath, 'neosnippets', 1, 1),
+        \     { _, val -> { 'path': val } }))
+'''
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'ray-x/lsp_signature.nvim'
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_event = 'InsertEnter'
+hook_source = '''
+source ~/.config/nvim/rc/lexima.vim
+'''
+
+[[plugins]]
+repo = 'nvim-lua/popup.nvim'
+
+[[plugins]]
+repo = 'kyazdani42/nvim-web-devicons'
+
+[[plugins]]
+repo = 'nvim-telescope/telescope.nvim'
+depends = ['popup.nvim', 'plenary.nvim']
+
+[[plugins]]
+repo = 'pwntester/octo.nvim'
+on_cmd = ['Octo']
+depends = ['telescope.nvim', 'nvim-web-devicons']
+hook_source = '''
+lua <<EOS
+require"octo".setup()
+EOS
+'''
+
+[[plugins]]
+repo = 'simnalamburt/vim-mundo'
+on_cmd = ['MundoShow', 'MundoToggle']
+
+[[plugins]]
+repo = 'liuchengxu/vim-clap'
+hook_post_update = 'Clap install-binary'
+
+[[plugins]]
+repo = 'wsdjeg/dein-ui.vim'
+on_cmd = 'DeinUpdate'
+
+[[plugins]]
+repo = 'folke/trouble.nvim'
+depends = ['nvim-web-devicons']
+on_event = 'BufRead'
+hook_source = '''
+lua << EOF
+  require("trouble").setup{}
+EOF
+'''
+
+[[plugins]]
+repo = 'glepnir/lspsaga.nvim'
+on_source = ['nvim-lspconfig']
+hook_source = '''
+lua << EOF
+require'lspsaga'.init_lsp_saga()
+EOF
+'''
+
+[[plugins]]
+repo = 'haringsrob/nvim_context_vt'
+depends = ['nvim-treesitter']
+on_event = 'BufRead'
+
+[[plugins]]
+repo = 'jose-elias-alvarez/null-ls.nvim'
+
+[[plugins]]
+repo = 'jose-elias-alvarez/nvim-lsp-ts-utils'

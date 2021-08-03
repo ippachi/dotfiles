@@ -4,14 +4,5 @@
 
 - clean: ['~']
 
-- link:
-    ~/.vimrc: vimrc
-    ~/.zshrc: zshrc
-    ~/.gitconfig: gitconfig
-    ~/.gitignore_global: gitignore_global
-    ~/.git_template: git_template
-    ~/.tmux.conf: tmux.conf
-    ~/.asdfrc: asdfrc
-
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
