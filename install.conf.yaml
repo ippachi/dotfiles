@@ -4,5 +4,22 @@
 
 - clean: ['~']
 
+- link:
+    ~/.asdfrc: asdfrc
+    ~/.tmux.conf: tmux.conf
+    ~/.zshenv: zshenv
+    ~/.config/nvim/:
+      glob: true
+      path: config/nvim/**
+      create: true
+    ~/.config/alacritty/:
+      glob: true
+      path: config/alacritty/**
+      create: true
+    ~/.config/git/:
+      glob: true
+      path: config/git/**
+      create: true
+
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

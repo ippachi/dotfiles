@@ -122,8 +122,3 @@ highlight Folded       guibg=NONE
 highlight LineNr       guibg=NONE
 highlight CursorLineNr guibg=NONE
 highlight SpecialKey   guibg=NONE
-
-" plugins {{{
-call plug#begin('~/.vim/plugged')
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
-call plug#end()

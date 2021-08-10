@@ -15,6 +15,10 @@ repo = 'morhetz/gruvbox'
 repo = 'lambdalisue/gina.vim'
 hook_add = '''
 nnoremap <leader>gs <cmd>Gina status<cr>
+nnoremap <leader>gb <cmd>Gina branch<cr>
+nnoremap <leader>gco<space> :Gina checkout<space>
+nnoremap <leader>gci<space> :Gina commit<space>
+nnoremap <leader>g<space> :Gina<space>
 '''
 
 [[plugins]]

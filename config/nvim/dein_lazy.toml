@@ -238,6 +238,25 @@ on_cmd = 'Defx'
 hook_add = '''
 nnoremap <leader>df <cmd>Defx -toggle -split=vertical -direction=topleft -winwidth=30<cr>
 '''
+hook_source = '''
+augroup user_plugin_defx
+  autocmd!
+  " Define defx window mappings
+  autocmd FileType defx call <SID>defx_mappings()
+  autocmd BufNewFile,BufRead * Defx `getcwd()` -no-focus
+  \ -search=`expand('%:p')`
+augroup END
+
+function! s:defx_mappings() abort
+  setlocal cursorline
+endfunction
+
+call defx#custom#option('_', {
+            \ 'winwidth': 30,
+            \ 'split': 'vertical',
+            \ 'direction': 'topleft',
+            \ })
+'''
 
 [plugins.ftplugin]
 defx = '''
