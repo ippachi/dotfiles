@@ -21,6 +21,8 @@ set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set encoding=utf-8
 set undofile
 set swapfile
+set backupdir=~/.local/share/nvim/backup
+set backup
 set pumheight=10
 set pumblend=15
 set scrolloff=3
