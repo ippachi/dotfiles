@@ -31,7 +31,7 @@ set termguicolors
 set splitbelow
 set splitright
 set dictionary=/usr/share/dict/words
-set completeopt=menuone,noselect
+set completeopt=menuone
 set updatetime=300
 set background=dark
 set cursorline

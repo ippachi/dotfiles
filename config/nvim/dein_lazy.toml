@@ -372,27 +372,7 @@ repo = 'liuchengxu/vim-clap'
 hook_post_update = 'Clap install-binary'
 
 [[plugins]]
-repo = 'wsdjeg/dein-ui.vim'
-on_cmd = 'DeinUpdate'
-
-[[plugins]]
-repo = 'folke/trouble.nvim'
-depends = ['nvim-web-devicons']
-on_event = 'BufRead'
-hook_source = '''
-lua << EOF
-  require("trouble").setup{}
-EOF
-'''
-
-[[plugins]]
-repo = 'glepnir/lspsaga.nvim'
-on_source = ['nvim-lspconfig']
-hook_source = '''
-lua << EOF
-require'lspsaga'.init_lsp_saga()
-EOF
-'''
+repo = 'ray-x/lsp_signature.nvim'
 
 [[plugins]]
 repo = 'haringsrob/nvim_context_vt'
@@ -400,7 +380,21 @@ depends = ['nvim-treesitter']
 on_event = 'BufRead'
 
 [[plugins]]
-repo = 'jose-elias-alvarez/null-ls.nvim'
+repo = 'neovim/nvim-lspconfig'
+depends = ['lsp_signature.nvim']
+on_ft = ['ruby', 'typescriptreact', 'typescript']
+hook_source = '''
+luafile ~/.config/nvim/rc/nvim-lspconfig.lua
+
+augroup vimrc-lsp
+  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'diagnosticls', 'tsserver'})
+augroup END
+'''
 
 [[plugins]]
-repo = 'jose-elias-alvarez/nvim-lsp-ts-utils'
+repo = 'machakann/vim-sandwich'
+on_map = { nxo = '<Plug>(operator-sandwich-' }
+
+[[plugins]]
+repo = 'machakann/vim-textobj-delimited'
+on_map = { xo = '<Plug>(textobj-delimited-' }

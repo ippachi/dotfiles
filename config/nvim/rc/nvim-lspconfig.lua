@@ -31,11 +31,12 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
+  require'lsp_signature'.on_attach()
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'tsserver', 'tailwindcss' }
+local servers = { 'solargraph', 'tsserver', 'tailwindcss' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -46,21 +47,6 @@ for _, lsp in ipairs(servers) do
 end
 
 local util = require 'lspconfig/util'
-
-nvim_lsp.solargraph.setup{
-  on_attach = on_attach,
-  init_options = {
-    formatting = true,
-    definitions = false,
-    hover = false,
-    completion = false
-  },
-  settings = {
-    solargraph = {
-      diagnostics = true,
-    }
-  }
-}
 
 nvim_lsp.sorbet.setup{
   cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
