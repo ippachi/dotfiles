@@ -3,10 +3,7 @@ repo = 'kana/vim-altr'
 on_map = { n = '<Plug>' }
 hook_source = '''
   call altr#remove_all()
-  call altr#define('app/controllers/%_controller.rb', 'spec/requests/%_spec.rb')
-  " call altr#define('app/%.rb', 'spec/%_spec.rb')
-  call altr#define('app/%.rb', 'lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
-  " call altr#define('apps/%.rb', 'spec/%_spec.rb')
+  call altr#define('lib/%.rb', 'test/%_spec.rb')
 '''
 hook_add = '''
   nmap ]t <Plug>(altr-forward)
@@ -108,19 +105,11 @@ repo = 'vim-ruby/vim-ruby'
 on_ft = 'ruby'
 
 [[plugins]]
-repo = 'neovim/nvim-lspconfig'
-depends = ['lsp_signature.nvim', 'lsp-colors.nvim', 'null-ls.nvim', 'nvim-lsp-ts-utils']
-on_event = 'BufRead'
-hook_source = '''
-luafile ~/.config/nvim/rc/nvim-lspconfig.lua
-
-augroup vimrc-lsp
-  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'diagnosticls', 'tsserver'})
-augroup END
-'''
+repo = 'vim-denops/denops.vim'
 
 [[plugins]]
-repo = 'vim-denops/denops.vim'
+repo = 'vim-denops/denops-helloworld.vim'
+on_source = 'denops'
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
@@ -157,7 +146,8 @@ repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['around', 'nvimlsp'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'around'])
+call ddc#custom#patch_global('keywordPattern', '[a-zA-Z_@]\k*')
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -217,20 +207,10 @@ hook_source = '''
 
   call denite#custom#source('grep',
   \ 'converters', ['converter/abbr_word'])
-
-  function! s:candidate_file_rec(context)
-    let sources_queue = a:context['sources_queue'] + [[
-          \ {'name': 'file/rec', 'args': []},
-          \ ]]
-    return {'sources_queue': sources_queue}
-  endfunction
-  call denite#custom#action('buffer,directory,file,openable',
-          \ 'candidate_file_rec', function('s:candidate_file_rec'))
 '''
 [plugins.ftplugin]
 denite-filter = '''
   imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
-  imap <silent><buffer><expr> <c-e> '<esc>ggdG' . denite#do_map('do_action', 'candidate_file_rec') . '<c-r>.'
 '''
 
 denite = '''
@@ -245,8 +225,6 @@ denite = '''
   \ denite#do_map('open_filter_buffer')
   nnoremap <silent><buffer><expr> <Space>
   \ denite#do_map('toggle_select').'j'
-  nnoremap <silent><buffer><expr> <c-e>
-  \ denite#do_map('do_action', 'candidate_file_rec') . '<c-r>.'
 '''
 
 [[plugins]]
@@ -357,9 +335,6 @@ call deoppet#custom#option('snippets',
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-
-[[plugins]]
-repo = 'ray-x/lsp_signature.nvim'
 
 [[plugins]]
 repo = 'cohama/lexima.vim'

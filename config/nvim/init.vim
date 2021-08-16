@@ -12,6 +12,7 @@ set smartcase
 set incsearch
 set hlsearch
 set backspace=indent,eol,start
+set isk& isk+=@-@
 
 set autoread
 set ttimeout
@@ -36,7 +37,8 @@ set background=dark
 set cursorline
 set cmdheight=2
 set colorcolumn=100
-set diffopt& diffopt=vertical
+set diffopt& diffopt+=vertical,algorithm:histogram
+set exrc
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case

@@ -3,3 +3,5 @@
 	email = ippachi1018@gmail.com
 [core]
 	editor = nvim
+[diff]
+	algorithm = histogram

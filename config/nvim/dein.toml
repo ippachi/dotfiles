@@ -58,6 +58,16 @@ call submode#map('winsize', 'n', '', '-', '<C-w>-')
 [[plugins]]
 repo = 'lukas-reineke/indent-blankline.nvim'
 
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+hook_add = '''
+luafile ~/.config/nvim/rc/nvim-lspconfig.lua
+
+augroup vimrc-lsp
+  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'diagnosticls', 'tsserver'})
+augroup END
+'''
+
 # [[plugins]]
 # repo = 'neoclide/coc.nvim'
 # rev = 'release'

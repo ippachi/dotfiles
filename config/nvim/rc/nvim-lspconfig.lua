@@ -45,6 +45,28 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+local util = require 'lspconfig/util'
+
+nvim_lsp.solargraph.setup{
+  on_attach = on_attach,
+  init_options = {
+    formatting = true,
+    definitions = false,
+    hover = false,
+    completion = false
+  },
+  settings = {
+    solargraph = {
+      diagnostics = true,
+    }
+  }
+}
+
+nvim_lsp.sorbet.setup{
+  cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
+  root_dir = util.root_pattern("sorbet/config")
+}
+
 nvim_lsp.diagnosticls.setup{
   on_attach = on_attach,
   filetypes = { 'typescriptreact' },
@@ -56,7 +78,8 @@ nvim_lsp.diagnosticls.setup{
       eslint = {
         command = './node_modules/.bin/eslint',
         rootPatterns = {
-          '.eslintrc.js'
+          '.eslintrc.js',
+          '.eslintrc.json'
         },
         debounce = 100,
         args = {
@@ -101,7 +124,8 @@ nvim_lsp.diagnosticls.setup{
           ".prettierrc.cjs",
           "prettier.config.js",
           "prettier.config.cjs",
-          ".eslintrc.js"
+          ".eslintrc.js",
+          ".eslintrc.json"
         }
       }
     }
