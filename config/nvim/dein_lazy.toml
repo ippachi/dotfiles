@@ -3,7 +3,7 @@ repo = 'kana/vim-altr'
 on_map = { n = '<Plug>' }
 hook_source = '''
   call altr#remove_all()
-  call altr#define('lib/%.rb', 'test/%_spec.rb')
+  call altr#define('lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
 '''
 hook_add = '''
   nmap ]t <Plug>(altr-forward)
@@ -143,10 +143,10 @@ call echodoc#enable()
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'around'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet'])
 call ddc#custom#patch_global('keywordPattern', '[a-zA-Z_@]\k*')
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
@@ -155,7 +155,8 @@ call ddc#custom#patch_global('sourceOptions', {
       \   },
       \   'around': { 'mark': 'A' },
       \   'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
-      \   'buffer': { 'mark': 'B' }
+      \   'buffer': { 'mark': 'B' },
+      \   'deoppet': { 'mark': 'dp' },
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvimlsp': {'useIcon': v:true},
@@ -183,9 +184,10 @@ repo = 'Shougo/denite.nvim'
 depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
-  nnoremap <c-p> <cmd>Denite -match-highlight -start-filter -unique -floating-border=rounded -split=floating -matchers=matcher/clap,matcher/project_files -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr file/rec<cr>
-  nnoremap <leader>dg <cmd>Denite -floating-border=rounded -split=floating -matchers=matcher/clap grep<cr>
-  nnoremap <leader>dr <cmd>Denite -resume<cr>
+  nnoremap <c-p> <cmd>Denite -match-highlight -start-filter -unique -floating-border=rounded -split=floating -matchers=matcher/clap,matcher/project_files -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr -buffer-name=file file/rec<cr>
+  nnoremap <leader>dg <cmd>Denite -floating-border=rounded -split=floating -matchers=matcher/clap -buffer-name=grep grep<cr>
+  nnoremap <leader>drg <cmd>Denite -buffer-name=grep -resume<cr>
+  nnoremap <leader>drf <cmd>Denite -buffer-name=file -resume<cr>
   nnoremap <leader>dn <cmd>Denite -resume -immediately -cursor-pos=+1<cr>
   nnoremap <leader>dp <cmd>Denite -resume -immediately -cursor-pos=-1<cr>
 '''
@@ -223,6 +225,8 @@ denite = '''
   \ denite#do_map('quit')
   nnoremap <silent><buffer><expr> i
   \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> r
+  \ denite#do_map('restore_sources')
   nnoremap <silent><buffer><expr> <Space>
   \ denite#do_map('toggle_select').'j'
 '''
@@ -328,7 +332,7 @@ xmap <C-x>  <Plug>(deoppet_cut_text)
 hook_source = '''
 call deoppet#initialize()
 call deoppet#custom#option('snippets',
-        \ [{'path': expand('~/.config/nvim/my-snippets')}],
+        \ [{'path': expand('~/.config/nvim/my-snippets')}] +
         \ map(globpath(&runtimepath, 'neosnippets', 1, 1),
         \     { _, val -> { 'path': val } }))
 '''
@@ -340,7 +344,7 @@ repo = 'Shougo/neosnippet-snippets'
 repo = 'cohama/lexima.vim'
 on_event = 'InsertEnter'
 hook_source = '''
-source ~/.config/nvim/rc/lexima.vim
+let g:lexima_accept_pum_with_enter = 0
 '''
 
 [[plugins]]
