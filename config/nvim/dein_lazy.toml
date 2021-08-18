@@ -184,7 +184,7 @@ repo = 'Shougo/denite.nvim'
 depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
-  nnoremap <c-p> <cmd>Denite -match-highlight -start-filter -unique -floating-border=rounded -split=floating -matchers=matcher/clap,matcher/project_files -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr -buffer-name=file file/rec<cr>
+  nnoremap <c-p> <cmd>Denite -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr -buffer-name=file file/rec<cr>
   nnoremap <leader>dg <cmd>Denite -floating-border=rounded -split=floating -matchers=matcher/clap -buffer-name=grep grep<cr>
   nnoremap <leader>drg <cmd>Denite -buffer-name=grep -resume<cr>
   nnoremap <leader>drf <cmd>Denite -buffer-name=file -resume<cr>
@@ -195,9 +195,6 @@ hook_source = '''
   call denite#custom#var('file/rec', 'command',
   \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 
-  call denite#custom#filter('matcher/clap',
-        \ 'clap_path', expand('~/.cache/dein/repos/github.com/liuchengxu/vim-clap'))
-
   call denite#custom#var('grep', {
           \ 'command': ['rg'],
           \ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
@@ -207,8 +204,26 @@ hook_source = '''
           \ 'final_opts': [],
           \ })
 
+  call denite#custom#filter('matcher/clap',
+        \ 'clap_path', expand('~/.cache/dein/repos/github.com/liuchengxu/vim-clap'))
+
+  call denite#custom#source('file/rec',
+      \ 'matchers', ['matcher/clap'],
+      \ 'sorters', ['sorter/oldfiles']
+      \ )
+
   call denite#custom#source('grep',
   \ 'converters', ['converter/abbr_word'])
+
+  call denite#custom#option('files', {
+      \ 'highlight_filter_background': 'CursorLine',
+      \ 'source_names': 'short',
+      \ 'split': 'floating',
+      \ 'filter_split_direction': 'floating',
+      \ 'vertical_preview': v:true,
+      \ 'floating_preview': v:true,
+      \ })
+
 '''
 [plugins.ftplugin]
 denite-filter = '''
