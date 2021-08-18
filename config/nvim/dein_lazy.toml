@@ -187,23 +187,6 @@ hook_add = '''
   nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
   nnoremap <leader>dg <cmd>Denite -buffer-name=search -no-empty grep<cr>
   nnoremap <leader>dr <cmd>Denite -resume -buffer-name=search<cr>
-
-  nnoremap <silent><expr> / wordcount().chars > 30000 ?
-  \ "\<Cmd>Denite -buffer-name=search -start-filter
-  \  -search line/external\<CR>" :
-  \ "\<Cmd>Denite -buffer-name=search -start-filter -search line\<CR>"
-  nnoremap <silent><expr> * wordcount().chars > 30000 ?
-  \ "\<Cmd>DeniteCursorWord -buffer-name=search -search line/external\<CR>" :
-  \ "\<Cmd>DeniteCursorWord -buffer-name=search -search line\<CR>"
-  xnoremap <silent> *
-  \ "qy:Denite -input=`@q` -buffer-name=search -search line<CR>
-  nnoremap <silent><expr> ss finddir('.git', ';') != '' ?
-  \ "\<Cmd>Denite -sorters=sorter/rank -unique -buffer-name=files
-  \  file/point file/old file/dirty file/git file file:new\<CR>" :
-  \ "\<Cmd>Denite -sorters=sorter/rank -unique -buffer-name=files
-  \  file/point file/old file file:new\<CR>"
-  nnoremap <silent> n
-  \ <Cmd>Denite -buffer-name=search -resume<CR>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
@@ -242,8 +225,7 @@ hook_source = '''
   call denite#custom#option('search', {
         \ 'highlight_filter_background': 'CursorLine',
         \ 'source_names': 'short',
-        \ 'filter-split-direction': 'floating',
-        \ 'auto_action': 'preview'
+        \ 'filter-split-direction': 'floating'
         \ })
 '''
 [plugins.ftplugin]
