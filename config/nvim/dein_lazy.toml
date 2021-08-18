@@ -184,46 +184,67 @@ repo = 'Shougo/denite.nvim'
 depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
-  nnoremap <c-p> <cmd>Denite -sorters=sorter/oldfiles,converter/abbr_word,converter/relative_abbr -buffer-name=file file/rec<cr>
-  nnoremap <leader>dg <cmd>Denite -floating-border=rounded -split=floating -matchers=matcher/clap -buffer-name=grep grep<cr>
-  nnoremap <leader>drg <cmd>Denite -buffer-name=grep -resume<cr>
-  nnoremap <leader>drf <cmd>Denite -buffer-name=file -resume<cr>
-  nnoremap <leader>dn <cmd>Denite -resume -immediately -cursor-pos=+1<cr>
-  nnoremap <leader>dp <cmd>Denite -resume -immediately -cursor-pos=-1<cr>
+  nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
+  nnoremap <leader>dg <cmd>Denite -buffer-name=search -no-empty grep<cr>
+  nnoremap <leader>dr <cmd>Denite -resume -buffer-name=search<cr>
+
+  nnoremap <silent><expr> / wordcount().chars > 30000 ?
+  \ "\<Cmd>Denite -buffer-name=search -start-filter
+  \  -search line/external\<CR>" :
+  \ "\<Cmd>Denite -buffer-name=search -start-filter -search line\<CR>"
+  nnoremap <silent><expr> * wordcount().chars > 30000 ?
+  \ "\<Cmd>DeniteCursorWord -buffer-name=search -search line/external\<CR>" :
+  \ "\<Cmd>DeniteCursorWord -buffer-name=search -search line\<CR>"
+  xnoremap <silent> *
+  \ "qy:Denite -input=`@q` -buffer-name=search -search line<CR>
+  nnoremap <silent><expr> ss finddir('.git', ';') != '' ?
+  \ "\<Cmd>Denite -sorters=sorter/rank -unique -buffer-name=files
+  \  file/point file/old file/dirty file/git file file:new\<CR>" :
+  \ "\<Cmd>Denite -sorters=sorter/rank -unique -buffer-name=files
+  \  file/point file/old file file:new\<CR>"
+  nnoremap <silent> n
+  \ <Cmd>Denite -buffer-name=search -resume<CR>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
   \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 
   call denite#custom#var('grep', {
-          \ 'command': ['rg'],
-          \ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
-          \ 'recursive_opts': [],
-          \ 'pattern_opt': ['--regexp'],
-          \ 'separator': ['--'],
-          \ 'final_opts': [],
+          \   'command': ['rg'],
+          \   'default_opts': ['-i', '--vimgrep', '--no-heading'],
+          \   'recursive_opts': [],
+          \   'pattern_opt': ['--regexp'],
+          \   'separator': ['--'],
+          \   'final_opts': [],
           \ })
 
   call denite#custom#filter('matcher/clap',
         \ 'clap_path', expand('~/.cache/dein/repos/github.com/liuchengxu/vim-clap'))
 
   call denite#custom#source('file/rec',
-      \ 'matchers', ['matcher/clap'],
-      \ 'sorters', ['sorter/oldfiles']
+      \   'matchers', ['matcher/clap'],
+      \   'sorters', ['sorter/oldfiles']
       \ )
 
   call denite#custom#source('grep',
-  \ 'converters', ['converter/abbr_word'])
+      \   'converters', ['converter/abbr_word']
+      \ )
 
   call denite#custom#option('files', {
-      \ 'highlight_filter_background': 'CursorLine',
-      \ 'source_names': 'short',
-      \ 'split': 'floating',
-      \ 'filter_split_direction': 'floating',
-      \ 'vertical_preview': v:true,
-      \ 'floating_preview': v:true,
+      \   'source_names': 'short',
+      \   'split': 'floating',
+      \   'filter_split_direction': 'floating',
+      \   'vertical_preview': v:true,
+      \   'floating_preview': v:true,
+      \   'floating_border': 'rounded'
       \ })
 
+  call denite#custom#option('search', {
+        \ 'highlight_filter_background': 'CursorLine',
+        \ 'source_names': 'short',
+        \ 'filter-split-direction': 'floating',
+        \ 'auto_action': 'preview'
+        \ })
 '''
 [plugins.ftplugin]
 denite-filter = '''

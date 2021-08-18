@@ -7,3 +7,5 @@
 	algorithm = histogram
 	colorMoved = dimmed-zebra
 	colorMovedWS = allow-indentation-change
+[pull]
+	twohead = ort
