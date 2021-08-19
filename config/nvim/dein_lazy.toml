@@ -135,18 +135,17 @@ on_source = 'deoplete.nvim'
 
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
-on_source = 'CompleteDone'
+on_event = 'CompleteDone'
 hook_source = '''
-let g:echodoc#type = 'virtual'
 call echodoc#enable()
 '''
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim', 'ddc-zsh']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet', 'zsh'])
 call ddc#custom#patch_global('keywordPattern', '[a-zA-Z_@]\k*')
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
@@ -157,12 +156,20 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
+      \   'zsh': { 'mark': 'Z' },
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvimlsp': {'useIcon': v:true},
       \ })
+
+call ddc#custom#patch_global('filterParams', {
+    \ 'buffer': {'requireSameFiletype': v:false},
+    \ })
 call ddc#enable()
 '''
+
+[[plugins]]
+repo = 'Shougo/ddc-zsh'
 
 [[plugins]]
 repo = 'Shougo/ddc-around'
@@ -335,6 +342,12 @@ nmap sk :SplitjoinSplit<cr>
 [[plugins]]
 repo = 'Shougo/deol.nvim'
 on_cmd = ['Deol']
+hook_add = '''
+  nnoremap <silent> <space>s <Cmd>Deol zsh -no-start-insert -toggle<CR>
+'''
+hook_source = '''
+let g:deol#shell_history_path = '~/.config/zsh/.zsh_history'
+'''
 
 [[plugins]]
 repo = 'Shougo/deoppet.nvim'
@@ -411,4 +424,13 @@ luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 augroup vimrc-lsp
   autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'tsserver', 'eslint'})
 augroup END
+'''
+
+[[plugins]]
+repo = 'matsui54/ddc-nvim-lsp-doc'
+on_source = 'ddc'
+hook_source = '''
+lua << EOF
+require'ddc-nvim-lsp-doc'.setup{}
+EOF
 '''
