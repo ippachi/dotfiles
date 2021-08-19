@@ -38,3 +38,9 @@ let g:lightline = {
 
 [[plugins]]
 repo = 'lukas-reineke/indent-blankline.nvim'
+
+[[plugins]]
+repo = 'machakann/vim-sandwich'
+
+[[plugins]]
+repo = 'machakann/vim-textobj-delimited'

@@ -409,14 +409,6 @@ hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 
 augroup vimrc-lsp
-  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'diagnosticls', 'tsserver'})
+  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'tsserver', 'eslint'})
 augroup END
 '''
-
-[[plugins]]
-repo = 'machakann/vim-sandwich'
-on_map = { nxo = '<Plug>(operator-sandwich-' }
-
-[[plugins]]
-repo = 'machakann/vim-textobj-delimited'
-on_map = { xo = '<Plug>(textobj-delimited-' }

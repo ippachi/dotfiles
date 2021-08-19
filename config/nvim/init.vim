@@ -55,6 +55,7 @@ nnoremap gj j
 nnoremap gk k
 nnoremap Y y$
 nnoremap \ ,
+nnoremap <esc><esc> <cmd>nohl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
 " }}}
 
