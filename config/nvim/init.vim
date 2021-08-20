@@ -80,11 +80,6 @@ augroup vimrc-vim-marker
   autocmd!
   autocmd BufEnter .vimrc,init.vim setl foldmethod=marker
 augroup END
-
-augroup vimrc-spell-check
-  autocmd!
-  autocmd BufWritePost * cgetexpr system("typos --format Brief " . expand('%:p'))
-augroup END
 " }}}
 
 "dein Scripts-----------------------------

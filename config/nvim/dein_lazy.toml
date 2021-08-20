@@ -350,6 +350,10 @@ let g:deol#shell_history_path = '~/.config/zsh/.zsh_history'
 '''
 
 [[plugins]]
+repo = 'lambdalisue/edita.vim'
+on_source = 'deol.nvim'
+
+[[plugins]]
 repo = 'Shougo/deoppet.nvim'
 depends = ['neosnippet-snippets']
 on_event = 'InsertEnter'
@@ -429,8 +433,3 @@ augroup END
 [[plugins]]
 repo = 'matsui54/ddc-nvim-lsp-doc'
 on_source = 'ddc'
-hook_source = '''
-lua << EOF
-require'ddc-nvim-lsp-doc'.setup{}
-EOF
-'''
