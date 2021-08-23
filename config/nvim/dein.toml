@@ -12,13 +12,9 @@ let g:everforest_diagnostic_virtual_text = 'colored'
 repo = 'morhetz/gruvbox'
 
 [[plugins]]
-repo = 'lambdalisue/gina.vim'
+repo = 'tpope/vim-fugitive'
 hook_add = '''
-nnoremap <leader>gs <cmd>Gina status<cr>
-nnoremap <leader>gb <cmd>Gina branch<cr>
-nnoremap <leader>gco<space> :Gina checkout<space>
-nnoremap <leader>gci<space> :Gina commit<space>
-nnoremap <leader>g<space> :Gina<space>
+nnoremap <leader>gs <cmd>Git<cr>
 '''
 
 [[plugins]]
@@ -44,3 +40,9 @@ repo = 'machakann/vim-sandwich'
 
 [[plugins]]
 repo = 'machakann/vim-textobj-delimited'
+
+[[plugins]]
+repo = 'vimwiki/vimwiki'
+hook_add = '''
+let g:vimwiki_list = [{ 'path': '~/Dropbox/wiki' }, { 'path': './.wiki' }]
+'''

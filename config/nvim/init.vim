@@ -38,7 +38,7 @@ set cursorline
 set cmdheight=2
 set colorcolumn=100
 set diffopt& diffopt+=vertical,algorithm:histogram
-set exrc
+set wildmode=longest:full
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case
