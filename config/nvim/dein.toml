@@ -44,5 +44,5 @@ repo = 'machakann/vim-textobj-delimited'
 [[plugins]]
 repo = 'vimwiki/vimwiki'
 hook_add = '''
-let g:vimwiki_list = [{ 'path': '~/Dropbox/wiki' }, { 'path': './.wiki' }]
+let g:vimwiki_list = [{ 'path': '~/Dropbox/wiki', 'syntax': 'markdown', 'ext': '.md' }, { 'path': './.wiki' }]
 '''

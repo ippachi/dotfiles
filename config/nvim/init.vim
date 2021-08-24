@@ -114,11 +114,3 @@ filetype plugin indent on
 "End dein Scripts-------------------------
 
 colorscheme everforest
-
-highlight Normal       guibg=NONE
-highlight NonText      guibg=NONE
-highlight EndOfBuffer  guibg=NONE
-highlight Folded       guibg=NONE
-highlight LineNr       guibg=NONE
-highlight CursorLineNr guibg=NONE
-highlight SpecialKey   guibg=NONE

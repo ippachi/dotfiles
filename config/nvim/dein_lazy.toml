@@ -4,6 +4,8 @@ on_map = { n = '<Plug>' }
 hook_source = '''
   call altr#remove_all()
   call altr#define('lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
+  call altr#define('app/%.rb', 'spec/%_spec.rb')
+  call altr#define('app/controllers/%_controller.rb', 'spec/requests/%_spec.rb')
 '''
 hook_add = '''
   nmap ]t <Plug>(altr-forward)
@@ -16,6 +18,10 @@ on_map = { x = '<Plug>(EasyAlign)' }
 hook_add = '''
   xmap ga <Plug>(EasyAlign)
 '''
+hook_source = '''
+  xmap ga <Plug>(EasyAlign)
+'''
+
 [[plugins]]
 repo = 'vim-test/vim-test'
 on_cmd = ['TestNearest', 'TestLast', 'TestFile', 'TestRunnerMinitest']
@@ -420,16 +426,26 @@ on_event = 'BufRead'
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-depends = ['lsp_signature.nvim']
+depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall']
 on_ft = ['ruby', 'typescriptreact', 'typescript']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 
-augroup vimrc-lsp
-  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'tsserver', 'eslint'})
-augroup END
+" augroup vimrc-lsp
+"   autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'tsserver', 'eslint'})
+" augroup END
 '''
 
 [[plugins]]
 repo = 'matsui54/ddc-nvim-lsp-doc'
 on_source = 'ddc'
+
+[[plugins]]
+repo = 'jose-elias-alvarez/null-ls.nvim'
+
+[[plugins]]
+repo = 'kabouzeid/nvim-lspinstall'
+
+[[plugins]]
+repo = 'mechatroner/rainbow_csv'
+on_ft = ['csv']
