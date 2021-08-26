@@ -151,7 +151,7 @@ repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim', 'ddc-zsh']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet', 'zsh'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet', 'buffer', 'zsh'])
 call ddc#custom#patch_global('keywordPattern', '[a-zA-Z_@]\k*')
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
@@ -198,8 +198,9 @@ depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
   nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
-  nnoremap <leader>dg <cmd>Denite -buffer-name=search -no-empty grep<cr>
-  nnoremap <leader>dr <cmd>Denite -resume -buffer-name=search<cr>
+  nnoremap ;g <cmd>Denite -buffer-name=search -no-empty grep<cr>
+  nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty grep<cr>
+  nnoremap ;r <cmd>Denite -resume -buffer-name=search<cr>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
@@ -218,12 +219,22 @@ hook_source = '''
         \ 'clap_path', expand('~/.cache/dein/repos/github.com/liuchengxu/vim-clap'))
 
   call denite#custom#source('file/rec',
+      \   {
+      \     'matchers': ['matcher/clap'],
+      \     'sorters': ['sorter/oldfiles', 'sorter/rank']
+      \   }
+      \ )
+
+  call denite#custom#source('file/old',
       \   'matchers', ['matcher/clap'],
       \   'sorters', ['sorter/oldfiles']
       \ )
 
   call denite#custom#source('grep',
-      \   'converters', ['converter/abbr_word']
+      \   {
+      \     'converters': ['converter/abbr_word'],
+      \     'matchers': ['matcher/regexp']
+      \   }
       \ )
 
   call denite#custom#option('files', {
@@ -426,7 +437,7 @@ on_event = 'BufRead'
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall']
+depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall', 'plenary.nvim']
 on_ft = ['ruby', 'typescriptreact', 'typescript']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua

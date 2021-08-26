@@ -3,8 +3,7 @@ set expandtab
 set autoindent
 set smartindent
 set shiftwidth=2
-set softtabstop=2
-set tabstop=8
+set tabstop=2
 set hidden
 set laststatus=2
 set ignorecase

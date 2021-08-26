@@ -9,3 +9,5 @@
 	colorMovedWS = allow-indentation-change
 [pull]
 	twohead = ort
+[init]
+	templateDir = ~/.config/git/templates
