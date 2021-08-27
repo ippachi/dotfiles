@@ -460,3 +460,10 @@ repo = 'kabouzeid/nvim-lspinstall'
 [[plugins]]
 repo = 'mechatroner/rainbow_csv'
 on_ft = ['csv']
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown', 'vimwiki']
+
+[[plugins]]
+repo = 'godlygeek/tabular'
