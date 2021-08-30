@@ -27,13 +27,10 @@ let g:lightline = {
         \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
         \ },
         \ 'component_function': {
-        \   'gitbranch': 'gina#component#repo#branch'
+        \   'gitbranch': 'FugitiveHead'
         \ },
         \ }
 '''
-
-[[plugins]]
-repo = 'lukas-reineke/indent-blankline.nvim'
 
 [[plugins]]
 repo = 'machakann/vim-sandwich'
