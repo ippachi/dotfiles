@@ -34,6 +34,7 @@ hook_add = '''
   nnoremap <leader>tn <cmd>TestNearest<cr>
   nnoremap <leader>tl <cmd>TestLast<cr>
   nnoremap <leader>tf <cmd>TestFile<cr>
+  nnoremap <leader>ts <cmd>TestSuite<cr>
 '''
 
 [[plugins]]
@@ -59,6 +60,8 @@ hook_source = '''
   \	'sorted': 1,
   \	'encoding': 'euc-jp',
   \}
+
+  let g:eskk#enable_completion = 0
 
   augroup vimrc-eskk
     autocmd!
@@ -149,10 +152,10 @@ call echodoc#enable()
 [[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim', 'ddc-zsh']
+rev = "92149a260ed2876de2bd4395f6054ce1bf5fa0ad"
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'deoppet', 'buffer', 'zsh'])
-call ddc#custom#patch_global('keywordPattern', '[a-zA-Z_@]\k*')
+call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'deoppet'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
