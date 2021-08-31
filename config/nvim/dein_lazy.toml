@@ -41,47 +41,47 @@ hook_add = '''
 repo = 'thinca/vim-quickrun'
 on_cmd = ['QuickRun']
 
-# [[plugins]]
-# repo = 'tyru/eskk.vim'
-# on_map = { ic = '<Plug>' }
-# hook_add = '''
-#   imap <C-j> <Plug>(eskk:toggle)
-#   cmap <C-j> <Plug>(eskk:toggle)
-# '''
-# hook_source = '''
-#   let g:eskk#dictionary = {
-#   \	'path': "~/.local/share/skk/skk-jisyo",
-#   \	'sorted': 0,
-#   \	'encoding': 'utf-8',
-#   \}
-#
-#   let g:eskk#large_dictionary = {
-#   \	'path': "~/.local/share/skk/SKK-JISYO.L",
-#   \	'sorted': 1,
-#   \	'encoding': 'euc-jp',
-#   \}
-#
-#   let g:eskk#enable_completion = 0
-#
-#   augroup vimrc-eskk
-#     autocmd!
-#     autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
-#   augroup END
-# '''
-
 [[plugins]]
-repo = 'kuuote/denops-skkeleton.vim'
-on_map = { ic = '<Plug>(skkeleton' }
+repo = 'tyru/eskk.vim'
+on_map = { ic = '<Plug>' }
 hook_add = '''
-imap <C-j> <Plug>(skkeleton-enable)
-cmap <C-j> <Plug>(skkeleton-enable)
+  imap <C-j> <Plug>(eskk:toggle)
+  cmap <C-j> <Plug>(eskk:toggle)
 '''
 hook_source = '''
-call skkeleton#config({
-  \ 'globalJisyo': '/Users/ippachi/.local/share/skk/SKK-JISYO.L',
-  \ 'userJisyo': '/Users/ippachi/.local/share/skk/skk-jisyo'
-  \ })
+  let g:eskk#dictionary = {
+  \	'path': "~/.local/share/skk/skk-jisyo",
+  \	'sorted': 0,
+  \	'encoding': 'utf-8',
+  \}
+
+  let g:eskk#large_dictionary = {
+  \	'path': "~/.local/share/skk/SKK-JISYO.L",
+  \	'sorted': 1,
+  \	'encoding': 'euc-jp',
+  \}
+
+  let g:eskk#enable_completion = 0
+
+  augroup vimrc-eskk
+    autocmd!
+    autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
+  augroup END
 '''
+
+# [[plugins]]
+# repo = 'kuuote/denops-skkeleton.vim'
+# on_map = { ic = '<Plug>(skkeleton' }
+# hook_add = '''
+# imap <C-j> <Plug>(skkeleton-enable)
+# cmap <C-j> <Plug>(skkeleton-enable)
+# '''
+# hook_source = '''
+# call skkeleton#config({
+#   \ 'globalJisyo': '/Users/ippachi/.local/share/skk/SKK-JISYO.L',
+#   \ 'userJisyo': '/Users/ippachi/.local/share/skk/skk-jisyo'
+#   \ })
+# '''
 
 [[plugins]]
 repo = 'AndrewRadev/linediff.vim'

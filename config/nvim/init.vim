@@ -11,7 +11,6 @@ set smartcase
 set incsearch
 set hlsearch
 set backspace=indent,eol,start
-set isk& isk+=@-@
 
 set autoread
 set ttimeout
