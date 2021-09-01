@@ -377,9 +377,6 @@ nmap sk :SplitjoinSplit<cr>
 [[plugins]]
 repo = 'Shougo/deol.nvim'
 on_cmd = ['Deol']
-hook_add = '''
-  nnoremap <silent> <space>s <Cmd>Deol zsh -no-start-insert -toggle<CR>
-'''
 hook_source = '''
 let g:deol#shell_history_path = '~/.config/zsh/.zsh_history'
 '''

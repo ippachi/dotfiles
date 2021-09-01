@@ -111,4 +111,4 @@ filetype plugin indent on
 
 "End dein Scripts-------------------------
 
-colorscheme everforest
+colorscheme gruvbox-material
