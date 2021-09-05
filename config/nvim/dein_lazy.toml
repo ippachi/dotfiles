@@ -2,10 +2,7 @@
 repo = 'kana/vim-altr'
 on_map = { n = '<Plug>' }
 hook_source = '''
-  call altr#remove_all()
-  call altr#define('lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
-  call altr#define('app/%.rb', 'spec/%_spec.rb')
-  call altr#define('app/controllers/%_controller.rb', 'spec/requests/%_spec.rb')
+  source ~/.config/nvim/rc/altr.vim
 '''
 hook_add = '''
   nmap ]t <Plug>(altr-forward)
@@ -24,11 +21,10 @@ hook_source = '''
 
 [[plugins]]
 repo = 'vim-test/vim-test'
+depends = ['vim-dispatch']
 on_cmd = ['TestNearest', 'TestLast', 'TestFile', 'TestRunnerMinitest']
 hook_source = '''
-  let test#ruby#minitest#executable = 'bundle exec rake test VIM=1'
-  let g:dispatch_compilers = {'bundle exec': ''}
-  command! -nargs=0 TestRunnerMinitest let test#ruby#minitest#file_pattern = '_spec\.rb'
+  source ~/.config/nvim/rc/test.vim
 '''
 hook_add = '''
   nnoremap <leader>tn <cmd>TestNearest<cr>
@@ -49,24 +45,7 @@ hook_add = '''
   cmap <C-j> <Plug>(eskk:toggle)
 '''
 hook_source = '''
-  let g:eskk#dictionary = {
-  \	'path': "~/.local/share/skk/skk-jisyo",
-  \	'sorted': 0,
-  \	'encoding': 'utf-8',
-  \}
-
-  let g:eskk#large_dictionary = {
-  \	'path': "~/.local/share/skk/SKK-JISYO.L",
-  \	'sorted': 1,
-  \	'encoding': 'euc-jp',
-  \}
-
-  let g:eskk#enable_completion = 0
-
-  augroup vimrc-eskk
-    autocmd!
-    autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
-  augroup END
+  source ~/.config/nvim/rc/eskk.vim
 '''
 
 # [[plugins]]
@@ -109,17 +88,9 @@ on_event = 'BufRead'
 depends = ['plenary.nvim']
 hook_source = '''
 lua << EOS
-require('gitsigns').setup()
-EOS
-'''
-
-[[plugins]]
-repo = 'folke/todo-comments.nvim'
-on_event = 'BufRead'
-depends = ['plenary.nvim']
-hook_source = '''
-lua << EOS
-require('todo-comments').setup()
+require('gitsigns').setup({
+  current_line_blame = true
+})
 EOS
 '''
 
@@ -132,40 +103,11 @@ repo = 'vim-denops/denops.vim'
 
 [[plugins]]
 repo = 'vim-denops/denops-helloworld.vim'
-on_source = 'denops'
-
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-# on_event = 'InsertEnter'
-hook_source = '''
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#close_popup() . "\<CR>"
-endfunction
-
-call deoplete#custom#option({
-  \ 'num_processes': 4,
-  \ 'refresh_always': v:false,
-  \ 'auto_complete_delay': 20,
-  \ 'smart_case': v:true,
-  \ })
-call deoplete#enable()
-'''
-
-[[plugins]]
-repo = 'deoplete-plugins/deoplete-lsp'
-on_source = 'deoplete.nvim'
-
-[[plugins]]
-repo = 'Shougo/echodoc.vim'
-on_event = 'CompleteDone'
-hook_source = '''
-call echodoc#enable()
-'''
+on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim', 'ddc-zsh']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim']
 on_event = 'InsertEnter'
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'deoppet'])
@@ -191,9 +133,6 @@ call ddc#enable()
 '''
 
 [[plugins]]
-repo = 'Shougo/ddc-zsh'
-
-[[plugins]]
 repo = 'Shougo/ddc-around'
 
 [[plugins]]
@@ -217,6 +156,7 @@ hook_add = '''
   nnoremap ;g <cmd>Denite -buffer-name=search -no-empty grep<cr>
   nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty grep<cr>
   nnoremap ;r <cmd>Denite -resume -buffer-name=search<cr>
+  nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
@@ -364,17 +304,6 @@ defx = '''
 '''
 
 [[plugins]]
-repo = 'AndrewRadev/splitjoin.vim'
-on_cmd = ['SplitjoinJoin', 'SplitjoinSplit']
-hook_add = '''
-let g:splitjoin_split_mapping = ''
-let g:splitjoin_join_mapping = ''
-
-nmap sj :SplitjoinJoin<cr>
-nmap sk :SplitjoinSplit<cr>
-'''
-
-[[plugins]]
 repo = 'Shougo/deol.nvim'
 on_cmd = ['Deol']
 hook_source = '''
@@ -421,20 +350,6 @@ repo = 'nvim-lua/popup.nvim'
 repo = 'kyazdani42/nvim-web-devicons'
 
 [[plugins]]
-repo = 'nvim-telescope/telescope.nvim'
-depends = ['popup.nvim', 'plenary.nvim']
-
-[[plugins]]
-repo = 'pwntester/octo.nvim'
-on_cmd = ['Octo']
-depends = ['telescope.nvim', 'nvim-web-devicons']
-hook_source = '''
-lua <<EOS
-require"octo".setup()
-EOS
-'''
-
-[[plugins]]
 repo = 'simnalamburt/vim-mundo'
 on_cmd = ['MundoShow', 'MundoToggle']
 
@@ -453,18 +368,12 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
 depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall', 'plenary.nvim']
-on_ft = ['ruby', 'typescriptreact', 'typescript']
+on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 
-" augroup vimrc-lsp
-"   autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000, {'tsserver', 'eslint'})
-" augroup END
+command! SolargraphSetting lua require('ippachi/change-solargraph')
 '''
-
-[[plugins]]
-repo = 'matsui54/ddc-nvim-lsp-doc'
-on_source = 'ddc'
 
 [[plugins]]
 repo = 'jose-elias-alvarez/null-ls.nvim'
@@ -478,7 +387,19 @@ on_ft = ['csv']
 
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
+depends = ['tabular']
 on_ft = ['markdown', 'vimwiki']
 
 [[plugins]]
 repo = 'godlygeek/tabular'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip-integ'
+depends = ['vim-vsnip']
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'tpope/vim-dispatch'

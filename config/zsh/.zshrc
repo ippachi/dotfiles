@@ -52,6 +52,10 @@ fi
 
 # Customize to your needs...
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ -f /usr/local/bin/brew ]]; then
+  eval $(/usr/local/bin/brew shellenv)
+fi
+
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval $(/opt/homebrew/bin/brew shellenv)
 elif [[ -f /usr/local/bin/brew ]]; then
@@ -67,6 +71,11 @@ autoload -Uz compinit
 compinit
 
 alias rm='rm -iv'
+
+if [ -d "$HOME/.bookmarks" ]; then
+    export CDPATH=".:$HOME/.bookmarks:/"
+    alias goto="cd -P"
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

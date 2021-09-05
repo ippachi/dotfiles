@@ -106,6 +106,9 @@ if dein#check_install()
   call dein#install()
 endif
 
+" set rtp+=~/.cache/dein/repos/github.com/hrsh7th/vim-vsnip
+" set rtp+=~/ghq/github.com/ippachi/vim-vsnip-integ/
+
 syntax enable
 filetype plugin indent on
 

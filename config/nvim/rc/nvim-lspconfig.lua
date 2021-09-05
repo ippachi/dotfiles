@@ -4,6 +4,7 @@ require("null-ls").config({
       require("null-ls").builtins.formatting.eslint,
       require("null-ls").builtins.diagnostics.eslint,
       require("null-ls").builtins.code_actions.eslint,
+      require("null-ls").builtins.code_actions.gitsigns,
     }
 })
 
@@ -39,34 +40,49 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+  -- require "lsp_signature".on_attach()
 end
 
--- Use a loop to conveniently call 'setup' on multiple servers and
--- map buffer local keybindings when the language server attaches
-local servers = { 'solargraph' }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
+local function make_config()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  return {
+    -- enable snippet support
+    capabilities = capabilities,
+    -- map buffer local keybindings when the language server attaches
     on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
   }
 end
 
-local function lsp_settings(key)
-  local settings = {}
-  return settings[key] or {}
+local util = require 'lspconfig/util'
+
+local function lsp_configs(server, config)
+  local configs = {
+    solragraph = {
+      cmd = { "solargraph", "stdio" }
+    },
+    sorbet = {
+      cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
+      root_dir = util.root_pattern("sorbet/config")
+    }
+  }
+  return vim.tbl_deep_extend('force', config, configs[server] or {})
 end
 
 local function setup_servers()
   require'lspinstall'.setup()
+
+  -- get all installed servers
   local servers = require'lspinstall'.installed_servers()
+  -- ... and add manually installed servers
+  table.insert(servers, "solargraph")
+  table.insert(servers, "sorbet")
+
   for _, server in pairs(servers) do
-    local config = { on_attach = on_attach }
-    for k,v in pairs(lsp_settings(server)) do config[k] = v end
-    nvim_lsp[server].setup{
-      on_attach = on_attach
-    }
+    local config = make_config()
+
+    require'lspconfig'[server].setup(lsp_configs(server, config))
   end
 end
 
@@ -80,78 +96,5 @@ end
 
 nvim_lsp["null-ls"].setup{
   on_attach = on_attach,
-  root_dir = vim.loop.cwd
+  root_dir = util.root_pattern('package.json')
 }
-
-
-local util = require 'lspconfig/util'
-
-nvim_lsp.sorbet.setup{
-  cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
-  root_dir = util.root_pattern("sorbet/config")
-}
---
--- nvim_lsp.diagnosticls.setup{
---   on_attach = on_attach,
---   filetypes = { 'typescriptreact' },
---   init_options = {
---     filetypes = {
---       typescriptreact = 'eslint'
---     },
---     linters = {
---       eslint = {
---         command = './node_modules/.bin/eslint',
---         rootPatterns = {
---           '.eslintrc.js',
---           '.eslintrc.json'
---         },
---         debounce = 100,
---         args = {
---           '--stdin',
---           '--stdin-filename',
---           '%filepath',
---           '--format',
---           'json'
---         },
---         sourceName = 'eslint',
---         parseJson = {
---           errorsRoot = '[0].messages',
---           line = 'line',
---           column = 'column',
---           endLine = 'endLine',
---           endColumn = 'endColumn',
---           message = '${message} [${ruleId}]',
---           security = 'severity'
---         },
---         securities = {
---           ['2'] = 'error',
---           ['1'] = 'warning'
---         }
---       }
---     },
---     formatFiletypes = {
---       typescriptreact = 'prettier'
---     },
---     formatters = {
---       prettier =  {
---         command =  "./node_modules/.bin/prettier",
---         args =  {"--stdin-filepath", "%filepath"},
---         rootPatterns =  {
---           ".prettierrc",
---           ".prettierrc.json",
---           ".prettierrc.toml",
---           ".prettierrc.json",
---           ".prettierrc.yml",
---           ".prettierrc.yaml",
---           ".prettierrc.json5",
---           ".prettierrc.js",
---           ".prettierrc.cjs",
---           "prettier.config.js",
---           "prettier.config.cjs",
---           ".eslintrc.js",
---           ".eslintrc.json"
---         }
---       }
---     }
---   }
--- }
