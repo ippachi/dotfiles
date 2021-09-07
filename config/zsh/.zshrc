@@ -71,6 +71,7 @@ autoload -Uz compinit
 compinit
 
 alias rm='rm -iv'
+export LANG=en_US.utf-8
 
 if [ -d "$HOME/.bookmarks" ]; then
     export CDPATH=".:$HOME/.bookmarks:/"

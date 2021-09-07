@@ -110,7 +110,7 @@ repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'deoppet'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'buffer', 'deoppet'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -153,8 +153,8 @@ depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
   nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
-  nnoremap ;g <cmd>Denite -buffer-name=search -no-empty grep<cr>
-  nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty grep<cr>
+  nnoremap ;g <cmd>Denite -buffer-name=search -no-empty -smartcase grep<cr>
+  nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty -smartcase grep<cr>
   nnoremap ;r <cmd>Denite -resume -buffer-name=search<cr>
   nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
 '''
@@ -164,7 +164,7 @@ hook_source = '''
 
   call denite#custom#var('grep', {
           \   'command': ['rg'],
-          \   'default_opts': ['-i', '--vimgrep', '--no-heading'],
+          \   'default_opts': ['-i', '--vimgrep', '--no-heading', '--smart-case'],
           \   'recursive_opts': [],
           \   'pattern_opt': ['--regexp'],
           \   'separator': ['--'],
@@ -368,7 +368,7 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
 depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall', 'plenary.nvim']
-on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua']
+on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 
