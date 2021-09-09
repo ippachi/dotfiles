@@ -83,16 +83,8 @@ EOF
 '''
 
 [[plugins]]
-repo = 'lewis6991/gitsigns.nvim'
+repo = 'airblade/vim-gitgutter'
 on_event = 'BufRead'
-depends = ['plenary.nvim']
-hook_source = '''
-lua << EOS
-require('gitsigns').setup({
-  current_line_blame = true
-})
-EOS
-'''
 
 [[plugins]]
 repo = 'vim-ruby/vim-ruby'
