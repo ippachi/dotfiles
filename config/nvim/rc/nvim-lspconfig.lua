@@ -4,7 +4,6 @@ require("null-ls").config({
       require("null-ls").builtins.formatting.eslint,
       require("null-ls").builtins.diagnostics.eslint,
       require("null-ls").builtins.code_actions.eslint,
-      require("null-ls").builtins.code_actions.gitsigns,
     }
 })
 
