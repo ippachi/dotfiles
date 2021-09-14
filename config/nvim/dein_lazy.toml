@@ -359,16 +359,18 @@ on_event = 'BufRead'
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-depends = ['lsp_signature.nvim', 'null-ls.nvim', 'nvim-lspinstall', 'plenary.nvim']
+depends = ['lsp_signature.nvim', 'nvim-lspinstall', 'plenary.nvim']
 on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 
 command! SolargraphSetting lua require('ippachi/change-solargraph')
-'''
 
-[[plugins]]
-repo = 'jose-elias-alvarez/null-ls.nvim'
+augroup vimrc-lspconfig
+  autocmd!
+  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000)
+augroup END
+'''
 
 [[plugins]]
 repo = 'kabouzeid/nvim-lspinstall'

@@ -1,12 +1,3 @@
-require("null-ls").config({
-    -- you must define at least one source for the plugin to work
-    sources = {
-      require("null-ls").builtins.formatting.eslint,
-      require("null-ls").builtins.diagnostics.eslint,
-      require("null-ls").builtins.code_actions.eslint,
-    }
-})
-
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys
@@ -56,6 +47,59 @@ end
 
 local util = require 'lspconfig/util'
 
+local function diagnosticls_settings()
+  return {
+    filetypes = { "typescriptreact" },
+    init_options = {
+      filetypes = {
+        typescriptreact = "eslint",
+      },
+      formatFiletypes = {
+        typescriptreact = "prettier"
+      },
+      linters = {
+        eslint = {
+          command = "./node_modules/.bin/eslint",
+          rootPatterns = {
+            "package.json"
+          },
+          debounce = 100,
+          args = {
+            "--stdin",
+            "--stdin-filename",
+            "%filepath",
+            "--format",
+            "json"
+          },
+          sourceName = "eslint",
+          parseJson = {
+            errorsRoot = "[0].messages",
+            line = "line",
+            column = "column",
+            endLine = "endLine",
+            endColumn = "endColumn",
+            message = "${message} [${ruleId}]",
+            security = "severity"
+          },
+          securities = {
+            ["2"] = "error",
+            ["1"] = "warning"
+          }
+        }
+      },
+      formatters = {
+        prettier = {
+          command = "./node_modules/.bin/prettier",
+          args = {"--stdin-filepath", "%filepath"},
+          rootPatterns = {
+            "package.json",
+          }
+        }
+      }
+    }
+  }
+end
+
 local function lsp_configs(server, config)
   local configs = {
     solragraph = {
@@ -64,7 +108,8 @@ local function lsp_configs(server, config)
     sorbet = {
       cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
       root_dir = util.root_pattern("sorbet/config")
-    }
+    },
+    diagnosticls = diagnosticls_settings()
   }
   return vim.tbl_deep_extend('force', config, configs[server] or {})
 end
@@ -92,8 +137,3 @@ require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
 end
-
-nvim_lsp["null-ls"].setup{
-  on_attach = on_attach,
-  root_dir = util.root_pattern('package.json')
-}
