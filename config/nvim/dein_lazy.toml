@@ -147,8 +147,12 @@ hook_add = '''
   nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
   nnoremap ;g <cmd>Denite -buffer-name=search -no-empty -smartcase grep<cr>
   nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty -smartcase grep<cr>
-  nnoremap ;r <cmd>Denite -resume -buffer-name=search<cr>
+  nnoremap ;n <cmd>Denite -resume -buffer-name=search<cr>
+  nnoremap ;f <cmd>Denite -resume -buffer-name=files<cr>
+  nnoremap ;r <cmd>Denite register<cr>
+  xnoremap ;r <cmd>Denite -default-action=replace register<cr>
   nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
+  nnoremap ;l <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
@@ -156,7 +160,7 @@ hook_source = '''
 
   call denite#custom#var('grep', {
           \   'command': ['rg'],
-          \   'default_opts': ['-i', '--vimgrep', '--no-heading', '--smart-case'],
+          \   'default_opts': ['-i', '--vimgrep', '--pcre2', '--no-heading', '--smart-case'],
           \   'recursive_opts': [],
           \   'pattern_opt': ['--regexp'],
           \   'separator': ['--'],

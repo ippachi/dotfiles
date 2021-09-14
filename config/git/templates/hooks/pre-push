@@ -1,0 +1,5 @@
+#!/bin/bash
+git grep 'TODO: now'
+if [[ $? == 0 ]]; then
+  exit 1
+fi

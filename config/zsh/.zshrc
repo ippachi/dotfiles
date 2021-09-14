@@ -62,6 +62,8 @@ elif [[ -f /usr/local/bin/brew ]]; then
   eval $(/usr/local/bin/brew shellenv)
 fi
 
+eval "$(direnv hook zsh)"
+
 . $HOMEBREW_PREFIX/opt/asdf/asdf.sh
 
 export PATH=~/bin:$PATH

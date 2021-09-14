@@ -7,6 +7,8 @@
 	algorithm = histogram
 	colorMoved = dimmed-zebra
 	colorMovedWS = allow-indentation-change
+[branch]
+  sort = -committerdate
 [pull]
 	twohead = ort
 [init]
