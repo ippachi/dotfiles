@@ -66,7 +66,8 @@ eval "$(direnv hook zsh)"
 
 . $HOMEBREW_PREFIX/opt/asdf/asdf.sh
 
-export PATH=~/bin:$PATH
+export PATH=$HOME/bin:$PATH
+export PATH=$HOME/.cargo/bin:$PATH
 
 zmodload zsh/zpty
 autoload -Uz compinit

@@ -329,13 +329,6 @@ call deoppet#custom#option('snippets',
 repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
-repo = 'cohama/lexima.vim'
-on_event = 'InsertEnter'
-hook_source = '''
-let g:lexima_accept_pum_with_enter = 0
-'''
-
-[[plugins]]
 repo = 'nvim-lua/popup.nvim'
 
 [[plugins]]
