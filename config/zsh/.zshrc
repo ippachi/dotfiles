@@ -62,7 +62,9 @@ elif [[ -f /usr/local/bin/brew ]]; then
   eval $(/usr/local/bin/brew shellenv)
 fi
 
-eval "$(direnv hook zsh)"
+if which direnv 2>&1 1>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 . $HOMEBREW_PREFIX/opt/asdf/asdf.sh
 
