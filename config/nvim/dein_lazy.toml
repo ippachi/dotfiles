@@ -99,10 +99,10 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'ddc-buffer', 'deoppet.nvim', 'ddc-file']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'around', 'buffer', 'deoppet'])
+call ddc#custom#patch_global('sources', ['nvimlsp', 'file', 'around', 'buffer', 'deoppet'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -112,7 +112,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
-      \   'zsh': { 'mark': 'Z' },
+      \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' }
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvimlsp': {'useIcon': v:true},
@@ -382,3 +382,13 @@ repo = 'godlygeek/tabular'
 
 [[plugins]]
 repo = 'tpope/vim-dispatch'
+
+[[plugins]]
+repo = 'LumaKernel/ddc-file'
+
+[[plugins]]
+repo = 'matsui54/ddc-nvim-lsp-doc'
+on_source = 'ddc-nvim-lsp'
+hook_source = '''
+call ddc_nvim_lsp_doc#enable()
+'''
