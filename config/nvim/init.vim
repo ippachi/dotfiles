@@ -55,6 +55,8 @@ nnoremap Y y$
 nnoremap \ ,
 nnoremap <esc><esc> <cmd>nohl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
+nnoremap ;g :<c-u>silent grep ''<left>
+nnoremap ;w :<c-u>silent grep '<c-r><c-w>'<cr>
 " }}}
 
 " Base augroup {{{

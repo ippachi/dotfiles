@@ -1,3 +1,4 @@
+M = {}
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys
@@ -102,13 +103,6 @@ end
 
 local function lsp_configs(server, config)
   local configs = {
-    solragraph = {
-      cmd = { "solargraph", "stdio" }
-    },
-    sorbet = {
-      cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
-      root_dir = util.root_pattern("sorbet/config")
-    },
     diagnosticls = diagnosticls_settings()
   }
   return vim.tbl_deep_extend('force', config, configs[server] or {})
@@ -120,8 +114,8 @@ local function setup_servers()
   -- get all installed servers
   local servers = require'lspinstall'.installed_servers()
   -- ... and add manually installed servers
-  table.insert(servers, "solargraph")
-  table.insert(servers, "sorbet")
+  -- table.insert(servers, "solargraph")
+  -- table.insert(servers, "sorbet")
 
   for _, server in pairs(servers) do
     local config = make_config()
@@ -137,3 +131,6 @@ require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
 end
+
+M.make_config = make_config
+M.lsp_configs = lsp_configs
