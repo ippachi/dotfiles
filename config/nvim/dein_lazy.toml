@@ -99,23 +99,24 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
+rev = 'popup'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvimlsp', 'file', 'around', 'buffer', 'deoppet'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
       \     'sorters': ['sorter_rank']
       \   },
       \   'around': { 'mark': 'A' },
-      \   'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
+      \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
       \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' }
       \ })
 call ddc#custom#patch_global('sourceParams', {
-      \ 'nvimlsp': {'useIcon': v:true},
+      \ 'nvim-lsp': {'useIcon': v:true},
       \ })
 
 call ddc#custom#patch_global('filterParams', {

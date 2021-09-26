@@ -54,3 +54,9 @@ repo = 'vimwiki/vimwiki'
 hook_add = '''
 let g:vimwiki_list = [{ 'path': '~/Dropbox/wiki', 'syntax': 'markdown', 'ext': '.md' }, { 'path': './.wiki' }]
 '''
+
+[[plugins]]
+repo = 'kana/vim-submode'
+hook_add = '''
+let g:submode_timeout = v:false
+'''

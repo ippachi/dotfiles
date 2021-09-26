@@ -34,12 +34,12 @@ set updatetime=300
 set background=dark
 set cursorline
 set cmdheight=2
-set colorcolumn=100
+set colorcolumn=120
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
 
 if executable('rg')
-  set grepprg=rg\ --vimgrep\ --smart-case
+  set grepprg=rg\ --vimgrep\ --smart-case\ --pcre2
   set grepformat=%f:%l:%c:%m,%f:%l:%m
 end
 
