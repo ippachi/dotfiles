@@ -44,6 +44,8 @@ if executable('rg')
 end
 
 let mapleader=','
+
+packadd Cfilter
 " }}}
 
 " Base mappings {{{
@@ -53,10 +55,12 @@ nnoremap gj j
 nnoremap gk k
 nnoremap Y y$
 nnoremap \ ,
-nnoremap <esc><esc> <cmd>nohl<cr>
+nnoremap <esc><esc> <cmd>nohl \| ccl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
 nnoremap ;g :<c-u>silent grep ''<left>
 nnoremap ;w :<c-u>silent grep '<c-r><c-w>'<cr>
+cnoremap cn<cr> cope \| cn<cr>
+cnoremap cp<cr> cope \| cp<cr>
 " }}}
 
 " Base augroup {{{

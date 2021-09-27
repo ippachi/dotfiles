@@ -5,6 +5,6 @@ command! -nargs=0 TestRunnerMinitest let test#ruby#minitest#file_pattern = '_spe
 let test#ruby#minitest#file_pattern = 'test\/.*_spec\.rb'
 let test#strategy = {
   \ 'nearest': 'neovim',
-  \ 'file':    'dispatch',
+  \ 'file':    'neovim',
   \ 'suite':   'basic',
 \}
