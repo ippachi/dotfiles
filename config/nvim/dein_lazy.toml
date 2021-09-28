@@ -109,7 +109,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \     'sorters': ['sorter_rank']
       \   },
       \   'around': { 'mark': 'A' },
-      \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
+      \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
       \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' }
