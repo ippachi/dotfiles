@@ -27,9 +27,9 @@ hook_source = '''
   source ~/.config/nvim/rc/test.vim
 '''
 hook_add = '''
-  nnoremap <leader>tn <cmd>TestNearest<cr>
+  nnoremap <leader>tn :TestNearest<cr><c-\><c-n><c-w>p
   nnoremap <leader>tl <cmd>TestLast<cr>
-  nnoremap <leader>tf <cmd>TestFile<cr>
+  nnoremap <leader>tf :TestFile<cr><c-\><c-n><c-w>p
   nnoremap <leader>ts <cmd>TestSuite<cr>
 '''
 
