@@ -27,9 +27,9 @@ hook_source = '''
   source ~/.config/nvim/rc/test.vim
 '''
 hook_add = '''
-  nnoremap <leader>tn <cmd>TestNearest<cr>
+  nnoremap <leader>tn :TestNearest<cr><c-\><c-n><c-w>p
   nnoremap <leader>tl <cmd>TestLast<cr>
-  nnoremap <leader>tf <cmd>TestFile<cr>
+  nnoremap <leader>tf :TestFile<cr><c-\><c-n><c-w>p
   nnoremap <leader>ts <cmd>TestSuite<cr>
 '''
 
@@ -99,7 +99,6 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-rev = 'popup'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer']
 on_event = 'InsertEnter'
 hook_source = '''
@@ -110,7 +109,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \     'sorters': ['sorter_rank']
       \   },
       \   'around': { 'mark': 'A' },
-      \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
+      \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
       \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' },
@@ -358,13 +357,6 @@ depends = ['lsp_signature.nvim', 'nvim-lspinstall', 'plenary.nvim']
 on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
-
-command! SolargraphSetting lua require('ippachi/change-solargraph')
-
-augroup vimrc-lspconfig
-  autocmd!
-  autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_seq_sync(nil, 1000)
-augroup END
 '''
 
 [[plugins]]
