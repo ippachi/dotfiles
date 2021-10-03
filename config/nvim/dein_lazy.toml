@@ -103,7 +103,7 @@ rev = 'popup'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -113,7 +113,8 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.|:|->'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
-      \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' }
+      \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' },
+      \   'yank': { 'mark': 'Y' }
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvim-lsp': {'useIcon': v:true},

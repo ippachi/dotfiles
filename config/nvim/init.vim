@@ -110,6 +110,7 @@ endif
 
 " set rtp+=~/.cache/dein/repos/github.com/hrsh7th/vim-vsnip
 " set rtp+=~/ghq/github.com/ippachi/vim-vsnip-integ/
+set rtp+=~/ghq/github.com/ippachi/ddc-yank
 
 syntax enable
 filetype plugin indent on
