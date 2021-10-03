@@ -24,7 +24,11 @@ repo = 'vim-test/vim-test'
 depends = ['vim-dispatch']
 on_cmd = ['TestNearest', 'TestLast', 'TestFile', 'TestRunnerMinitest']
 hook_source = '''
-  source ~/.config/nvim/rc/test.vim
+  let g:test#strategy = {
+    \ 'nearest': 'neovim',
+    \ 'file':    'neovim',
+    \ 'suite':   'basic',
+    \ }
 '''
 hook_add = '''
   nnoremap <leader>tn :TestNearest<cr><c-\><c-n><c-w>p
@@ -99,10 +103,10 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine']
 on_event = 'InsertEnter'
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank', 'tabnine'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -113,7 +117,8 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
       \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' },
-      \   'yank': { 'mark': 'Y' }
+      \   'tabnine': { 'mark': 'TN', 'isVolatile': v:true },
+      \   'yank': { 'mark': 'Y' },
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvim-lsp': {'useIcon': v:true},
@@ -390,3 +395,17 @@ call ddc_nvim_lsp_doc#enable()
 [[plugins]]
 repo = 'liuchengxu/vista.vim'
 on_cmd = ['Vista']
+
+[[plugins]]
+repo = 'Shougo/pum.vim'
+hook_source = '''
+inoremap <Tab>   <Cmd>call pum#map#select_relative(+1)<CR>
+inoremap <S-Tab> <Cmd>call pum#map#select_relative(-1)<CR>
+inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+'''
+
+[[plugins]]
+repo = 'LumaKernel/ddc-tabnine'
