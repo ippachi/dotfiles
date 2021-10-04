@@ -24,6 +24,7 @@ repo = 'vim-test/vim-test'
 depends = ['vim-dispatch']
 on_cmd = ['TestNearest', 'TestLast', 'TestFile', 'TestRunnerMinitest']
 hook_source = '''
+  let g:test#ruby#minitest#file_pattern = '^test.*_spec\.rb'
   let g:test#strategy = {
     \ 'nearest': 'neovim',
     \ 'file':    'neovim',
@@ -104,7 +105,7 @@ on_source = 'denops.vim'
 [[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine']
-on_event = 'InsertEnter'
+on_event = ['InsertEnter', 'CmdLineEnter']
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank', 'tabnine'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -127,6 +128,11 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
     \ 'buffer': {'requireSameFiletype': v:false},
     \ })
+
+" call ddc#custom#patch_global('completionMenu', 'pum.vim')
+" call ddc#custom#patch_global('autoCompleteEvents',
+"     \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+
 call ddc#enable()
 '''
 
@@ -368,10 +374,6 @@ luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 repo = 'kabouzeid/nvim-lspinstall'
 
 [[plugins]]
-repo = 'mechatroner/rainbow_csv'
-on_ft = ['csv']
-
-[[plugins]]
 repo = 'plasticboy/vim-markdown'
 depends = ['tabular']
 on_ft = ['markdown', 'vimwiki']
@@ -399,8 +401,6 @@ on_cmd = ['Vista']
 [[plugins]]
 repo = 'Shougo/pum.vim'
 hook_source = '''
-inoremap <Tab>   <Cmd>call pum#map#select_relative(+1)<CR>
-inoremap <S-Tab> <Cmd>call pum#map#select_relative(-1)<CR>
 inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
 inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
@@ -409,3 +409,11 @@ inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
 [[plugins]]
 repo = 'LumaKernel/ddc-tabnine'
+
+[[plugins]]
+repo = 'chrisbra/csv.vim'
+on_ft = 'csv'
+hook_source = '''
+call pum#set_option('border', 'none')
+call pum#set_option('winblend', 15)
+'''
