@@ -11,8 +11,3 @@ let g:eskk#large_dictionary = {
 \}
 
 let g:eskk#enable_completion = 0
-
-augroup vimrc-eskk
-  autocmd!
-  autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
-augroup END

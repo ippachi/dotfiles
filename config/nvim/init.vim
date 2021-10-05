@@ -55,9 +55,6 @@ nnoremap Y y$
 nnoremap \ ,
 nnoremap <esc><esc> <cmd>nohl \| ccl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
-nnoremap ;g :<c-u>silent grep ''<left>
-nnoremap ;w :<c-u>silent grep '<c-r><c-w>'<cr>
-nnoremap ;dd :<c-u>silent grep 'def <c-r><c-w>'<cr>
 cnoremap cn<cr> cope \| cn<cr>
 cnoremap cp<cr> cope \| cp<cr>
 " }}}

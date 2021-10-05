@@ -42,30 +42,30 @@ hook_add = '''
 repo = 'thinca/vim-quickrun'
 on_cmd = ['QuickRun']
 
-[[plugins]]
-repo = 'tyru/eskk.vim'
-on_map = { ic = '<Plug>' }
-hook_add = '''
-  imap <C-j> <Plug>(eskk:toggle)
-  cmap <C-j> <Plug>(eskk:toggle)
-'''
-hook_source = '''
-  source ~/.config/nvim/rc/eskk.vim
-'''
-
 # [[plugins]]
-# repo = 'kuuote/denops-skkeleton.vim'
-# on_map = { ic = '<Plug>(skkeleton' }
+# repo = 'tyru/eskk.vim'
+# on_map = { ic = '<Plug>' }
 # hook_add = '''
-# imap <C-j> <Plug>(skkeleton-enable)
-# cmap <C-j> <Plug>(skkeleton-enable)
+#   imap <C-j> <Plug>(eskk:toggle)
+#   cmap <C-j> <Plug>(eskk:toggle)
 # '''
 # hook_source = '''
-# call skkeleton#config({
-#   \ 'globalJisyo': '/Users/ippachi/.local/share/skk/SKK-JISYO.L',
-#   \ 'userJisyo': '/Users/ippachi/.local/share/skk/skk-jisyo'
-#   \ })
+#   source ~/.config/nvim/rc/eskk.vim
 # '''
+
+[[plugins]]
+repo = 'kuuote/denops-skkeleton.vim'
+on_map = { ic = '<Plug>(skkeleton' }
+hook_add = '''
+imap <C-j> <Plug>(skkeleton-enable)
+cmap <C-j> <Plug>(skkeleton-enable)
+'''
+hook_source = '''
+call skkeleton#config({
+  \ 'globalJisyo': '/Users/ippachi/.local/share/skk/SKK-JISYO.L',
+  \ 'userJisyo': '/Users/ippachi/.local/share/skk/skk-jisyo'
+  \ })
+'''
 
 [[plugins]]
 repo = 'AndrewRadev/linediff.vim'
@@ -105,7 +105,7 @@ on_source = 'denops.vim'
 [[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine']
-on_event = ['InsertEnter', 'CmdLineEnter']
+on_event = ['InsertEnter']
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank', 'tabnine'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -157,14 +157,17 @@ depends = ['vim-clap']
 on_cmd = 'Denite'
 hook_add = '''
   nnoremap <c-p> <cmd>Denite -buffer-name=files -start-filter file/rec<cr>
-  " nnoremap ;g <cmd>Denite -buffer-name=search -no-empty -smartcase grep<cr>
-  " nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty -smartcase grep<cr>
+  nnoremap ;g <cmd>Denite -buffer-name=search -no-empty -smartcase grep<cr>
+  nnoremap ;w <cmd>DeniteCursorWord -buffer-name=search -no-empty -smartcase grep<cr>
+  nnoremap ;h <cmd>Denite -start-filter help<cr>
   nnoremap ;n <cmd>Denite -resume -buffer-name=search<cr>
   nnoremap ;f <cmd>Denite -resume -buffer-name=files<cr>
   nnoremap ;r <cmd>Denite register<cr>
   xnoremap ;r <cmd>Denite -default-action=replace register<cr>
   nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
   nnoremap ;l <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
+  nnoremap ,dn <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
+  nnoremap ,dp <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
