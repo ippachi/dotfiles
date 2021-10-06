@@ -45,6 +45,14 @@ local function make_config()
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150
+    },
+    handlers = {
+      ["textDocument/publishDiagnostics"] = vim.lsp.with(
+        vim.lsp.diagnostic.on_publish_diagnostics, {
+          -- Disable virtual_text
+          underline = false
+        }
+      ),
     }
   }
 end
