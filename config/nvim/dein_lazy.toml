@@ -104,14 +104,35 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate']
 on_event = ['InsertEnter']
+hook_add = '''
+nnoremap : <Cmd>call CommandlinePre()<CR>:
+
+function! CommandlinePre() abort
+  call dein#source('ddc.vim')
+  " Overwrite sources
+  let s:prev_buffer_config = ddc#custom#get_buffer()
+  call ddc#custom#patch_buffer('sources', ['cmdline-history'])
+  call ddc#custom#patch_buffer('sourceOptions', { '_': { 'sorters': [] } })
+
+  autocmd CmdlineLeave * ++once call CommandlinePost()
+
+  " Enable command line completion
+  call ddc#enable_cmdline_completion()
+endfunction
+function! CommandlinePost() abort
+  " Restore sources
+  call ddc#custom#set_buffer(s:prev_buffer_config)
+endfunction
+'''
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank', 'tabnine'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
-      \     'sorters': ['sorter_rank']
+      \     'sorters': ['sorter_rank'],
+      \     'converters': ['converter_remove_overlap', 'converter_truncate'],
       \   },
       \   'around': { 'mark': 'A' },
       \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'},
@@ -120,6 +141,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' },
       \   'tabnine': { 'mark': 'TN', 'isVolatile': v:true },
       \   'yank': { 'mark': 'Y' },
+      \   'cmdline-history': { 'mark': 'history' },
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvim-lsp': {'useIcon': v:true},
@@ -127,11 +149,12 @@ call ddc#custom#patch_global('sourceParams', {
 
 call ddc#custom#patch_global('filterParams', {
     \ 'buffer': {'requireSameFiletype': v:false},
+    \ 'converter_truncate': {'maxInfoWidth': 20}
     \ })
 
-" call ddc#custom#patch_global('completionMenu', 'pum.vim')
-" call ddc#custom#patch_global('autoCompleteEvents',
-"     \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+call ddc#custom#patch_global('completionMenu', 'pum.vim')
+call ddc#custom#patch_global('autoCompleteEvents',
+    \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
 
 call ddc#enable()
 '''
@@ -408,6 +431,15 @@ inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
 inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+
+cnoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+cnoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+
+call pum#set_option('border', 'none')
+call pum#set_option('winblend', 15)
+call pum#set_option('highlight_matches', 'Orange')
 '''
 
 [[plugins]]
@@ -416,7 +448,12 @@ repo = 'LumaKernel/ddc-tabnine'
 [[plugins]]
 repo = 'chrisbra/csv.vim'
 on_ft = 'csv'
-hook_source = '''
-call pum#set_option('border', 'none')
-call pum#set_option('winblend', 15)
-'''
+
+[[plugins]]
+repo = 'Shougo/ddc-cmdline-history'
+
+[[plugins]]
+repo = 'Shougo/ddc-converter_remove_overlap'
+
+[[plugins]]
+repo = 'matsui54/ddc-converter_truncate'

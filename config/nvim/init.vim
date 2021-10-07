@@ -22,7 +22,7 @@ set undofile
 set swapfile
 set backupdir=~/.local/share/nvim/backup
 set backup
-set scrolloff=3
+set scrolloff=0
 set termguicolors
 set splitbelow
 set splitright
