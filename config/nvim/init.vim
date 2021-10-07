@@ -35,6 +35,7 @@ set cmdheight=2
 set colorcolumn=120
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
+set pumheight=10
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --pcre2
