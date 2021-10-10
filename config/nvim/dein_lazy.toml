@@ -196,7 +196,7 @@ hook_source = '''
 
   call denite#custom#source('file/rec',
       \   {
-      \     'matchers': ['matcher/clap'],
+      \     'matchers': ['matcher/fuzzy'],
       \     'sorters': ['sorter/oldfiles', 'sorter/rank']
       \   }
       \ )
