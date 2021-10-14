@@ -138,7 +138,7 @@ call ddc#custom#patch_global('filterParams', {
     \ 'converter_truncate': {'maxInfoWidth': 20}
     \ })
 
-" call ddc#custom#patch_global('completionMenu', 'pum.vim')
+call ddc#custom#patch_global('completionMenu', 'pum.vim')
 " call ddc#custom#patch_global('autoCompleteEvents',
 "     \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
 
@@ -175,8 +175,7 @@ hook_add = '''
   xnoremap ;r <cmd>Denite -default-action=replace register<cr>
   nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
   nnoremap ;l <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
-  nnoremap ,dn <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
-  nnoremap ,dp <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
+  nnoremap ;s <cmd>Denite -start-filter gitstatus<cr>
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
@@ -377,7 +376,7 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
 depends = ['lsp_signature.nvim', 'nvim-lspinstall', 'plenary.nvim']
-on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim']
+on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim', 'php']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 '''
@@ -398,13 +397,6 @@ repo = 'tpope/vim-dispatch'
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
-
-[[plugins]]
-repo = 'matsui54/ddc-nvim-lsp-doc'
-on_source = 'ddc-nvim-lsp'
-hook_source = '''
-call ddc_nvim_lsp_doc#enable()
-'''
 
 [[plugins]]
 repo = 'liuchengxu/vista.vim'
@@ -443,3 +435,18 @@ repo = 'Shougo/ddc-converter_remove_overlap'
 
 [[plugins]]
 repo = 'matsui54/ddc-converter_truncate'
+
+[[plugins]]
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'typescriptreact']
+
+[[plugins]]
+repo = 'matsui54/denops-popup-preview.vim'
+on_source = 'ddc-nvim-lsp'
+hook_source = '''
+call popup_preview#enable()
+'''
+
+[[plugins]]
+repo = 'neoclide/denite-git'
+on_source = 'denite.nvim'

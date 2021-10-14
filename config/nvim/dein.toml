@@ -25,7 +25,7 @@ repo = 'morhetz/gruvbox'
 [[plugins]]
 repo = 'tpope/vim-fugitive'
 hook_add = '''
-nnoremap <leader>gs <cmd>Git<cr>
+nnoremap <leader>gs <cmd>tab Git<cr>
 '''
 
 [[plugins]]
