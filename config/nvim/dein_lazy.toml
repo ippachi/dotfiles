@@ -90,7 +90,7 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-tabnine', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate']
 on_event = ['InsertEnter']
 hook_add = '''
 " nnoremap : <Cmd>call CommandlinePre()<CR>:
@@ -113,7 +113,7 @@ hook_add = '''
 " endfunction
 '''
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank', 'tabnine'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'buffer', 'deoppet', 'yank'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
@@ -124,8 +124,6 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'},
       \   'buffer': { 'mark': 'B' },
       \   'deoppet': { 'mark': 'dp' },
-      \   'file': { 'mark': 'F', 'forceCompletionPattern': '\S/\S*' },
-      \   'tabnine': { 'mark': 'TN', 'isVolatile': v:true },
       \   'yank': { 'mark': 'Y' },
       \   'cmdline-history': { 'mark': 'history' },
       \ })
@@ -419,9 +417,6 @@ call pum#set_option('border', 'none')
 call pum#set_option('winblend', 15)
 call pum#set_option('highlight_matches', 'Orange')
 '''
-
-[[plugins]]
-repo = 'LumaKernel/ddc-tabnine'
 
 [[plugins]]
 repo = 'chrisbra/csv.vim'
