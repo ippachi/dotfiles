@@ -92,26 +92,6 @@ on_source = 'denops.vim'
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate']
 on_event = ['InsertEnter']
-hook_add = '''
-" nnoremap : <Cmd>call CommandlinePre()<CR>:
-"
-" function! CommandlinePre() abort
-"   call dein#source('ddc.vim')
-"   " Overwrite sources
-"   let s:prev_buffer_config = ddc#custom#get_buffer()
-"   call ddc#custom#patch_buffer('sources', ['cmdline-history'])
-"   call ddc#custom#patch_buffer('sourceOptions', { '_': { 'sorters': [] } })
-"
-"   autocmd CmdlineLeave * ++once call CommandlinePost()
-"
-"   " Enable command line completion
-"   call ddc#enable_cmdline_completion()
-" endfunction
-" function! CommandlinePost() abort
-"   " Restore sources
-"   call ddc#custom#set_buffer(s:prev_buffer_config)
-" endfunction
-'''
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'buffer', 'deoppet', 'yank'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -135,10 +115,6 @@ call ddc#custom#patch_global('filterParams', {
     \ 'buffer': {'requireSameFiletype': v:false},
     \ 'converter_truncate': {'maxInfoWidth': 20}
     \ })
-
-call ddc#custom#patch_global('completionMenu', 'pum.vim')
-" call ddc#custom#patch_global('autoCompleteEvents',
-"     \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
 
 call ddc#enable()
 '''

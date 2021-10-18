@@ -56,6 +56,7 @@ nnoremap Y y$
 nnoremap \ ,
 nnoremap <esc><esc> <cmd>nohl \| ccl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
+tnoremap <c-o> <c-\><c-n>
 " }}}
 
 " Base augroup {{{
