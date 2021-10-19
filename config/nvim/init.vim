@@ -19,7 +19,7 @@ set signcolumn=yes
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set encoding=utf-8
 set undofile
-set swapfile
+set noswapfile
 set backupdir=~/.local/share/nvim/backup
 set backup
 set scrolloff=0
