@@ -8,7 +8,7 @@
 
  augroup ruby-lsp-autostart
    autocmd!
-   autocmd BufEnter *.rb call g:ruby_lsp_autostart#start_lsp_client()
+   " autocmd BufEnter *.rb call g:ruby_lsp_autostart#start_lsp_client()
  augroup END
 
  let &cpo = s:save_cpo

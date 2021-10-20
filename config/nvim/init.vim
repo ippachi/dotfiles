@@ -80,6 +80,27 @@ augroup vimrc-vim-marker
   autocmd!
   autocmd BufEnter .vimrc,init.vim setl foldmethod=marker
 augroup END
+
+augroup vimrc-local
+  autocmd!
+  autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
+augroup END
+
+function! s:vimrc_local(loc)
+  let l:token_path = expand('~/.local/share/vimrc-local/token')
+  if !filereadable(l:token_path)
+    return
+  endif
+
+  let l:token = readfile(l:token_path)[0]
+
+  let files = findfile('.vimrc.local', escape(a:loc, ' ') . ';', -1)
+  for i in reverse(filter(files, 'filereadable(v:val)'))
+    if readfile(i)[0] == l:token
+      source `=i`
+    endif
+  endfor
+endfunction
 " }}}
 
 "dein Scripts-----------------------------

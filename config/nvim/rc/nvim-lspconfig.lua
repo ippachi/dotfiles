@@ -45,103 +45,92 @@ local function make_config()
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150
-    },
-    handlers = {
-      ["textDocument/publishDiagnostics"] = vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics, {
-          -- Disable virtual_text
-          underline = false
-        }
-      ),
     }
   }
 end
 
 local util = require 'lspconfig/util'
+--
+-- local function diagnosticls_settings()
+--   return {
+--     filetypes = { "typescriptreact" },
+--     init_options = {
+--       filetypes = {
+--         typescriptreact = "eslint",
+--       },
+--       formatFiletypes = {
+--         typescriptreact = "prettier"
+--       },
+--       linters = {
+--         eslint = {
+--           command = "./node_modules/.bin/eslint",
+--           rootPatterns = {
+--             "package.json"
+--           },
+--           debounce = 100,
+--           args = {
+--             "--stdin",
+--             "--stdin-filename",
+--             "%filepath",
+--             "--format",
+--             "json"
+--           },
+--           sourceName = "eslint",
+--           parseJson = {
+--             errorsRoot = "[0].messages",
+--             line = "line",
+--             column = "column",
+--             endLine = "endLine",
+--             endColumn = "endColumn",
+--             message = "${message} [${ruleId}]",
+--             security = "severity"
+--           },
+--           securities = {
+--             ["2"] = "error",
+--             ["1"] = "warning"
+--           }
+--         }
+--       },
+--       formatters = {
+--         prettier = {
+--           command = "./node_modules/.bin/prettier",
+--           args = {"--stdin-filepath", "%filepath"},
+--           rootPatterns = {
+--             "package.json",
+--           }
+--         }
+--       }
+--     }
+--   }
+-- end
 
-local function diagnosticls_settings()
-  return {
-    filetypes = { "typescriptreact" },
-    init_options = {
-      filetypes = {
-        typescriptreact = "eslint",
-      },
-      formatFiletypes = {
-        typescriptreact = "prettier"
-      },
-      linters = {
-        eslint = {
-          command = "./node_modules/.bin/eslint",
-          rootPatterns = {
-            "package.json"
-          },
-          debounce = 100,
-          args = {
-            "--stdin",
-            "--stdin-filename",
-            "%filepath",
-            "--format",
-            "json"
-          },
-          sourceName = "eslint",
-          parseJson = {
-            errorsRoot = "[0].messages",
-            line = "line",
-            column = "column",
-            endLine = "endLine",
-            endColumn = "endColumn",
-            message = "${message} [${ruleId}]",
-            security = "severity"
-          },
-          securities = {
-            ["2"] = "error",
-            ["1"] = "warning"
-          }
-        }
-      },
-      formatters = {
-        prettier = {
-          command = "./node_modules/.bin/prettier",
-          args = {"--stdin-filepath", "%filepath"},
-          rootPatterns = {
-            "package.json",
-          }
-        }
-      }
-    }
+local servers = require "nvim-lsp-installer.servers"
+local server = require "nvim-lsp-installer.server"
+servers.register(server.Server:new {
+  name = 'sorbet',
+  root_dir = server.get_server_root_path('sorbet'),
+  installer = function(server, callback, context) callback(true) end,
+  default_options = {
+    cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
+    root_dir = util.root_pattern("sorbet/config")
   }
-end
+})
 
-local function lsp_configs(server, config)
-  local configs = {
-    diagnosticls = diagnosticls_settings()
-  }
-  return vim.tbl_deep_extend('force', config, configs[server] or {})
-end
+local lsp_installer = require("nvim-lsp-installer")
 
-local function setup_servers()
-  require'lspinstall'.setup()
+lsp_installer.on_server_ready(function(server)
+    local opts = make_config()
 
-  -- get all installed servers
-  local servers = require'lspinstall'.installed_servers()
-  -- ... and add manually installed servers
-  -- table.insert(servers, "solargraph")
-  -- table.insert(servers, "sorbet")
+    -- (optional) Customize the options passed to the server
+    -- if server.name == "tsserver" then
+    --     opts.root_dir = function() ... end
+    -- end
 
-  for _, server in pairs(servers) do
-    local config = make_config()
+    -- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+    server:setup(opts)
+    vim.cmd [[ do User LspAttachBuffers ]]
+end)
 
-    require'lspconfig'[server].setup(lsp_configs(server, config))
-  end
-end
-
-setup_servers()
-
--- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
-require'lspinstall'.post_install_hook = function ()
-  setup_servers() -- reload installed servers
-  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
-end
 
 M.make_config = make_config
 M.lsp_configs = lsp_configs

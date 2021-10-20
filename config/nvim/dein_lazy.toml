@@ -354,14 +354,14 @@ on_event = 'BufRead'
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-depends = ['lsp_signature.nvim', 'nvim-lspinstall', 'plenary.nvim']
+depends = ['lsp_signature.nvim', 'nvim-lsp-installer', 'plenary.nvim']
 on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim', 'php']
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 '''
 
 [[plugins]]
-repo = 'kabouzeid/nvim-lspinstall'
+repo = 'williamboman/nvim-lsp-installer'
 
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
@@ -426,3 +426,8 @@ call popup_preview#enable()
 [[plugins]]
 repo = 'neoclide/denite-git'
 on_source = 'denite.nvim'
+
+[[plugins]]
+repo = 'prettier/vim-prettier'
+build = 'npm install'
+on_ft = ['typescript', 'typescriptreact']
