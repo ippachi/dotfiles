@@ -90,8 +90,27 @@ on_source = 'denops.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate']
+depends = ['denops.vim', 'ddc-around', 'ddc-matcher_head', 'ddc-sorter_rank', 'ddc-nvim-lsp', 'deoppet.nvim', 'ddc-file', 'ddc-buffer', 'ddc-cmdline-history', 'ddc-converter_remove_overlap', 'ddc-converter_truncate', 'ddc-cmdline']
 on_event = ['InsertEnter']
+hook_add = '''
+nnoremap :       <Cmd>call CommandlinePre()<CR>:
+
+function! CommandlinePre() abort
+  call dein#source('ddc.vim')
+  " Overwrite sources
+  let s:prev_buffer_config = ddc#custom#get_buffer()
+  call ddc#custom#patch_buffer('sources', ['cmdline', 'cmdline-history'])
+
+  autocmd User DDCCmdlineLeave ++once call CommandlinePost()
+
+  " Enable command line completion
+  call ddc#enable_cmdline_completion()
+endfunction
+function! CommandlinePost() abort
+  " Restore sources
+  call ddc#custom#set_buffer(s:prev_buffer_config)
+endfunction
+'''
 hook_source = '''
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -106,6 +125,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'deoppet': { 'mark': 'dp' },
       \   'yank': { 'mark': 'Y' },
       \   'cmdline-history': { 'mark': 'history' },
+      \   'cmdline': { 'mark': 'cmdline' },
       \   'file': {
       \     'mark': 'F',
       \     'isVolatile': v:true,
@@ -120,6 +140,11 @@ call ddc#custom#patch_global('filterParams', {
     \ 'buffer': {'requireSameFiletype': v:false},
     \ 'converter_truncate': {'maxInfoWidth': 20}
     \ })
+
+call ddc#custom#patch_global('completionMenu', 'pum.vim')
+call ddc#custom#patch_global('backspaceCompletion', v:true)
+call ddc#custom#patch_global('autoCompleteEvents',
+    \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
 
 call ddc#enable()
 '''
@@ -229,7 +254,7 @@ denite = '''
 repo = 'Shougo/defx.nvim'
 on_cmd = 'Defx'
 hook_add = '''
-nnoremap <leader>df <cmd>Defx -toggle -split=vertical -direction=topleft -winwidth=30<cr>
+nnoremap <leader>df <cmd>Defx -resume<cr>
 '''
 
 [plugins.ftplugin]
@@ -389,8 +414,8 @@ inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
-cnoremap <expr> <C-n> pum#visible() ? pum#map#insert_relative(+1) : '<c-n>'
-cnoremap <expr> <C-p> pum#visible() ? pum#map#insert_relative(-1) : '<c-p>'
+cnoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<Cmd>call pum#map#insert_relative(+1)<CR>'
+cnoremap <expr> <C-p> pumvisible() ? '<C-p>' : '<Cmd>call pum#map#insert_relative(-1)<CR>'
 cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
@@ -431,3 +456,6 @@ on_source = 'denite.nvim'
 repo = 'prettier/vim-prettier'
 build = 'npm install'
 on_ft = ['typescript', 'typescriptreact']
+
+[[plugins]]
+repo = 'Shougo/ddc-cmdline'
