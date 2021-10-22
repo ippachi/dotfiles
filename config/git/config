@@ -11,5 +11,6 @@
   sort = -committerdate
 [pull]
 	twohead = ort
+	ff = only
 [init]
 	templateDir = ~/.config/git/templates

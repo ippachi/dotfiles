@@ -112,7 +112,7 @@ function! CommandlinePost() abort
 endfunction
 '''
 hook_source = '''
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'deoppet', 'yank'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'buffer', 'deoppet', 'yank', 'file'])
 call ddc#custom#patch_global('sourceOptions', {
       \   '_': {
       \     'matchers': ['matcher_head'],
