@@ -42,6 +42,7 @@ zinit snippet PZTM::syntax-highlighting
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit light olets/zsh-abbr
 zinit light migutw42/zsh-fzf-ghq
+zinit light agkozak/zsh-z
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
