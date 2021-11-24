@@ -104,26 +104,20 @@ local util = require 'lspconfig/util'
 --   }
 -- end
 
-local servers = require "nvim-lsp-installer.servers"
-local server = require "nvim-lsp-installer.server"
-servers.register(server.Server:new {
-  name = 'sorbet',
-  root_dir = server.get_server_root_path('sorbet'),
-  installer = function(server, callback, context) callback(true) end,
-  default_options = {
-    cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
-    root_dir = util.root_pattern("sorbet/config")
-  }
-})
-
 local lsp_installer = require("nvim-lsp-installer")
 
 lsp_installer.on_server_ready(function(server)
     local opts = make_config()
 
+    if server.name == "sorbet" then
+      opts.cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" }
+      server._default_options = { cmd_env = {} }
+    end
+
     if server.name == "solargraph" then
       if vim.fn.findfile(vim.fn.getcwd() .. "/.solargraph.yml") ~= "" then
         opts.cmd = { "bundle", "exec", "solargraph", "stdio" }
+        server._default_options = { cmd_env = {} }
       end
 
       if vim.fn.findfile(vim.fn.getcwd() .. '/sorbet/config') ~= "" then
