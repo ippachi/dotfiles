@@ -181,6 +181,7 @@ hook_add = '''
   nnoremap ;v <cmd>Denite -buffer-name=files -path=~/.config/nvim file/rec<cr>
   nnoremap ;l <cmd>Denite -start-filter -matchers=matcher/substring line<cr>
   nnoremap ;s <cmd>Denite -start-filter gitstatus<cr>
+  command! Drepeat Denite -resume -buffer-name=search -do='normal .'
 '''
 hook_source = '''
   call denite#custom#var('file/rec', 'command',
