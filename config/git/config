@@ -12,8 +12,6 @@
 [pull]
 	twohead = ort
 	ff = only
-[init]
-	templateDir = ~/.config/git/templates
 
 [pager]
   diff = delta
