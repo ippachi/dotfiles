@@ -111,6 +111,7 @@ lsp_installer.on_server_ready(function(server)
 
     if server.name == "sorbet" then
       opts.cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" }
+      opts.root_dir = util.root_pattern("sorbet/config")
       server._default_options = { cmd_env = {} }
     end
 
