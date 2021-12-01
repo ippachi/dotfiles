@@ -106,6 +106,7 @@ function! CommandlinePre() abort
   " Enable command line completion
   call ddc#enable_cmdline_completion()
 endfunction
+
 function! CommandlinePost() abort
   " Restore sources
   call ddc#custom#set_buffer(s:prev_buffer_config)
@@ -146,6 +147,7 @@ call ddc#custom#patch_global('completionMenu', 'pum.vim')
 call ddc#custom#patch_global('backspaceCompletion', v:true)
 call ddc#custom#patch_global('autoCompleteEvents',
     \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+call ddc#custom#patch_filetype('denite-filter', 'specialBufferCompletion', v:true)
 
 call ddc#enable()
 '''
@@ -425,6 +427,12 @@ cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 call pum#set_option('border', 'none')
 call pum#set_option('winblend', 15)
 call pum#set_option('highlight_matches', 'Orange')
+
+augroup vimrc-pum
+  autocmd!
+  autocmd BufEnter denite-filter call pum#set_option('horizontal_menu', v:true)
+  autocmd BufLeave denite-filter call pum#set_option('horizontal_menu', v:false)
+augroup END
 '''
 
 [[plugins]]
