@@ -385,7 +385,7 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
 depends = ['lsp_signature.nvim', 'nvim-lsp-installer', 'plenary.nvim']
-on_ft = ['ruby', 'typescriptreact', 'typescript', 'lua', 'vim', 'php']
+on_event = 'BufEnter'
 hook_source = '''
 luafile ~/.config/nvim/rc/nvim-lspconfig.lua
 '''
