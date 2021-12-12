@@ -59,9 +59,13 @@ fi
 
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval $(/opt/homebrew/bin/brew shellenv)
+  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+  PATH=/opt/homebrew/bin:$PATH
 elif [[ -f /usr/local/bin/brew ]]; then
   eval $(/usr/local/bin/brew shellenv)
 fi
+
+
 
 if which direnv 2>&1 1>/dev/null; then
   eval "$(direnv hook zsh)"
