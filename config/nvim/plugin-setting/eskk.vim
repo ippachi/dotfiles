@@ -1,3 +1,6 @@
+imap <C-j> <Plug>(eskk:toggle)
+cmap <C-j> <Plug>(eskk:toggle)
+
 let g:eskk#dictionary = {
 \	'path': "~/.local/share/skk/skk-jisyo",
 \	'sorted': 0,

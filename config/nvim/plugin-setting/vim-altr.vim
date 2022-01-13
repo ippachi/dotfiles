@@ -1,3 +1,6 @@
+nmap ]t <Plug>(altr-forward)
+nmap [t <Plug>(altr-back)
+
 call altr#remove_all()
 call altr#define('lib/%.rb', 'apps/%.rb', 'test/%_spec.rb')
 call altr#define('app/%.rb', 'spec/%_spec.rb')

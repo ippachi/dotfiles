@@ -104,39 +104,43 @@ function! s:vimrc_local(loc)
 endfunction
 " }}}
 
-"dein Scripts-----------------------------
-if &compatible
-  set nocompatible               " Be iMproved
-endif
+call plug#begin()
+Plug 'sainnhe/gruvbox-material'
+Plug 'itchyny/lightline.vim'
+Plug 'machakann/vim-sandwich'
+Plug 'machakann/vim-textobj-delimited'
+Plug 'kana/vim-altr'
+Plug 'vim-test/vim-test'
+Plug 'thinca/vim-quickrun'
+Plug 'tyru/eskk.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'airblade/vim-gitgutter'
+Plug 'vim-denops/denops.vim'
 
-" Required:
-set runtimepath+=/Users/ippachi/.cache/dein/repos/github.com/Shougo/dein.vim
+Plug 'nvim-lua/plenary.nvim'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'neovim/nvim-lspconfig'
 
-let s:dein_path = '/Users/ippachi/.cache/dein'
-let s:dein_toml = '~/.config/nvim/dein.toml'
-let s:dein_lazy_toml = '~/.config/nvim/dein_lazy.toml'
+Plug 'Shougo/ddc.vim'
+Plug 'Shougo/ddc-matcher_head'
+Plug 'Shougo/ddc-sorter_rank'
+Plug 'Shougo/ddc-converter_remove_overlap'
+Plug 'Shougo/ddc-around'
+Plug 'Shougo/ddc-nvim-lsp'
+Plug 'matsui54/ddc-buffer'
+Plug 'LumaKernel/ddc-file'
+Plug 'ippachi/ddc-yank'
+Plug 'Shougo/ddc-rg'
 
-if dein#load_state(s:dein_path)
-  call dein#begin(s:dein_path, [$MYVIMRC, s:dein_toml, s:dein_lazy_toml])
-  call dein#add('/Users/ippachi/.cache/dein/repos/github.com/Shougo/dein.vim')
-  call dein#load_toml(s:dein_toml, {'lazy': 0})
-  call dein#load_toml(s:dein_lazy_toml, {'lazy': 1})
-  call dein#end()
-  call dein#save_state()
-endif
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-  call dein#install()
-endif
+Plug 'haringsrob/nvim_context_vt'
+Plug 'cohama/lexima.vim'
 
-" set rtp+=~/.cache/dein/repos/github.com/hrsh7th/vim-vsnip
-" set rtp+=~/ghq/github.com/ippachi/vim-vsnip-integ/
-set rtp+=~/ghq/github.com/ippachi/ddc-yank
+Plug 'lambdalisue/fern.vim'
+call plug#end()
 
-syntax enable
-filetype plugin indent on
-
-"End dein Scripts-------------------------
+runtime! plugin-setting/*.vim plugin-setting/*.lua
 
 colorscheme gruvbox-material

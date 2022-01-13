@@ -57,6 +57,8 @@ if [[ -f /usr/local/bin/brew ]]; then
   eval $(/usr/local/bin/brew shellenv)
 fi
 
+export FZF_DEFAULT_COMMAND='rg --files'
+
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval $(/opt/homebrew/bin/brew shellenv)
   fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
