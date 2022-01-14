@@ -58,6 +58,12 @@ nnoremap <esc><esc> <cmd>nohl \| ccl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
 tnoremap <c-o> <c-\><c-n>
 vnoremap p "_dP
+
+" 矯正用
+" <c-h>を<bs>として使わないようにする
+noremap <expr> <c-h> ':h '
+noremap! <expr> <c-h> ':h '
+tnoremap <expr> <c-h> ':h '
 " }}}
 
 " Base augroup {{{
@@ -140,6 +146,9 @@ Plug 'cohama/lexima.vim'
 
 Plug 'lambdalisue/fern.vim'
 call plug#end()
+
+
+packadd cfilter
 
 runtime! plugin-setting/*.vim plugin-setting/*.lua
 

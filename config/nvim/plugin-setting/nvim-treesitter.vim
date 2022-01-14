@@ -2,6 +2,6 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained",
   sync_install = false,
-  highlight = { enable = true }
+  highlight = { enable = false }
 }
 EOF
