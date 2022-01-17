@@ -112,7 +112,7 @@ endfunction
 
 call plug#begin()
 Plug 'sainnhe/gruvbox-material'
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-textobj-delimited'
 Plug 'kana/vim-altr'
@@ -121,22 +121,11 @@ Plug 'thinca/vim-quickrun'
 Plug 'tyru/eskk.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-denops/denops.vim'
+Plug 'feline-nvim/feline.nvim'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
-
-Plug 'Shougo/ddc.vim'
-Plug 'Shougo/ddc-matcher_head'
-Plug 'Shougo/ddc-sorter_rank'
-Plug 'Shougo/ddc-converter_remove_overlap'
-Plug 'Shougo/ddc-around'
-Plug 'Shougo/ddc-nvim-lsp'
-Plug 'matsui54/ddc-buffer'
-Plug 'LumaKernel/ddc-file'
-Plug 'ippachi/ddc-yank'
-Plug 'Shougo/ddc-rg'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -145,6 +134,15 @@ Plug 'haringsrob/nvim_context_vt'
 Plug 'cohama/lexima.vim'
 
 Plug 'lambdalisue/fern.vim'
+
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'lukas-reineke/cmp-rg'
 call plug#end()
 
 
