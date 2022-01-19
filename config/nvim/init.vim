@@ -45,6 +45,8 @@ end
 let mapleader=','
 
 packadd Cfilter
+
+let loaded_matchparen = 1
 " }}}
 
 " Base mappings {{{
@@ -54,7 +56,6 @@ nnoremap gj j
 nnoremap gk k
 nnoremap Y y$
 nnoremap \ ,
-nnoremap <esc><esc> <cmd>nohl \| ccl<cr>
 cnoremap <c-x> <C-r>=expand('%')<cr>
 tnoremap <c-o> <c-\><c-n>
 vnoremap p "_dP
@@ -112,7 +113,6 @@ endfunction
 
 call plug#begin()
 Plug 'sainnhe/gruvbox-material'
-" Plug 'itchyny/lightline.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-textobj-delimited'
 Plug 'kana/vim-altr'
@@ -120,20 +120,20 @@ Plug 'vim-test/vim-test'
 Plug 'thinca/vim-quickrun'
 Plug 'tyru/eskk.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'airblade/vim-gitgutter'
-Plug 'feline-nvim/feline.nvim'
-
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
-
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
 Plug 'haringsrob/nvim_context_vt'
 Plug 'cohama/lexima.vim'
-
 Plug 'lambdalisue/fern.vim'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'machakann/vim-swap'
+
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'neovim/nvim-lspconfig'
+Plug 'kosayoda/nvim-lightbulb'
 
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -143,6 +143,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'lukas-reineke/cmp-rg'
+Plug 'onsails/lspkind-nvim'
 call plug#end()
 
 

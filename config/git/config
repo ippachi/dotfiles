@@ -22,3 +22,6 @@
   df = diff --word-diff=color -w
   lg = log --oneline
   st = status
+  br = branch
+  co = checkout
+  ci = commit

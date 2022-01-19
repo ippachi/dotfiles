@@ -1,6 +1,13 @@
 local cmp = require'cmp'
+local lspkind = require'lspkind'
 
 cmp.setup({
+  formatting = {
+    format = lspkind.cmp_format({
+      with_text = true, -- do not show text alongside icons
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+    })
+  },
   snippet = {
     -- REQUIRED - you must specify a snippet engine
     expand = function(args)
@@ -46,5 +53,7 @@ cmp.setup.cmdline(':', {
     { name = 'path' }
   }, {
     { name = 'cmdline' }
-  })
+  }),
+  mapping = {
+  }
 })
