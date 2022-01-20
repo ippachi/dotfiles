@@ -1,17 +1,21 @@
 [user]
-	name = ippachi
-	email = ippachi1018@gmail.com
+  name = ippachi
+  email = ippachi1018@gmail.com
+[pager]
+  log = diff-highlight | less
+  show = diff-highlight | less
+  diff = diff-highlight | less
 [core]
-	editor = nvim
+  editor = nvim
 [diff]
-	algorithm = histogram
-	colorMoved = dimmed-zebra
-	colorMovedWS = allow-indentation-change
+  algorithm = histogram
+  colorMoved = dimmed-zebra
+  colorMovedWS = allow-indentation-change
 [branch]
   sort = -committerdate
 [pull]
-	twohead = ort
-	ff = only
+  twohead = ort
+  ff = only
 [merge]
   tool = vimdiff
 [mergetool]

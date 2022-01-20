@@ -77,6 +77,7 @@ fi
 
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH=/usr/local/share/git-core/contrib/diff-highlight:$PATH
 
 zmodload zsh/zpty
 autoload -Uz compinit

@@ -32,8 +32,6 @@ cmp.setup({
     { name = 'vsnip' }, -- For vsnip users.
   }, {
     { name = 'buffer' },
-  }, {
-    { name = 'rg' }
   }),
   experimental = {
     ghost_text = true
