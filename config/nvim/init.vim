@@ -59,6 +59,11 @@ nnoremap \ ,
 cnoremap <c-x> <C-r>=expand('%')<cr>
 tnoremap <c-o> <c-\><c-n>
 vnoremap p "_dP
+nnoremap <left> gT
+nnoremap <right> gt
+
+nnoremap <s-left> <cmd>-tabmove<cr>
+nnoremap <s-right> <cmd>+tabmove<cr>
 
 " 矯正用
 " <c-h>を<bs>として使わないようにする
@@ -144,6 +149,7 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'lukas-reineke/cmp-rg'
 Plug 'onsails/lspkind-nvim'
+Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
 
