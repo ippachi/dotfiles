@@ -62,7 +62,8 @@ export FZF_DEFAULT_COMMAND='rg --files'
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval $(/opt/homebrew/bin/brew shellenv)
   fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
-  PATH=/opt/homebrew/bin:$PATH
+  export PATH=/opt/homebrew/bin:$PATH
+  export PATH=/opt/homebrew/opt/openssl@3/bin:$PATH
   export PATH=/opt/homebrew/share/git-core/contrib/diff-highlight:$PATH
 elif [[ -f /usr/local/bin/brew ]]; then
   eval $(/usr/local/bin/brew shellenv)

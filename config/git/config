@@ -29,3 +29,5 @@
   br = branch
   co = checkout
   ci = commit
+[init]
+	templateDir = /Users/ippachi/.config/git/template

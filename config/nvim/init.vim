@@ -59,8 +59,8 @@ nnoremap \ ,
 cnoremap <c-x> <C-r>=expand('%')<cr>
 tnoremap <c-o> <c-\><c-n>
 vnoremap p "_dP
-nnoremap <left> gT
-nnoremap <right> gt
+nnoremap gh gT
+nnoremap gl gt
 
 nnoremap <s-left> <cmd>-tabmove<cr>
 nnoremap <s-right> <cmd>+tabmove<cr>
@@ -135,10 +135,13 @@ Plug 'lambdalisue/fern.vim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'machakann/vim-swap'
+Plug 'akinsho/toggleterm.nvim'
+Plug 'tknightz/telescope-termfinder.nvim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
 Plug 'kosayoda/nvim-lightbulb'
+Plug 'onsails/lspkind-nvim'
 
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -148,8 +151,6 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'lukas-reineke/cmp-rg'
-Plug 'onsails/lspkind-nvim'
-Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
 
