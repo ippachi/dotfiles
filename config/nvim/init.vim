@@ -116,6 +116,15 @@ function! s:vimrc_local(loc)
 endfunction
 " }}}
 
+" Base command{{{
+command! -complete=customlist,ListPluginSetting -nargs=1 ReloadPluginSetting luafile ~/.config/nvim/plugin-setting/<args>
+
+function! ListPluginSetting(a,l,p) abort
+  let l:absolute_paths = split(glob('~/.config/nvim/plugin-setting/*'), '\n')
+  return map(copy(l:absolute_paths), {_, val -> split(val, '/')[-1]})
+endfunction
+" }}}
+
 call plug#begin()
 Plug 'sainnhe/gruvbox-material'
 Plug 'machakann/vim-sandwich'
