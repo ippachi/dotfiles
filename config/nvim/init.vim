@@ -146,6 +146,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'machakann/vim-swap'
 Plug 'akinsho/toggleterm.nvim'
 Plug 'tknightz/telescope-termfinder.nvim'
+Plug 'TimUntersberger/neogit'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
