@@ -130,7 +130,6 @@ Plug 'sainnhe/gruvbox-material'
 Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-textobj-delimited'
 Plug 'kana/vim-altr'
-Plug 'vim-test/vim-test'
 Plug 'thinca/vim-quickrun'
 Plug 'tyru/eskk.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -146,7 +145,9 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'machakann/vim-swap'
 Plug 'akinsho/toggleterm.nvim'
 Plug 'tknightz/telescope-termfinder.nvim'
-Plug 'TimUntersberger/neogit'
+Plug 'lambdalisue/gina.vim'
+Plug 'vim-test/vim-test'
+Plug 'kamykn/spelunker.vim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
@@ -162,7 +163,6 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'lukas-reineke/cmp-rg'
 call plug#end()
-
 
 packadd cfilter
 
