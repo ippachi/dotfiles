@@ -147,7 +147,6 @@ Plug 'akinsho/toggleterm.nvim'
 Plug 'tknightz/telescope-termfinder.nvim'
 Plug 'lambdalisue/gina.vim'
 Plug 'vim-test/vim-test'
-Plug 'kamykn/spelunker.vim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
