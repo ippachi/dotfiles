@@ -24,7 +24,7 @@
   cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [alias]
   df = diff --word-diff=color -w
-  lg = log --oneline
+  lg = log --oneline --graph
   st = status
   br = branch
   co = checkout
