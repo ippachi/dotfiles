@@ -36,6 +36,7 @@ set colorcolumn=120
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
 set pumheight=10
+let $TMPDIR='~/.vim/tmp'
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --pcre2
@@ -150,20 +151,29 @@ Plug 'vim-skk/skkeleton'
 Plug 'prettier/vim-prettier'
 Plug 'lambdalisue/gina.vim'
 Plug 'lambdalisue/guise.vim'
+Plug 'rbtnn/vim-diffnotify'
 
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
-Plug 'kosayoda/nvim-lightbulb'
-Plug 'onsails/lspkind-nvim'
+" Plug 'williamboman/nvim-lsp-installer'
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'kosayoda/nvim-lightbulb'
+" Plug 'onsails/lspkind-nvim'
+"
+" Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'hrsh7th/cmp-buffer'
+" Plug 'hrsh7th/cmp-path'
+" Plug 'hrsh7th/cmp-cmdline'
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'hrsh7th/cmp-vsnip'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'lukas-reineke/cmp-rg'
 
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'lukas-reineke/cmp-rg'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'Shougo/ddu.vim'
+Plug 'Shougo/ddu-ui-ff'
+Plug 'Shougo/ddu-kind-file'
+Plug 'Shougo/ddu-filter-matcher_substring'
+Plug 'Shougo/ddu-source-file'
 call plug#end()
 
 packadd cfilter

@@ -1,0 +1,34 @@
+{
+  "languageserver": {
+    "sorbet": {
+      "command": "srb",
+      "args": [
+        "tc",
+        "--typed",
+        "true",
+        "--enable-all-experimental-lsp-features",
+        "--lsp",
+        "--disable-watchman"
+      ],
+      "filetypes": [
+        "ruby"
+      ],
+      "rootPatterns": [
+        "sorbet/config"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  },
+  "solargraph.rename": false,
+  "solargraph.hover": false,
+  "solargraph.useBundler": true,
+  "solargraph.completion": false,
+  "solargraph.autoformat": false,
+  "solargraph.formatting": true,
+  "solargraph.references": false,
+  "solargraph.definitions": false,
+  "solargraph.folding": false,
+  "solargraph.diagnostics": true,
+  "solargraph.bundlerPath": "/Users/ippachi/.asdf/shims/bundler"
+}
