@@ -10,14 +10,16 @@
         "--lsp",
         "--disable-watchman"
       ],
-      "filetypes": [
-        "ruby"
-      ],
-      "rootPatterns": [
-        "sorbet/config"
-      ],
+      "filetypes": ["ruby"],
+      "rootPatterns": ["sorbet/config"],
       "initializationOptions": {},
       "settings": {}
+    },
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": ["terraform", "tf"],
+      "initializationOptions": {}
     }
   },
   "solargraph.rename": false,

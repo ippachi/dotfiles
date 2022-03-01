@@ -1,3 +1,4 @@
+let g:ippachi_completion_env = "coc"
 " Options {{{
 set expandtab
 set autoindent
@@ -152,22 +153,25 @@ Plug 'prettier/vim-prettier'
 Plug 'lambdalisue/gina.vim'
 Plug 'lambdalisue/guise.vim'
 Plug 'rbtnn/vim-diffnotify'
+Plug 'hashivim/vim-terraform'
 
-" Plug 'williamboman/nvim-lsp-installer'
-" Plug 'neovim/nvim-lspconfig'
-" Plug 'kosayoda/nvim-lightbulb'
-" Plug 'onsails/lspkind-nvim'
-"
-" Plug 'hrsh7th/cmp-nvim-lsp'
-" Plug 'hrsh7th/cmp-buffer'
-" Plug 'hrsh7th/cmp-path'
-" Plug 'hrsh7th/cmp-cmdline'
-" Plug 'hrsh7th/nvim-cmp'
-" Plug 'hrsh7th/cmp-vsnip'
-" Plug 'hrsh7th/vim-vsnip'
-" Plug 'lukas-reineke/cmp-rg'
+if g:ippachi_completion_env == "nvimlsp"
+  Plug 'williamboman/nvim-lsp-installer'
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'kosayoda/nvim-lightbulb'
+  Plug 'onsails/lspkind-nvim'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'hrsh7th/cmp-buffer'
+  Plug 'hrsh7th/cmp-path'
+  Plug 'hrsh7th/cmp-cmdline'
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/cmp-vsnip'
+  Plug 'hrsh7th/vim-vsnip'
+  Plug 'lukas-reineke/cmp-rg'
+else
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
 
 Plug 'Shougo/ddu.vim'
 Plug 'Shougo/ddu-ui-ff'
