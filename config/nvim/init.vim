@@ -1,4 +1,4 @@
-let g:ippachi_completion_env = "coc"
+let g:ippachi_completion_env = "nvimlsp"
 " Options {{{
 set expandtab
 set autoindent
@@ -37,9 +37,11 @@ set colorcolumn=120
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
 set pumheight=10
-let $TMPDIR='~/.vim/tmp'
 
-if executable('rg')
+if finddir('.git', '.;') != ''
+  set grepprg=git\ grep\ --perl-regexp\ --line-number\ --column
+  set grepformat=%f:%l:%c:%m,%f:%l:%m
+elseif executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --pcre2
   set grepformat=%f:%l:%c:%m,%f:%l:%m
 end
@@ -88,7 +90,7 @@ augroup END
 
 augroup vimrc-quickfix
   autocmd!
-  autocmd QuickFixCmdPost vimgrep,grep copen
+  autocmd QuickFixCmdPost vimgrep,grep copen | Cfilter! sorbet/rbi
 augroup END
 
 augroup vimrc-vim-marker
@@ -155,29 +157,32 @@ Plug 'lambdalisue/guise.vim'
 Plug 'rbtnn/vim-diffnotify'
 Plug 'hashivim/vim-terraform'
 
+Plug 'Shougo/ddu.vim'
+Plug 'Shougo/ddu-ui-ff'
+Plug 'Shougo/ddu-kind-file'
+Plug 'Shougo/ddu-filter-matcher_substring'
+Plug 'Shougo/ddu-source-file_rec'
+Plug 'matsui54/ddu-source-file_external'
+Plug 'Shougo/ddu-commands.vim'
+
 if g:ippachi_completion_env == "nvimlsp"
   Plug 'williamboman/nvim-lsp-installer'
   Plug 'neovim/nvim-lspconfig'
   Plug 'kosayoda/nvim-lightbulb'
   Plug 'onsails/lspkind-nvim'
+  Plug 'jose-elias-alvarez/null-ls.nvim'
 
   Plug 'hrsh7th/cmp-nvim-lsp'
   Plug 'hrsh7th/cmp-buffer'
   Plug 'hrsh7th/cmp-path'
   Plug 'hrsh7th/cmp-cmdline'
-  Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/nvim-cmp', { 'branch': 'dev' }
   Plug 'hrsh7th/cmp-vsnip'
   Plug 'hrsh7th/vim-vsnip'
   Plug 'lukas-reineke/cmp-rg'
 else
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
-
-Plug 'Shougo/ddu.vim'
-Plug 'Shougo/ddu-ui-ff'
-Plug 'Shougo/ddu-kind-file'
-Plug 'Shougo/ddu-filter-matcher_substring'
-Plug 'Shougo/ddu-source-file'
 call plug#end()
 
 packadd cfilter
