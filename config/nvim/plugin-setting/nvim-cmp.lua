@@ -67,3 +67,5 @@ cmp.setup.cmdline(':', {
   mapping = {
   }
 })
+
+cmp.setup.filetype({ 'ddu-ff-filter' }, { sources = {}, enabled = false })

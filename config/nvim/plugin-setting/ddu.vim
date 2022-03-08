@@ -6,6 +6,9 @@ call ddu#custom#patch_global({
     \   'uiParams': {
     \     'ff': {
     \       'startFilter': v:true,
+    \       'filterSplitDirection': 'floating',
+    \       'previewVertical': v:true,
+    \       'previewWidth': 80
     \     }
     \   }
     \ })
@@ -46,12 +49,14 @@ function! s:ddu_ff_mappings() abort
   nnoremap <buffer><silent> <Space> <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
   nnoremap <buffer><silent> i <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
   nnoremap <buffer><silent> q <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+  nnoremap <buffer><silent> p <Cmd>call ddu#ui#ff#do_action('preview')<CR>
 endfunction
 
 function! s:ddu_filter_mappings() abort
   inoremap <buffer><silent> <CR> <Esc><Cmd>close<CR>
   nnoremap <buffer><silent> <CR> <Cmd>close<CR>
   nnoremap <buffer><silent> q <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+  inoremap <buffer><silent> <c-l> <Cmd>call ddu#ui#ff#do_action('updateOptions', { 'sources': [{'name': 'rg_files'}] })<CR>
 endfunction
 
 augroup ddu-ff
