@@ -1,4 +1,7 @@
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'file', 'around', 'buffer', 'rg'])
+let g:ippachi_ddc_normal_sources = ['nvim-lsp', 'file', 'around', 'buffer', 'rg']
+let g:ippachi_ddc_cmdline_sources = ['cmdline', 'cmdline-history', 'around']
+
+call ddc#custom#patch_global('sources', g:ippachi_ddc_normal_sources)
 
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
@@ -30,7 +33,7 @@ nnoremap :       <Cmd>call CommandlinePre()<CR>:
 function! CommandlinePre() abort
   " Overwrite sources
   let s:prev_buffer_config = ddc#custom#get_buffer()
-  call ddc#custom#patch_buffer('sources', ['cmdline', 'cmdline-history', 'around'])
+  call ddc#custom#patch_buffer('sources', g:ippachi_ddc_cmdline_sources)
 
   autocmd User DDCCmdlineLeave ++once call CommandlinePost()
 
