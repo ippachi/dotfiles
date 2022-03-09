@@ -68,14 +68,15 @@ lsp_installer.on_server_ready(function(server)
       end
 
       if vim.fn.findfile(vim.fn.getcwd() .. '/sorbet/config') ~= "" then
-        opts.init_options = {
-          completion = false,
-          definitions = false,
-          hover = false,
-          references = false,
-          rename = false,
-          symbols = false
-        }
+        return
+        -- opts.init_options = {
+        --   completion = false,
+        --   definitions = false,
+        --   hover = false,
+        --   references = false,
+        --   rename = false,
+        --   symbols = false
+        -- }
       end
     end
 
