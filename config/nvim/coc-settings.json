@@ -4,8 +4,6 @@
       "command": "srb",
       "args": [
         "tc",
-        "--typed",
-        "true",
         "--enable-all-experimental-lsp-features",
         "--lsp",
         "--disable-watchman"
@@ -22,6 +20,7 @@
       "initializationOptions": {}
     }
   },
+  "list.height": 20,
   "solargraph.rename": false,
   "solargraph.hover": false,
   "solargraph.useBundler": true,

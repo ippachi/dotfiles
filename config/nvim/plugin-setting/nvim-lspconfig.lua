@@ -38,9 +38,10 @@ local on_attach = function(client, bufnr)
 end
 
 local function make_config()
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
   return {
     -- enable snippet support
-    -- capabilities = capabilities,
+    capabilities = capabilities,
     -- map buffer local keybindings when the language server attaches
     on_attach = on_attach,
     flags = {
@@ -68,15 +69,14 @@ lsp_installer.on_server_ready(function(server)
       end
 
       if vim.fn.findfile(vim.fn.getcwd() .. '/sorbet/config') ~= "" then
-        return
-        -- opts.init_options = {
-        --   completion = false,
-        --   definitions = false,
-        --   hover = false,
-        --   references = false,
-        --   rename = false,
-        --   symbols = false
-        -- }
+        opts.init_options = {
+          completion = false,
+          definitions = false,
+          hover = false,
+          references = false,
+          rename = false,
+          symbols = false
+        }
       end
     end
 

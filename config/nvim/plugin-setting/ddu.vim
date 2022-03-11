@@ -35,6 +35,9 @@ call ddu#custom#patch_global('sourceParams', {
   \   'git_ls_files': {
   \     'cmd': ['git', 'ls-files']
   \   },
+  \   'rg' : {
+  \     'args': ['--column', '--no-heading', '--color', 'never'],
+  \   },
   \ })
 
 call ddu#custom#alias('source', 'rg_files', 'file_external')

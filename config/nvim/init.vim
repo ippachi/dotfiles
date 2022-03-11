@@ -1,4 +1,4 @@
-let g:ippachi_completion_env = "nvimlsp"
+let g:ippachi_completion_env = "coc"
 " Options {{{
 set expandtab
 set autoindent
@@ -90,7 +90,7 @@ augroup END
 
 augroup vimrc-quickfix
   autocmd!
-  autocmd QuickFixCmdPost vimgrep,grep copen | Cfilter! sorbet/rbi
+  autocmd QuickFixCmdPost vimgrep,grep copen
 augroup END
 
 augroup vimrc-vim-marker
@@ -149,7 +149,6 @@ Plug 'akinsho/toggleterm.nvim'
 Plug 'vim-denops/denops.vim'
 Plug 'vim-skk/skkeleton'
 Plug 'prettier/vim-prettier'
-Plug 'lambdalisue/gina.vim'
 Plug 'lambdalisue/guise.vim'
 Plug 'rbtnn/vim-diffnotify'
 Plug 'hashivim/vim-terraform'
@@ -162,6 +161,7 @@ Plug 'Shougo/ddu-filter-matcher_substring'
 Plug 'Shougo/ddu-source-file_rec'
 Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-buffer'
+Plug 'shun/ddu-source-rg'
 Plug 'Shougo/ddu-commands.vim'
 
 Plug 'vim-test/vim-test'
@@ -174,19 +174,15 @@ if g:ippachi_completion_env == "nvimlsp"
   Plug 'onsails/lspkind-nvim'
   Plug 'jose-elias-alvarez/null-ls.nvim'
 
-  Plug 'Shougo/ddc.vim'
-  Plug 'Shougo/ddc-around'
-  Plug 'Shougo/ddc-nvim-lsp'
-  Plug 'Shougo/ddc-matcher_head'
-  Plug 'Shougo/ddc-sorter_rank'
-  Plug 'Shougo/ddc-rg'
-  Plug 'matsui54/denops-signature_help'
-  Plug 'matsui54/denops-popup-preview.vim'
-  Plug 'matsui54/ddc-buffer'
-  Plug 'LumaKernel/ddc-file'
-  Plug 'Shougo/ddc-cmdline'
-  Plug 'Shougo/ddc-cmdline-history'
-  Plug 'Shougo/pum.vim'
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'hrsh7th/cmp-buffer'
+  Plug 'hrsh7th/cmp-path'
+  Plug 'hrsh7th/cmp-cmdline'
+  Plug 'hrsh7th/cmp-vsnip'
+  Plug 'hrsh7th/vim-vsnip'
+  Plug 'lukas-reineke/cmp-rg'
+  Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 else
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
