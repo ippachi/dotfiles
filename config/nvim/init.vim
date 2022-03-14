@@ -169,8 +169,8 @@ Plug 'Shougo/ddu-commands.vim'
 Plug 'vim-test/vim-test'
 Plug 'rcarriga/vim-ultest'
 
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 if g:ippachi_completion_env == "nvimlsp"
   Plug 'williamboman/nvim-lsp-installer'
