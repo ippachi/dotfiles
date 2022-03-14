@@ -33,6 +33,7 @@ nmap <space>rn <Plug>(coc-rename)
 
 " Formatting selected code.
 nmap <space>f <cmd>call CocActionAsync('format')<cr>
+inoremap <silent><expr> <c-@> coc#refresh()
 
 augroup mygroup
   autocmd!

@@ -1,8 +1,12 @@
 {
+  "codeLens.enable": true,
+  "suggest.enablePreview": true,
   "languageserver": {
     "sorbet": {
-      "command": "srb",
+      "command": "bundle",
       "args": [
+        "exec",
+        "srb",
         "tc",
         "--enable-all-experimental-lsp-features",
         "--lsp",
@@ -19,17 +23,5 @@
       "filetypes": ["terraform", "tf"],
       "initializationOptions": {}
     }
-  },
-  "list.height": 20,
-  "solargraph.rename": false,
-  "solargraph.hover": false,
-  "solargraph.useBundler": true,
-  "solargraph.completion": false,
-  "solargraph.autoformat": false,
-  "solargraph.formatting": true,
-  "solargraph.references": false,
-  "solargraph.definitions": false,
-  "solargraph.folding": false,
-  "solargraph.diagnostics": true,
-  "solargraph.bundlerPath": "/Users/ippachi/.asdf/shims/bundler"
+  }
 }

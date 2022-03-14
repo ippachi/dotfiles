@@ -153,6 +153,8 @@ Plug 'lambdalisue/guise.vim'
 Plug 'rbtnn/vim-diffnotify'
 Plug 'hashivim/vim-terraform'
 Plug 'lambdalisue/gin.vim'
+Plug 'TimUntersberger/neogit'
+Plug 'sindrets/diffview.nvim'
 
 Plug 'Shougo/ddu.vim'
 Plug 'Shougo/ddu-ui-ff'
