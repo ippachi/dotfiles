@@ -79,7 +79,7 @@ fi
 
 . $HOMEBREW_PREFIX/opt/asdf/asdf.sh
 
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 
 zmodload zsh/zpty
