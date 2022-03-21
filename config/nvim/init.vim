@@ -6,7 +6,7 @@ set smartindent
 set shiftwidth=2
 set tabstop=2
 set hidden
-set laststatus=2
+set laststatus=3
 set ignorecase
 set smartcase
 set incsearch
@@ -15,7 +15,8 @@ set backspace=indent,eol,start
 
 set autoread
 set ttimeout
-set signcolumn=yes
+set number
+set signcolumn=number
 
 set fileencodings=utf-8,cp932,shift-jis,euc-jp
 set encoding=utf-8
@@ -101,6 +102,11 @@ augroup END
 augroup vimrc-local
   autocmd!
   autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
+augroup END
+
+augroup vimrc-laststatus
+  autocmd!
+  autocmd VimEnter * set laststatus=3
 augroup END
 
 function! s:vimrc_local(loc)

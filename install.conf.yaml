@@ -19,6 +19,12 @@
     ~/.config/git:
       path: config/git
       create: true
+    ~/.config/wezterm:
+      path: config/wezterm
+      create: true
+    ~/.config/gitui:
+      path: config/gitui
+      create: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
