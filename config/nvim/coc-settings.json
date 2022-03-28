@@ -1,6 +1,13 @@
 {
   "codeLens.enable": true,
   "suggest.enablePreview": true,
+  "hover.floatConfig": {
+    "border": true,
+    "winblend": 15
+  },
+  "suggest.floatConfig": { "border": true, "winblend": 15 },
+  "signature.floatConfig": { "border": true, "winblend": 15 },
+  "diagnostic.floatConfig": { "border": true, "winblend": 15 },
   "languageserver": {
     "sorbet": {
       "command": "bundle",

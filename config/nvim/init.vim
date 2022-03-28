@@ -38,6 +38,7 @@ set colorcolumn=120
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
 set pumheight=10
+set pumblend=15
 
 if finddir('.git', '.;') != ''
   set grepprg=git\ grep\ --perl-regexp\ --line-number\ --column
