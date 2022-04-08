@@ -53,3 +53,5 @@ nmap <space>ca  <Plug>(coc-codeaction)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocActionAsync('format')
+
+nnoremap <leader>r <cmd>CocListResume<cr>
