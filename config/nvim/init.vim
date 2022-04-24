@@ -1,4 +1,3 @@
-let g:ippachi_completion_env = "coc"
 " Options {{{
 set expandtab
 set autoindent
@@ -148,56 +147,27 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'haringsrob/nvim_context_vt'
-Plug 'cohama/lexima.vim'
 Plug 'lambdalisue/fern.vim'
-Plug 'norcalli/nvim-colorizer.lua'
-Plug 'machakann/vim-swap'
-Plug 'akinsho/toggleterm.nvim'
 Plug 'vim-denops/denops.vim'
 Plug 'vim-skk/skkeleton'
-Plug 'prettier/vim-prettier'
-Plug 'lambdalisue/guise.vim'
-Plug 'rbtnn/vim-diffnotify'
 Plug 'hashivim/vim-terraform'
-Plug 'lambdalisue/gin.vim'
-Plug 'TimUntersberger/neogit'
-Plug 'sindrets/diffview.nvim'
-
-Plug 'Shougo/ddu.vim'
-Plug 'Shougo/ddu-ui-ff'
-Plug 'Shougo/ddu-kind-file'
-Plug 'Shougo/ddu-filter-matcher_substring'
-Plug 'Shougo/ddu-source-file_rec'
-Plug 'matsui54/ddu-source-file_external'
-Plug 'shun/ddu-source-buffer'
-Plug 'shun/ddu-source-rg'
-Plug 'Shougo/ddu-commands.vim'
 
 Plug 'vim-test/vim-test'
-Plug 'rcarriga/vim-ultest'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-if g:ippachi_completion_env == "nvimlsp"
-  Plug 'williamboman/nvim-lsp-installer'
-  Plug 'neovim/nvim-lspconfig'
-  Plug 'kosayoda/nvim-lightbulb'
-  Plug 'onsails/lspkind-nvim'
-  Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'neovim/nvim-lspconfig'
+Plug 'kosayoda/nvim-lightbulb'
+Plug 'onsails/lspkind-nvim'
+Plug 'jose-elias-alvarez/null-ls.nvim'
 
-  Plug 'hrsh7th/nvim-cmp'
-  Plug 'hrsh7th/cmp-nvim-lsp'
-  Plug 'hrsh7th/cmp-buffer'
-  Plug 'hrsh7th/cmp-path'
-  Plug 'hrsh7th/cmp-cmdline'
-  Plug 'hrsh7th/cmp-vsnip'
-  Plug 'hrsh7th/vim-vsnip'
-  Plug 'lukas-reineke/cmp-rg'
-  Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-else
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-endif
+Plug 'Shougo/ddc.vim'
+Plug 'Shougo/ddc-around'
+Plug 'Shougo/ddc-matcher_head'
+Plug 'Shougo/ddc-sorter_rank'
+Plug 'Shougo/ddc-nvim-lsp'
 call plug#end()
 
 packadd cfilter
