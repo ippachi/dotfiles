@@ -81,6 +81,7 @@ fi
 
 export PATH=$HOME/local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 
 zmodload zsh/zpty
 autoload -Uz compinit
