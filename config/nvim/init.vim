@@ -168,6 +168,13 @@ Plug 'Shougo/ddc-around'
 Plug 'Shougo/ddc-matcher_head'
 Plug 'Shougo/ddc-sorter_rank'
 Plug 'Shougo/ddc-nvim-lsp'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'matsui54/denops-signature_help'
+Plug 'matsui54/denops-popup-preview.vim'
+Plug 'LumaKernel/ddc-file'
+Plug 'Shougo/ddc-rg'
+Plug 'ippachi/ddc-yank'
 call plug#end()
 
 packadd cfilter
