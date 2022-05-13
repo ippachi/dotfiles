@@ -6,6 +6,6 @@ require'nvim-treesitter.configs'.setup {
     "gleam"
   },
   sync_install = false,
-  highlight = { enable = false }
+  highlight = { enable = true, indent = true }
 }
 EOF

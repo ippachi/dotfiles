@@ -141,7 +141,6 @@ Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-textobj-delimited'
 Plug 'kana/vim-altr'
 Plug 'thinca/vim-quickrun'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'lewis6991/gitsigns.nvim'
@@ -151,11 +150,9 @@ Plug 'lambdalisue/fern.vim'
 Plug 'vim-denops/denops.vim'
 Plug 'vim-skk/skkeleton'
 Plug 'hashivim/vim-terraform'
-
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'pwntester/octo.nvim'
 Plug 'vim-test/vim-test'
-
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
@@ -175,6 +172,20 @@ Plug 'matsui54/denops-popup-preview.vim'
 Plug 'LumaKernel/ddc-file'
 Plug 'Shougo/ddc-rg'
 Plug 'ippachi/ddc-yank'
+Plug '4513ECHO/ddc-github'
+
+Plug 'Shougo/ddu.vim'
+Plug 'Shougo/ddu-ui-ff'
+Plug 'Shougo/ddu-kind-file'
+Plug 'Shougo/ddu-filter-matcher_substring'
+Plug 'Shougo/ddu-commands.vim'
+Plug 'Shougo/ddu-source-file_rec'
+Plug 'matsui54/ddu-source-file_external'
+Plug 'shun/ddu-source-rg'
+Plug 'matsui54/ddu-filter-fzy'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
 call plug#end()
 
 packadd cfilter
