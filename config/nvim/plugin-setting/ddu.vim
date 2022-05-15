@@ -22,6 +22,11 @@ call ddu#custom#patch_global({
     \   'uiParams': {
     \     'ff': {
     \       'startFilter': v:true,
+    \       'split': 'floating',
+    \       'floatingBorder': 'single',
+    \       'reversed': v:false,
+    \       'filterSplitDirection': 'floating',
+    \       'filterFloatingPosition': 'top',
     \     },
     \   }
     \ })
@@ -64,4 +69,4 @@ function! s:ddu_filter_my_settings() abort
   \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
 endfunction
 
-nnoremap <c-p> <cmd>Ddu file_rg<cr>
+nnoremap <c-p> <cmd>Ddu file_old file_rg<cr>

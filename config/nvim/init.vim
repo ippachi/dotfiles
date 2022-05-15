@@ -153,6 +153,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'pwntester/octo.nvim'
 Plug 'vim-test/vim-test'
+Plug 'lewis6991/satellite.nvim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
@@ -183,6 +184,7 @@ Plug 'Shougo/ddu-source-file_rec'
 Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-rg'
 Plug 'matsui54/ddu-filter-fzy'
+Plug 'Shougo/ddu-source-file_old'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
