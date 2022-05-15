@@ -1,17 +1,11 @@
-if [ -f /usr/local/bin/brew ]; then
-  eval $(/usr/local/bin/brew shellenv)
-fi
-
 if [ -f /opt/homebrew/bin/brew ]; then
-  eval $(/opt/homebrew/bin/brew shellenv)
-  export PATH=/opt/homebrew/bin:$PATH
-  export PATH=/opt/homebrew/opt/openssl@3/bin:$PATH
-  export PATH=/opt/homebrew/share/git-core/contrib/diff-highlight:$PATH
+  HOMEBREW_PREFIX=/opt/homebrew
 elif [ -f /usr/local/bin/brew ]; then
-  eval $(/usr/local/bin/brew shellenv)
-  export PATH=/usr/local/share/git-core/contrib/diff-highlight:$PATH
+  HOMEBREW_PREFIX=/usr/local
 fi
 
+eval $($HOMEBREW_PREFIX/bin/brew shellenv 2>/dev/null)
+export PATH=$HOMEBREW_PREFIX/share/git-core/contrib/diff-highlight:$PATH
 export PATH=$HOME/local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
