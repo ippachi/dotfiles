@@ -1,3 +1,5 @@
+#!/bin/bash
+
 eval "$(starship init bash)"
 
 export EDITOR=nvim
@@ -6,11 +8,12 @@ export FZF_DEFAULT_OPTS='--exact'
 
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.fzf.bash ] && source "$HOME/.fzf.bash"
 
 _cdg () {
-  cd $(ghq list --full-path | fzf)
+  cd "$(ghq list --full-path | fzf)" || exit
 }
+
 bind -x '"\C-g": _cdg'
 
 alias be="bundle exec"
