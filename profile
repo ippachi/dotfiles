@@ -12,7 +12,7 @@ if [ -n "$HOMEBREW_PREFIX" ]; then
 
   export PATH="$HOMEBREW_PREFIX/share/git-core/contrib/diff-highlight:$PATH"
   export PATH="$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH"
-  export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
+  export PATH="$HOMEBREW_PREFIX/opt/openssl@3/bin:$PATH"
 fi
 
 export PATH="$HOME/local/bin:$PATH"
