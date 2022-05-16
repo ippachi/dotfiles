@@ -1,5 +1,7 @@
-local nvim_lsp = require('lspconfig')
+local nvim_lsp_installer = require("nvim-lsp-installer")
+nvim_lsp_installer.setup()
 
+local lspconfig = require("lspconfig")
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -30,48 +32,26 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-
 end
 
-local function make_config()
-  return {
-    -- map buffer local keybindings when the language server attaches
+for _, lsp in pairs(nvim_lsp_installer.get_installed_servers()) do
+  local config = {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150
     }
   }
+
+  if lsp.name == "sorbet" then
+    config.cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" }
+    config.root_dir = lspconfig.util.root_pattern("sorbet/config")
+    lsp._default_options = { cmd_env = {} }
+  end
+
+  if lsp.name == "solargraph" and vim.fn.findfile(vim.fn.getcwd() .. '/sorbet/config') ~= "" then
+    goto continue
+  end
+
+  lspconfig[lsp.name].setup(config)
+  ::continue::
 end
-
-local util = require 'lspconfig/util'
-local lsp_installer = require("nvim-lsp-installer")
-
-lsp_installer.on_server_ready(function(server)
-    local opts = make_config()
-
-    if server.name == "sorbet" then
-      opts.cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" }
-      opts.root_dir = util.root_pattern("sorbet/config")
-      server._default_options = { cmd_env = {} }
-    end
-
-    if server.name == "solargraph" then
-      if vim.fn.findfile(vim.fn.getcwd() .. "/.solargraph.yml") ~= "" then
-        opts.cmd = { "bundle", "exec", "solargraph", "stdio" }
-        server._default_options = { cmd_env = {} }
-      end
-
-      if vim.fn.findfile(vim.fn.getcwd() .. '/sorbet/config') ~= "" then
-        opts.init_options = {
-          completion = false,
-          definitions = false,
-          hover = false,
-          references = false,
-          rename = false,
-          symbols = false
-        }
-      end
-    end
-
-    server:setup(opts)
-end)
