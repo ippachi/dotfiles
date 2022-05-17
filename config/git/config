@@ -7,6 +7,7 @@
   diff = diff-highlight | less
 [core]
   editor = nvim
+	hooksPath = ~/.config/git/hooks
 [diff]
   algorithm = histogram
   colorMoved = dimmed-zebra
