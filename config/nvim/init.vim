@@ -33,7 +33,7 @@ set updatetime=300
 set background=dark
 set cursorline
 set cmdheight=2
-set colorcolumn=120
+set colorcolumn=100
 set diffopt& diffopt+=vertical,algorithm:histogram
 set wildmode=longest:full
 set pumheight=10
