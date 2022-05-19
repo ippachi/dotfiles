@@ -8,7 +8,6 @@ fi
 
 if [ -n "$HOMEBREW_PREFIX" ]; then
   eval "$($HOMEBREW_PREFIX/bin/brew shellenv 2>/dev/null)"
-  . $HOMEBREW_PREFIX/opt/asdf/asdf.sh
 
   export PATH="$HOMEBREW_PREFIX/share/git-core/contrib/diff-highlight:$PATH"
   export PATH="$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH"
@@ -17,5 +16,7 @@ fi
 
 export PATH="$HOME/local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+
+[[ -r "$HOME/.asdf/asdf.sh" ]] && . $HOME/.asdf/asdf.sh
 
 export LANG=en_US.UTF-8

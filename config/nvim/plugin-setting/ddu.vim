@@ -52,8 +52,12 @@ autocmd FileType ddu-ff call s:ddu_ff_my_settings()
 function! s:ddu_ff_my_settings() abort
   nnoremap <buffer> <CR>
   \ <Cmd>call ddu#ui#ff#do_action('itemAction')<CR>
-  nnoremap <buffer> <Space>
-  \ <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+  nnoremap <buffer> <tab>
+  \ <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>j
+  nnoremap <buffer> <s-tab>
+  \ <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>k
+  nnoremap <buffer> <C-q>
+  \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'quickfix'})<CR>
   nnoremap <buffer> i
   \ <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
   nnoremap <buffer> q
@@ -64,10 +68,12 @@ autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
 function! s:ddu_filter_my_settings() abort
   inoremap <buffer> <CR>
   \ <Esc><Cmd>close<CR>
+  inoremap <buffer> <C-l>
+  \ <Esc><Cmd>call ddu#ui#ff#do_action('quit')<CR><Cmd>Ddu file_rg<CR>
   nnoremap <buffer> <CR>
   \ <Cmd>close<CR>
   nnoremap <buffer> q
   \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
 endfunction
 
-nnoremap <c-p> <cmd>Ddu file_old file_rg<cr>
+nnoremap <c-p> <cmd>Ddu file_old<cr>

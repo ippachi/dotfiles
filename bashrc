@@ -8,6 +8,7 @@ export FZF_DEFAULT_OPTS='--exact'
 
 [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]] && . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
 [[ -r "$HOMEBREW_PREFIX/etc/bash_completion.d/git-completion.bash" ]] && . "$HOMEBREW_PREFIX/etc/bash_completion.d/git-completion.bash"
+[[ -r "$HOME/.asdf/completions/asdf.bash" ]] && . $HOME/.asdf/completions/asdf.bash
 
 [ -f ~/.fzf.bash ] && source "$HOME/.fzf.bash"
 
