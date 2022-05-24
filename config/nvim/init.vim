@@ -5,7 +5,7 @@ set smartindent
 set shiftwidth=2
 set tabstop=2
 set hidden
-set laststatus=3
+set laststatus=2
 set ignorecase
 set smartcase
 set incsearch
@@ -104,11 +104,6 @@ augroup vimrc-local
   autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
 augroup END
 
-augroup vimrc-laststatus
-  autocmd!
-  autocmd VimEnter * set laststatus=3
-augroup END
-
 function! s:vimrc_local(loc)
   let l:token_path = expand('~/.local/share/vimrc-local/token')
   if !filereadable(l:token_path)
@@ -137,6 +132,7 @@ endfunction
 
 call plug#begin()
 Plug 'sainnhe/gruvbox-material'
+Plug 'rebelot/kanagawa.nvim'
 Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-textobj-delimited'
 Plug 'kana/vim-altr'
@@ -194,4 +190,4 @@ packadd cfilter
 
 runtime! plugin-setting/*.vim plugin-setting/*.lua
 
-colorscheme gruvbox-material
+colorscheme kanagawa

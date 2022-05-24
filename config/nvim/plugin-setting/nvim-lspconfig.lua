@@ -55,3 +55,10 @@ for _, lsp in pairs(nvim_lsp_installer.get_installed_servers()) do
   lspconfig[lsp.name].setup(config)
   ::continue::
 end
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    -- Use a sharp border with `FloatBorder` highlights
+    border = "single"
+  }
+)
