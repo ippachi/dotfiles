@@ -169,7 +169,6 @@ Plug 'matsui54/denops-popup-preview.vim'
 Plug 'LumaKernel/ddc-file'
 Plug 'Shougo/ddc-rg'
 Plug 'ippachi/ddc-yank'
-Plug '4513ECHO/ddc-github'
 
 Plug 'Shougo/ddu.vim'
 Plug 'Shougo/ddu-ui-ff'
@@ -181,6 +180,7 @@ Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-rg'
 Plug 'matsui54/ddu-filter-fzy'
 Plug 'Shougo/ddu-source-file_old'
+Plug 'Shougo/ddu-filter-matcher_relative'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'

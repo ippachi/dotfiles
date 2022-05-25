@@ -16,6 +16,9 @@ call ddu#custom#patch_global({
     \       'matchers': ['matcher_substring'],
     \       'ignoreCase': v:true,
     \     },
+    \     'file_old': {
+    \       'matchers': ['matcher_relative', 'matcher_substring'],
+    \     },
     \   }
     \ })
 
@@ -76,4 +79,4 @@ function! s:ddu_filter_my_settings() abort
   \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
 endfunction
 
-nnoremap <c-p> <cmd>Ddu file_old<cr>
+nnoremap <c-p> <cmd>Ddu file_old file_rg<cr>
