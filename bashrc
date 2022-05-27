@@ -5,6 +5,7 @@ eval "$(starship init bash)"
 export EDITOR=nvim
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='--exact'
+export HISTSIZE=-1
 
 [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]] && . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
 [[ -r "$HOMEBREW_PREFIX/etc/bash_completion.d/git-completion.bash" ]] && . "$HOMEBREW_PREFIX/etc/bash_completion.d/git-completion.bash"

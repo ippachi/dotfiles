@@ -39,10 +39,7 @@ set wildmode=longest:full
 set pumheight=10
 set pumblend=15
 
-if finddir('.git', '.;') != ''
-  set grepprg=git\ grep\ --perl-regexp\ --line-number\ --column
-  set grepformat=%f:%l:%c:%m,%f:%l:%m
-elseif executable('rg')
+if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --pcre2
   set grepformat=%f:%l:%c:%m,%f:%l:%m
 end
@@ -150,6 +147,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'pwntester/octo.nvim'
 Plug 'vim-test/vim-test'
 Plug 'lewis6991/satellite.nvim'
+Plug 'kat0h/bufpreview.vim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
