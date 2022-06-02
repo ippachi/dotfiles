@@ -148,6 +148,7 @@ Plug 'pwntester/octo.nvim'
 Plug 'vim-test/vim-test'
 Plug 'lewis6991/satellite.nvim'
 Plug 'kat0h/bufpreview.vim'
+Plug 'prettier/vim-prettier'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
