@@ -35,11 +35,14 @@ local on_attach = function(client, bufnr)
 end
 
 for _, lsp in pairs(nvim_lsp_installer.get_installed_servers()) do
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
   local config = {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150
-    }
+    },
+    capabilities = capabilities
   }
 
   if lsp.name == "sorbet" then
