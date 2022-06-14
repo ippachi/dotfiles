@@ -140,7 +140,7 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'haringsrob/nvim_context_vt'
 Plug 'lambdalisue/fern.vim'
-Plug 'vim-denops/denops.vim', { 'branch': 'support-global-server' }
+Plug 'vim-denops/denops.vim'
 Plug 'vim-skk/skkeleton'
 Plug 'hashivim/vim-terraform'
 Plug 'nvim-telescope/telescope.nvim'
