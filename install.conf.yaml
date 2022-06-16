@@ -5,8 +5,6 @@
 - clean: ['~']
 
 - link:
-    ~/.profile: profile
-    ~/.bashrc: bashrc
     ~/.inputrc: inputrc
     ~/.asdfrc: asdfrc
     ~/.tmux.conf: tmux.conf

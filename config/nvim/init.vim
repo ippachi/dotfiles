@@ -150,6 +150,7 @@ Plug 'lewis6991/satellite.nvim'
 Plug 'kat0h/bufpreview.vim'
 Plug 'prettier/vim-prettier'
 Plug 'ryicoh/deepl.vim'
+Plug 'lervag/wiki.vim'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
