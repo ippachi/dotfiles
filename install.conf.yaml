@@ -5,10 +5,7 @@
 - clean: ['~']
 
 - link:
-    ~/.inputrc: inputrc
-    ~/.asdfrc: asdfrc
     ~/.tmux.conf: tmux.conf
-    ~/.config/kitty/kitty.conf: config/kitty/kitty.conf
     ~/.config/nvim:
       path: config/nvim
       create: true
@@ -17,12 +14,6 @@
       create: true
     ~/.config/git:
       path: config/git
-      create: true
-    ~/.config/wezterm:
-      path: config/wezterm
-      create: true
-    ~/.config/gitui:
-      path: config/gitui
       create: true
 
 - shell:
