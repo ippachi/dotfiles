@@ -18,6 +18,7 @@ set undofile
 set formatoptions-=ro
 set formatoptions+=mM
 set diffopt=internal,filler,algorithm:histogram,indent-heuristic
+set updatetime=300
 
 let mapleader=','
 
@@ -54,22 +55,7 @@ Plug 'lewis6991/satellite.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'lukas-reineke/indent-blankline.nvim'
-
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'jose-elias-alvarez/null-ls.nvim'
-Plug 'onsails/lspkind.nvim'
-
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
-Plug 'lukas-reineke/cmp-rg'
-Plug 'hrsh7th/vim-vsnip'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 set rtp+=~/ghq/github.com/ippachi/nvim-sticky
@@ -80,194 +66,6 @@ colorscheme kanagawa
 
 " lualine.nvim {{{
 lua require("lualine").setup()
-" }}}
-
-" nvim-lspconfig {{{
-lua << LUA
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-
-vim.diagnostic.config({
-  float = {
-    border = "rounded"
-  }
-})
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-  vim.lsp.buf.format { async = true }
-end
-
-local util = require('lspconfig.util')
-local configs = require('lspconfig.configs')
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
-
-if not configs["ruby-lsp"] then
-  configs["ruby-lsp"] = {
-    default_config = {
-      cmd = { "ruby-lsp" },
-      filetypes = { 'ruby' },
-      root_dir = util.root_pattern("Gemfile", ".git"),
-      settings = {},
-    },
-  }
-end
-
-for _, server in ipairs({ "vimls", "tsserver", "eslint", "yamlls", "jsonls", "terraformls", "tflint" }) do
-  require('lspconfig')[server].setup{
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
-end
-
-require('lspconfig')['sorbet'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  root_dir = util.root_pattern("sorbet/config"),
-  cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-beta-lsp-features" }
-}
-LUA
-" }}}
-
-" mason.nvim {{{
-lua << LUA
-require("mason").setup()
-require("mason-lspconfig").setup()
-LUA
-" }}}
-
-" null-ls.nvim {{{
-lua << LUA
-require("null-ls").setup({
-  sources = {
-    require("null-ls").builtins.formatting.prettier,
-    -- require("null-ls").builtins.diagnostics.cspell,
-  }
-})
-LUA
-" }}}
-
-" nvim-cmp {{{
-lua << LUA
-local cmp = require'cmp'
-local lspkind = require('lspkind')
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-x><C-o>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  }),
-  matching = {
-    disallow_fuzzy_matching = true
-  },
-  sources = cmp.config.sources({
-  },
-  {
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-    {
-      name = 'buffer',
-      option = {
-        get_bufnrs = function()
-          return vim.api.nvim_list_bufs()
-        end
-      }
-    },
-    {
-      name = 'rg',
-      keyword_length = 3
-    }
-  }, {
-    { name = 'path' },
-  }),
-  experimental = {
-    ghost_text = true,
-  },
-	formatting = {
-		format = function(entry, vim_item)
-      local source_mapping = {
-        buffer = "[Buffer]",
-        nvim_lsp = "[LSP]",
-        vsnip = "[Snip]",
-        cmp_tabnine = "[TN]",
-        path = "[Path]",
-        rg = "[RG]",
-      }
-
-			vim_item.kind = lspkind.presets.default[vim_item.kind]
-			local menu = source_mapping[entry.source.name]
-			if entry.source.name == 'cmp_tabnine' then
-				if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-					menu = entry.completion_item.data.detail .. ' ' .. menu
-				end
-				vim_item.kind = ''
-			end
-			vim_item.menu = menu
-			return vim_item
-		end
-	},
-})
-
-cmp.setup.cmdline('/', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
-})
-
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  })
-})
-LUA
-" }}}
-
-" vim-vsnip {{{
-imap <expr> <C-l> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-l>'
-smap <expr> <C-l> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-l>'
-imap <expr> <C-j> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-j>'
-smap <expr> <C-j> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-j>'
 " }}}
 
 " nvim-treesitter {{{
@@ -354,10 +152,6 @@ nnoremap <leader>tl <cmd>TestLast<cr>
 lua require"octo".setup()
 " }}}
 
-" nvim-lightbulb {{{
-lua require('nvim-lightbulb').setup({autocmd = {enabled = true}})
-" }}}
-
 " vim-better-whitespace {{{
 augroup vimrc-better-whitespace
   autocmd!
@@ -419,3 +213,42 @@ require("indent_blankline").setup {
 LUA
 " }}}
 
+" coc.nvim {{{
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+nmap <leader>rn <Plug>(coc-rename)
+
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>cl  <Plug>(coc-codelens-action)
+
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+
+command! -nargs=0 Format :call CocActionAsync('format')
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+" }}}
