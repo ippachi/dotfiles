@@ -12,6 +12,7 @@
   algorithm = histogram
   colorMoved = dimmed-zebra
   colorMovedWS = allow-indentation-change
+  external = difft
 [branch]
   sort = -committerdate
 [pull]

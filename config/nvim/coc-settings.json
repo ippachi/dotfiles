@@ -20,5 +20,6 @@
       "settings": {}
     }
   },
-  "suggest.noselect": true
+  "suggest.noselect": true,
+  "coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript"]
 }

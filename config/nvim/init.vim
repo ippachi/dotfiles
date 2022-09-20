@@ -88,7 +88,7 @@ function open_nvim_tree()
   require("nvim-tree").find_file(false, previous_buf)
 end
 
-vim.keymap.set("n", "<leader>f", open_nvim_tree, { noremap = true })
+vim.keymap.set("n", "<space>f", open_nvim_tree, { noremap = true })
 
 
 require"nvim-tree".setup {
