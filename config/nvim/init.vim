@@ -21,6 +21,7 @@ set diffopt=internal,filler,algorithm:histogram,indent-heuristic
 set updatetime=300
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 set grepformat=%f:%l:%c:%m
+set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 
 let mapleader=','
 
@@ -59,6 +60,7 @@ Plug 'vim-denops/denops-shared-server.vim'
 
 Plug 'Shougo/ddc.vim'
 Plug 'Shougo/ddc-ui-native'
+Plug 'Shougo/ddc-ui-pum'
 Plug 'Shougo/ddc-around'
 Plug 'Shougo/ddc-matcher_head'
 Plug 'Shougo/ddc-sorter_rank'
@@ -77,6 +79,7 @@ Plug 'Shougo/ddu-commands.vim'
 Plug 'Shougo/ddu-source-file_rec'
 Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-rg'
+Plug 'Shougo/pum.vim'
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -101,7 +104,10 @@ lua require("lualine").setup()
 lua << LUA
 require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
-  highlight = { enable = true },
+  highlight = {
+    enable = true,
+    disable = { "vim" }
+  },
 })
 LUA
 " }}}
@@ -225,7 +231,7 @@ lua require("hlslens").setup{}
 " }}}
 
 " ddc.vim {{{
-call ddc#custom#patch_global('ui', 'native')
+call ddc#custom#patch_global('ui', 'pum')
 call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'rg'])
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
@@ -383,4 +389,17 @@ keymap("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { silent = true })
 keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>", { silent = true })
 keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
 LUA
+" }}}
+
+" pum.vim {{{
+inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+inoremap <PageDown> <Cmd>call pum#map#insert_relative_page(+1)<CR>
+inoremap <PageUp>   <Cmd>call pum#map#insert_relative_page(-1)<CR>
+
+call pum#set_option({
+      \ 'highlight_matches': '@string'
+      \ })
 " }}}
