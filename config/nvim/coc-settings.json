@@ -3,5 +3,17 @@
   "coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript"],
   "eslint.format.enable": true,
   "eslint.autoFixOnSave": true,
-  "inlayHint.enable": true
+  "inlayHint.enable": true,
+  "languageserver": {
+		"terraform": {
+			"command": "terraform-ls",
+			"args": ["serve"],
+			"filetypes": [
+				"terraform",
+				"tf"
+			],
+			"initializationOptions": {},
+			"settings": {}
+		}
+	}
 }

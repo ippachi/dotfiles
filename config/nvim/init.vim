@@ -19,12 +19,19 @@ set formatoptions-=ro
 set formatoptions+=mM
 set diffopt=internal,filler,algorithm:histogram,indent-heuristic
 set updatetime=300
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+set grepformat=%f:%l:%c:%m
 
 let mapleader=','
 
 nnoremap j gj
 nnoremap k gk
 tnoremap <c-o> <c-\><c-n>
+
+augroup quickfix
+  autocmd!
+  autocmd QuickFixCmdPost * copen
+augroup END
 
 call plug#begin()
 Plug 'rebelot/kanagawa.nvim'
@@ -33,10 +40,8 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'machakann/vim-sandwich'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'vim-test/vim-test'
-Plug 'voldikss/vim-floaterm'
 Plug 'pwntester/octo.nvim'
 Plug 'kosayoda/nvim-lightbulb'
 Plug 'ntpeters/vim-better-whitespace'
@@ -45,12 +50,41 @@ Plug 'sindrets/diffview.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'lambdalisue/fern.vim'
 Plug 'kevinhwang91/nvim-hlslens'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
-Plug 'renerocksai/telekasten.nvim'
-Plug 'renerocksai/calendar-vim'
+Plug 'vim-denops/denops.vim'
+Plug 'vim-denops/denops-shared-server.vim'
+
+Plug 'Shougo/ddc.vim'
+Plug 'Shougo/ddc-ui-native'
+Plug 'Shougo/ddc-around'
+Plug 'Shougo/ddc-matcher_head'
+Plug 'Shougo/ddc-sorter_rank'
+Plug 'Shougo/ddc-nvim-lsp'
+Plug 'Shougo/ddc-rg'
+Plug 'ippachi/ddc-yank'
+Plug 'matsui54/denops-signature_help'
+Plug 'matsui54/denops-popup-preview.vim'
+
+Plug 'Shougo/ddu.vim'
+Plug 'Shougo/ddu-ui-ff'
+Plug 'Shougo/ddu-kind-file'
+Plug 'Shougo/ddu-filter-matcher_substring'
+Plug 'Shougo/ddu-source-file'
+Plug 'Shougo/ddu-commands.vim'
+Plug 'Shougo/ddu-source-file_rec'
+Plug 'matsui54/ddu-source-file_external'
+Plug 'shun/ddu-source-rg'
+
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 call plug#end()
 
 set rtp+=~/ghq/github.com/ippachi/nvim-sticky
@@ -69,31 +103,6 @@ require("nvim-treesitter.configs").setup({
   ensure_installed = "all",
   highlight = { enable = true },
 })
-LUA
-" }}}
-
-" telescope.nvim {{{
-command! LG Telescope live_grep
-lua << LUA
-require('telescope').setup {
-  pickers = {
-    oldfiles = {
-      mappings = {
-        i = {
-          ["<C-l>"] = function() require('telescope.builtin').find_files() end
-        }
-      }
-    },
-    find_files = {
-      mappings = {
-        i = {
-          ["<C-l>"] = function() require('telescope.builtin').oldfiles({ cwd_only = true }) end
-        }
-      }
-    }
-  }
-}
-vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files)
 LUA
 " }}}
 
@@ -170,196 +179,8 @@ require("indent_blankline").setup {
 LUA
 " }}}
 
-" coc.nvim {{{
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-nmap <leader>rn <Plug>(coc-rename)
-
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-nmap <leader>ac  <Plug>(coc-codeaction)
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-
-command! -nargs=0 Format :call CocActionAsync('format')
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-set tagfunc=CocTagFunc
-" }}}
-
 " fern.vim {{{
 nnoremap <space>f <Cmd>Fern . -reveal=%<cr>
-" }}}
-
-" telekasten.nvim {{{
-lua << LUA
-local home = vim.fn.expand("~/Documents/private/memo")
-
-require('telekasten').setup({
-  home = home,
-    -- if true, telekasten will be enabled when opening a note within the configured home
-  take_over_my_home = true,
-
-  -- auto-set telekasten filetype: if false, the telekasten filetype will not be used
-  --                               and thus the telekasten syntax will not be loaded either
-  auto_set_filetype = true,
-
-  -- dir names for special notes (absolute path or subdir name)
-  dailies      = home .. '/' .. 'daily',
-  weeklies     = home .. '/' .. 'weekly',
-  templates    = home .. '/' .. 'templates',
-
-  -- image (sub)dir for pasting
-  -- dir name (absolute path or subdir name)
-  -- or nil if pasted images shouldn't go into a special subdir
-  image_subdir = "img",
-
-  -- markdown file extension
-  extension    = ".md",
-
-  -- Generate note filenames. One of:
-  -- "title" (default) - Use title if supplied, uuid otherwise
-  -- "uuid" - Use uuid
-  -- "uuid-title" - Prefix title by uuid
-  -- "title-uuid" - Suffix title with uuid
-  new_note_filename = "uuid",
-  -- file uuid type ("rand" or input for os.date()")
-  uuid_type = "%Y%m%d%H%M",
-  -- UUID separator
-  uuid_sep = "-",
-
-  -- following a link to a non-existing note will create it
-  follow_creates_nonexisting = true,
-  dailies_create_nonexisting = true,
-  weeklies_create_nonexisting = true,
-
-  -- skip telescope prompt for goto_today and goto_thisweek
-  journal_auto_open = false,
-
-  -- template for new notes (new_note, follow_link)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_note = home .. '/' .. 'templates/new_note.md',
-
-  -- template for newly created daily notes (goto_today)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_daily = home .. '/' .. 'templates/daily.md',
-
-  -- template for newly created weekly notes (goto_thisweek)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_weekly= home .. '/' .. 'templates/weekly.md',
-
-  -- image link style
-  -- wiki:     ![[image name]]
-  -- markdown: ![](image_subdir/xxxxx.png)
-  image_link_style = "markdown",
-
-  -- default sort option: 'filename', 'modified'
-  sort = "filename",
-
-  -- integrate with calendar-vim
-  plug_into_calendar = true,
-  calendar_opts = {
-      -- calendar week display mode: 1 .. 'WK01', 2 .. 'WK 1', 3 .. 'KW01', 4 .. 'KW 1', 5 .. '1'
-      weeknm = 4,
-      -- use monday as first day of week: 1 .. true, 0 .. false
-      calendar_monday = 1,
-      -- calendar mark: where to put mark for marked days: 'left', 'right', 'left-fit'
-      calendar_mark = 'left-fit',
-  },
-
-  -- telescope actions behavior
-  close_after_yanking = false,
-  insert_after_inserting = true,
-
-  -- tag notation: '#tag', ':tag:', 'yaml-bare'
-  tag_notation = "#tag",
-
-  -- command palette theme: dropdown (window) or ivy (bottom panel)
-  command_palette_theme = "ivy",
-
-  -- tag list theme:
-  -- get_cursor: small tag list at cursor; ivy and dropdown like above
-  show_tags_theme = "ivy",
-
-  -- when linking to a note in subdir/, create a [[subdir/title]] link
-  -- instead of a [[title only]] link
-  subdirs_in_links = true,
-
-  -- template_handling
-  -- What to do when creating a new note via `new_note()` or `follow_link()`
-  -- to a non-existing note
-  -- - prefer_new_note: use `new_note` template
-  -- - smart: if day or week is detected in title, use daily / weekly templates (default)
-  -- - always_ask: always ask before creating a note
-  template_handling = "smart",
-
-  -- path handling:
-  --   this applies to:
-  --     - new_note()
-  --     - new_templated_note()
-  --     - follow_link() to non-existing note
-  --
-  --   it does NOT apply to:
-  --     - goto_today()
-  --     - goto_thisweek()
-  --
-  --   Valid options:
-  --     - smart: put daily-looking notes in daily, weekly-looking ones in weekly,
-  --              all other ones in home, except for notes/with/subdirs/in/title.
-  --              (default)
-  --
-  --     - prefer_home: put all notes in home except for goto_today(), goto_thisweek()
-  --                    except for notes with subdirs/in/title.
-  --
-  --     - same_as_current: put all new notes in the dir of the current note if
-  --                        present or else in home
-  --                        except for notes/with/subdirs/in/title.
-  new_note_location = "smart",
-
-  -- should all links be updated when a file is renamed
-  rename_update_links = true,
-
-  vaults = {
-      vault2 = {
-          -- alternate configuration for vault2 here. Missing values are defaulted to
-          -- default values from telekasten.
-          -- e.g.
-          -- home = "/home/user/vaults/personal",
-      },
-  },
-
-  -- how to preview media files
-  -- "telescope-media-files" if you have telescope-media-files.nvim installed
-  -- "catimg-previewer" if you have catimg installed
-  media_previewer = "telescope-media-files",
-})
-LUA
 " }}}
 
 " gitsigns.nvim {{{
@@ -397,4 +218,169 @@ LUA
 
 " nvim-hlslens {{{
 lua require("hlslens").setup{}
+" }}}
+
+" denops.vim {{{
+" let g:denops_server_addr = '127.0.0.1:32123'
+" }}}
+
+" ddc.vim {{{
+call ddc#custom#patch_global('ui', 'native')
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'rg'])
+call ddc#custom#patch_global('sourceOptions', {
+      \ '_': {
+      \   'matchers': ['matcher_head'],
+      \   'sorters': ['sorter_rank']},
+      \ })
+call ddc#custom#patch_global('sourceOptions', {
+      \ 'around': {'mark': 'A'},
+      \ 'nvim-lsp': {'mark': 'lsp'},
+      \ 'rg': {'mark': 'rg', 'minAutoCompleteLength': 4,},
+      \ })
+call ddc#enable()
+" }}}
+
+" denops-signature_help {{{
+call signature_help#enable()
+" }}}
+
+" denops-popup-preview.vim {{{
+call popup_preview#enable()
+" }}}
+
+" vim-vsnip {{{
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+" }}}
+
+" ddu.vim {{{
+call ddu#custom#patch_global({
+    \ 'ui': 'ff',
+    \ })
+call ddu#custom#patch_global({
+    \   'kindOptions': {
+    \     'file': {
+    \       'defaultAction': 'open',
+    \     },
+    \   }
+    \ })
+call ddu#custom#patch_global({
+    \   'uiParams': {
+    \     'ff': {
+    \       'startFilter': v:true,
+    \     },
+    \   }
+    \ })
+call ddu#custom#patch_global({
+    \   'sourceOptions': {
+    \     '_': {
+    \       'matchers': ['matcher_substring'],
+    \     },
+    \   }
+    \ })
+
+call ddu#custom#alias('source', 'file_rg', 'file_external')
+call ddu#custom#patch_global({
+    \   'sourceParams': {
+    \     'file_rg': {
+    \       'cmd': ['rg', '--files', '--glob', '!.git',
+    \               '--color', 'never', '--no-messages'],
+    \       'updateItems': 50000,
+    \     },
+    \   }
+    \ })
+call ddu#custom#patch_global({
+    \   'sourceParams' : {
+    \     'rg' : {
+    \       'args': ['--column', '--no-heading', '--color', 'never'],
+    \     },
+    \   },
+    \ })
+
+autocmd FileType ddu-ff call s:ddu_ff_my_settings()
+function! s:ddu_ff_my_settings() abort
+  nnoremap <buffer> <CR> <Cmd>call ddu#ui#ff#do_action('itemAction')<CR>
+  nnoremap <buffer> i <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
+  nnoremap <buffer> <C-q> <Cmd>call ddu#ui#ff#do_action('itemAction', { 'name': 'quickfix' })<CR>
+  nnoremap <buffer> <Tab> <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+  nnoremap <buffer> q <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+endfunction
+
+autocmd FileType ddu-ff-filter call s:ddu_ff_filter_my_settings()
+function! s:ddu_ff_filter_my_settings() abort
+  nnoremap <buffer> q <Cmd>call ddu#ui#ff#close()<CR>
+  inoremap <buffer> <cr> <esc><Cmd>call ddu#ui#ff#close()<CR>
+endfunction
+
+command! DduRgLive call <SID>ddu_rg_live()
+function! s:ddu_rg_live() abort
+  call ddu#start({
+        \   'volatile': v:true,
+        \   'sources': [{
+        \     'name': 'rg',
+        \     'options': {'matchers': []},
+        \   }],
+        \   'uiParams': {'ff': {
+        \     'ignoreEmpty': v:false,
+        \     'autoResize': v:false,
+        \   }},
+        \ })
+endfunction
+
+nnoremap <c-p> <Cmd>Ddu file_rg<cr>
+" }}}
+
+" nvim-lspconfig {{{
+lua << LUA
+require("mason").setup()
+require("mason-lspconfig").setup()
+
+local on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
+
+local util = require 'lspconfig.util'
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+require('lspconfig')['sorbet'].setup{
+  cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--enable-all-experimental-lsp-features" },
+  root_dir = util.root_pattern("sorbet/config"),
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+require('lspconfig')['terraformls'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+require('lspconfig')['tsserver'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+LUA
+" }}}
+
+" lspsaga.nvim {{{
+lua << LUA
+local keymap = vim.keymap.set
+local saga = require('lspsaga')
+
+keymap({"n","v"}, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
+keymap("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { silent = true })
+keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>", { silent = true })
+keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
+LUA
 " }}}
