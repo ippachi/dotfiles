@@ -21,7 +21,7 @@ set diffopt=internal,filler,algorithm:histogram,indent-heuristic
 set updatetime=300
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 set grepformat=%f:%l:%c:%m
-set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
+" set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 
 let mapleader=','
 
@@ -52,8 +52,8 @@ Plug 'windwp/nvim-autopairs'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'lambdalisue/fern.vim'
-Plug 'kevinhwang91/nvim-hlslens'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'tpope/vim-fugitive'
 
 Plug 'vim-denops/denops.vim'
 Plug 'vim-denops/denops-shared-server.vim'
@@ -69,6 +69,8 @@ Plug 'Shougo/ddc-rg'
 Plug 'ippachi/ddc-yank'
 Plug 'matsui54/denops-signature_help'
 Plug 'matsui54/denops-popup-preview.vim'
+Plug 'matsui54/ddc-buffer'
+Plug 'shougo/ddc-line'
 
 Plug 'Shougo/ddu.vim'
 Plug 'Shougo/ddu-ui-ff'
@@ -80,6 +82,8 @@ Plug 'Shougo/ddu-source-file_rec'
 Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-rg'
 Plug 'Shougo/pum.vim'
+Plug 'Shougo/ddc-cmdline'
+Plug 'Shougo/ddc-cmdline-history'
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -201,6 +205,17 @@ require('gitsigns').setup{
       opts.buffer = bufnr
       vim.keymap.set(mode, l, r, opts)
     end
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
 
     -- Actions
     map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
@@ -222,17 +237,14 @@ require('gitsigns').setup{
 LUA
 " }}}
 
-" nvim-hlslens {{{
-lua require("hlslens").setup{}
-" }}}
-
 " denops.vim {{{
 " let g:denops_server_addr = '127.0.0.1:32123'
 " }}}
 
 " ddc.vim {{{
 call ddc#custom#patch_global('ui', 'pum')
-call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'rg'])
+call ddc#custom#patch_global('sources', ['around', 'nvim-lsp', 'rg'])
+call ddc#custom#patch_global('cmdlineSources', ['cmdline-history', 'cmdline', 'rg'])
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_head'],
@@ -240,9 +252,34 @@ call ddc#custom#patch_global('sourceOptions', {
       \ })
 call ddc#custom#patch_global('sourceOptions', {
       \ 'around': {'mark': 'A'},
-      \ 'nvim-lsp': {'mark': 'lsp'},
+      \ 'nvim-lsp': {'mark': 'lsp','dup': 'force'},
       \ 'rg': {'mark': 'rg', 'minAutoCompleteLength': 4,},
+      \ 'line': {'mark': 'line'},
+      \ 'buffer': {'mark': 'buffer'},
+      \ 'cmdline': {'mark': 'cmdline'},
+      \ 'cmdline-history': {'mark': 'history'},
       \ })
+call ddc#custom#patch_global('sourceParams', {
+    \ 'buffer': {
+    \   'requireSameFiletype': v:false,
+    \   'limitBytes': 5000000,
+    \   'fromAltBuf': v:true,
+    \   'forceCollect': v:true,
+    \ },
+    \ })
+call ddc#custom#patch_filetype(['ddu-ff-filter'], {
+    \ 'keywordPattern': '[0-9a-zA-Z_:#-]*',
+    \ 'sources': ['line', 'buffer'],
+    \ 'specialBufferCompletion': v:true,
+    \ })
+
+call ddc#custom#patch_global('autoCompleteEvents', [
+    \ 'InsertEnter', 'TextChangedI', 'TextChangedP',
+    \ 'CmdlineEnter', 'CmdlineChanged', 'TextChangedT',
+    \ ])
+
+nnoremap :       <Cmd>call ddc#enable_cmdline_completion()<cr>:
+
 call ddc#enable()
 " }}}
 
@@ -267,13 +304,6 @@ call ddu#custom#patch_global({
     \   'kindOptions': {
     \     'file': {
     \       'defaultAction': 'open',
-    \     },
-    \   }
-    \ })
-call ddu#custom#patch_global({
-    \   'uiParams': {
-    \     'ff': {
-    \       'startFilter': v:true,
     \     },
     \   }
     \ })
@@ -376,6 +406,10 @@ require('lspconfig')['tsserver'].setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
+require('lspconfig')['solargraph'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
 LUA
 " }}}
 
@@ -398,6 +432,13 @@ inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 inoremap <PageDown> <Cmd>call pum#map#insert_relative_page(+1)<CR>
 inoremap <PageUp>   <Cmd>call pum#map#insert_relative_page(-1)<CR>
+
+cnoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
+cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+cnoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+cnoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
 call pum#set_option({
       \ 'highlight_matches': '@string'
