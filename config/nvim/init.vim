@@ -21,7 +21,6 @@ set diffopt=internal,filler,algorithm:histogram,indent-heuristic
 set updatetime=300
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 set grepformat=%f:%l:%c:%m
-" set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 
 let mapleader=','
 
@@ -54,6 +53,9 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'lambdalisue/fern.vim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'tpope/vim-fugitive'
+Plug 'lambdalisue/gin.vim'
+
+Plug 'MunifTanjim/nui.nvim'
 
 Plug 'vim-denops/denops.vim'
 Plug 'vim-denops/denops-shared-server.vim'
@@ -67,13 +69,12 @@ Plug 'Shougo/ddc-sorter_rank'
 Plug 'Shougo/ddc-nvim-lsp'
 Plug 'Shougo/ddc-rg'
 Plug 'ippachi/ddc-yank'
-Plug 'matsui54/denops-signature_help'
 Plug 'matsui54/denops-popup-preview.vim'
 Plug 'matsui54/ddc-buffer'
 Plug 'shougo/ddc-line'
 
 Plug 'Shougo/ddu.vim'
-Plug 'Shougo/ddu-ui-ff'
+" Plug 'Shougo/ddu-ui-ff'
 Plug 'Shougo/ddu-kind-file'
 Plug 'Shougo/ddu-filter-matcher_substring'
 Plug 'Shougo/ddu-source-file'
@@ -95,6 +96,7 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 call plug#end()
 
 set rtp+=~/ghq/github.com/ippachi/nvim-sticky
+set rtp+=~/ghq/github.com/ippachi/ddu-ui-ff
 
 " kanagawa.nvim {{{
 colorscheme kanagawa
@@ -283,10 +285,6 @@ nnoremap :       <Cmd>call ddc#enable_cmdline_completion()<cr>:
 call ddc#enable()
 " }}}
 
-" denops-signature_help {{{
-call signature_help#enable()
-" }}}
-
 " denops-popup-preview.vim {{{
 call popup_preview#enable()
 " }}}
@@ -299,6 +297,15 @@ smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l
 " ddu.vim {{{
 call ddu#custom#patch_global({
     \ 'ui': 'ff',
+    \ 'uiParams': {
+    \   'ff': {
+    \     'split': 'floating',
+    \     'floatingBorder': 'rounded',
+    \     'autoAction': { 'name': 'preview' },
+    \     'previewFloating': v:true,
+    \     'previewFloatingBorder': 'rounded',
+    \   }
+    \ }
     \ })
 call ddu#custom#patch_global({
     \   'kindOptions': {
@@ -348,22 +355,18 @@ function! s:ddu_ff_filter_my_settings() abort
   inoremap <buffer> <cr> <esc><Cmd>call ddu#ui#ff#close()<CR>
 endfunction
 
-command! DduRgLive call <SID>ddu_rg_live()
-function! s:ddu_rg_live() abort
-  call ddu#start({
-        \   'volatile': v:true,
-        \   'sources': [{
-        \     'name': 'rg',
-        \     'options': {'matchers': []},
-        \   }],
-        \   'uiParams': {'ff': {
-        \     'ignoreEmpty': v:false,
-        \     'autoResize': v:false,
-        \   }},
-        \ })
+nnoremap <c-p> <cmd>call <SID>open_ddu_files()<cr>
+function! s:open_ddu_files() abort
+call ddu#custom#patch_global({
+    \ 'ui': 'ff',
+    \ 'uiParams': {
+    \   'ff': {
+    \     'previewWidth': &columns / 2,
+    \   }
+    \ }
+    \ })
+Ddu file_rg
 endfunction
-
-nnoremap <c-p> <Cmd>Ddu file_rg<cr>
 " }}}
 
 " nvim-lspconfig {{{
@@ -380,6 +383,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
