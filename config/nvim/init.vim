@@ -54,6 +54,7 @@ Plug 'lambdalisue/fern.vim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'tpope/vim-fugitive'
 Plug 'lambdalisue/gin.vim'
+Plug 'mickael-menu/zk-nvim'
 
 Plug 'MunifTanjim/nui.nvim'
 
@@ -74,7 +75,7 @@ Plug 'matsui54/ddc-buffer'
 Plug 'shougo/ddc-line'
 
 Plug 'Shougo/ddu.vim'
-" Plug 'Shougo/ddu-ui-ff'
+Plug 'Shougo/ddu-ui-ff'
 Plug 'Shougo/ddu-kind-file'
 Plug 'Shougo/ddu-filter-matcher_substring'
 Plug 'Shougo/ddu-source-file'
@@ -301,7 +302,6 @@ call ddu#custom#patch_global({
     \   'ff': {
     \     'split': 'floating',
     \     'floatingBorder': 'rounded',
-    \     'autoAction': { 'name': 'preview' },
     \     'previewFloating': v:true,
     \     'previewFloatingBorder': 'rounded',
     \   }
@@ -347,12 +347,28 @@ function! s:ddu_ff_my_settings() abort
   nnoremap <buffer> <C-q> <Cmd>call ddu#ui#ff#do_action('itemAction', { 'name': 'quickfix' })<CR>
   nnoremap <buffer> <Tab> <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
   nnoremap <buffer> q <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+  nnoremap <buffer> p <Cmd>call ddu#ui#ff#do_action('preview')<CR>
 endfunction
 
 autocmd FileType ddu-ff-filter call s:ddu_ff_filter_my_settings()
 function! s:ddu_ff_filter_my_settings() abort
   nnoremap <buffer> q <Cmd>call ddu#ui#ff#close()<CR>
   inoremap <buffer> <cr> <esc><Cmd>call ddu#ui#ff#close()<CR>
+endfunction
+
+command! DduRgLive call <SID>ddu_rg_live()
+function! s:ddu_rg_live() abort
+  call ddu#start({
+        \   'volatile': v:true,
+        \   'sources': [{
+        \     'name': 'rg',
+        \     'options': {'matchers': []},
+        \   }],
+        \   'uiParams': {'ff': {
+        \     'ignoreEmpty': v:false,
+        \     'autoResize': v:false,
+        \   }},
+        \ })
 endfunction
 
 nnoremap <c-p> <cmd>call <SID>open_ddu_files()<cr>
@@ -414,6 +430,10 @@ require('lspconfig')['solargraph'].setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
+require('lspconfig')['zk'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
 LUA
 " }}}
 
@@ -447,4 +467,30 @@ cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 call pum#set_option({
       \ 'highlight_matches': '@string'
       \ })
+" }}}
+
+" zk-nvim {{{
+lua << LUA
+require("zk").setup({
+  -- can be "telescope", "fzf" or "select" (`vim.ui.select`)
+  -- it's recommended to use "telescope" or "fzf"
+  picker = "select",
+
+  lsp = {
+    -- `config` is passed to `vim.lsp.start_client(config)`
+    config = {
+      cmd = { "zk", "lsp" },
+      name = "zk",
+      -- on_attach = ...
+      -- etc, see `:h vim.lsp.start_client()`
+    },
+
+    -- automatically attach buffers in a zk notebook that match the given filetypes
+    auto_attach = {
+      enabled = true,
+      filetypes = { "markdown" },
+    },
+  },
+})
+LUA
 " }}}
