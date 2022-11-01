@@ -94,6 +94,11 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+
+Plug 'vimwiki/vimwiki'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
 call plug#end()
 
 set rtp+=~/ghq/github.com/ippachi/nvim-sticky
@@ -318,6 +323,7 @@ call ddu#custom#patch_global({
     \   'sourceOptions': {
     \     '_': {
     \       'matchers': ['matcher_substring'],
+    \       'ignoreCase': v:true,
     \     },
     \   }
     \ })
@@ -493,4 +499,9 @@ require("zk").setup({
   },
 })
 LUA
+" }}}
+
+" vim-zettel {{{
+let g:vimwiki_list = [{'path':'~/Documents/private/vimwiki/wiki/','ext':'.md', 'syntax':'markdown'}]
+let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always"
 " }}}
