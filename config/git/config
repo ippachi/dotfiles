@@ -1,10 +1,6 @@
 [user]
   name = ippachi
   email = ippachi1018@gmail.com
-[pager]
-  log = diff-highlight | less
-  show = diff-highlight | less
-  diff = diff-highlight | less
 [core]
   editor = nvim
 	hooksPath = ~/.config/git/hooks
@@ -12,7 +8,6 @@
   algorithm = histogram
   colorMoved = dimmed-zebra
   colorMovedWS = allow-indentation-change
-  # external = difft
 [branch]
   sort = -committerdate
 [pull]

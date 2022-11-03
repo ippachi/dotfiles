@@ -46,20 +46,12 @@ Plug 'pwntester/octo.nvim'
 Plug 'kosayoda/nvim-lightbulb'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryicoh/deepl.vim'
-Plug 'sindrets/diffview.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'lambdalisue/fern.vim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'tpope/vim-fugitive'
-Plug 'mickael-menu/zk-nvim'
-Plug 'folke/which-key.nvim'
-
-Plug 'ldelossa/litee.nvim'
-Plug 'ldelossa/gh.nvim'
-
-Plug 'MunifTanjim/nui.nvim'
 
 Plug 'vim-denops/denops.vim'
 Plug 'vim-denops/denops-shared-server.vim'
@@ -105,6 +97,26 @@ call plug#end()
 
 set rtp+=~/ghq/github.com/ippachi/nvim-sticky
 set rtp+=~/ghq/github.com/ippachi/ddu-ui-ff
+
+" Greview {{{
+command! -nargs=1 GReview call <SID>greview(<f-args>)
+function! s:greview(commit_hash) abort
+  execute('Git checkout ' . a:commit_hash)
+  execute('Git reset HEAD~')
+  Git
+endfunction
+
+command! -nargs=0 GReviewDone call <SID>greview_done()
+function! s:greview_done() abort
+  execute('Git reset --hard')
+endfunction
+
+command! -nargs=0 GReviewNext call <SID>greview_next()
+function! s:greview_next() abort
+  execute('Git checkout HEAD@{1}')
+  execute('Git reset HEAD~')
+endfunction
+" }}}
 
 " kanagawa.nvim {{{
 colorscheme kanagawa
@@ -166,20 +178,6 @@ lua require("nvim-autopairs").setup {}
 
 " nvim-treesitter-endwise {{{
 lua require('nvim-treesitter.configs').setup { endwise = { enable = true } }
-" }}}
-
-" diffview.nvim {{{
-lua << LUA
-local actions = require("diffview.actions")
-
-require("diffview").setup({
-  keymaps = {
-    file_panel = {
-      ["q"] = function() vim.fn.execute("qa") end
-    }
-  }
-})
-LUA
 " }}}
 
 " ident-blankline.nvim {{{
@@ -438,10 +436,6 @@ require('lspconfig')['solargraph'].setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
-require('lspconfig')['zk'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
 LUA
 " }}}
 
@@ -477,90 +471,6 @@ call pum#set_option({
       \ })
 " }}}
 
-" zk-nvim {{{
-lua << LUA
-require("zk").setup({
-  -- can be "telescope", "fzf" or "select" (`vim.ui.select`)
-  -- it's recommended to use "telescope" or "fzf"
-  picker = "select",
-
-  lsp = {
-    -- `config` is passed to `vim.lsp.start_client(config)`
-    config = {
-      cmd = { "zk", "lsp" },
-      name = "zk",
-      -- on_attach = ...
-      -- etc, see `:h vim.lsp.start_client()`
-    },
-
-    -- automatically attach buffers in a zk notebook that match the given filetypes
-    auto_attach = {
-      enabled = true,
-      filetypes = { "markdown" },
-    },
-  },
-})
-LUA
-" }}}
-
-" vim-zettel {{{
+" vimwiki {{{
 let g:vimwiki_list = [{'path':'~/Documents/private/wiki/','ext':'.md', 'syntax':'markdown'}]
-" }}}
-
-" gh.nvim {{{
-lua << LUA
-require('litee.lib').setup()
-require('litee.gh').setup()
-local wk = require("which-key")
-wk.register({
-    g = {
-        name = "+Git",
-        h = {
-            name = "+Github",
-            c = {
-                name = "+Commits",
-                c = { "<cmd>GHCloseCommit<cr>", "Close" },
-                e = { "<cmd>GHExpandCommit<cr>", "Expand" },
-                o = { "<cmd>GHOpenToCommit<cr>", "Open To" },
-                p = { "<cmd>GHPopOutCommit<cr>", "Pop Out" },
-                z = { "<cmd>GHCollapseCommit<cr>", "Collapse" },
-            },
-            i = {
-                name = "+Issues",
-                p = { "<cmd>GHPreviewIssue<cr>", "Preview" },
-            },
-            l = {
-                name = "+Litee",
-                t = { "<cmd>LTPanel<cr>", "Toggle Panel" },
-            },
-            r = {
-                name = "+Review",
-                b = { "<cmd>GHStartReview<cr>", "Begin" },
-                c = { "<cmd>GHCloseReview<cr>", "Close" },
-                d = { "<cmd>GHDeleteReview<cr>", "Delete" },
-                e = { "<cmd>GHExpandReview<cr>", "Expand" },
-                s = { "<cmd>GHSubmitReview<cr>", "Submit" },
-                z = { "<cmd>GHCollapseReview<cr>", "Collapse" },
-            },
-            p = {
-                name = "+Pull Request",
-                c = { "<cmd>GHClosePR<cr>", "Close" },
-                d = { "<cmd>GHPRDetails<cr>", "Details" },
-                e = { "<cmd>GHExpandPR<cr>", "Expand" },
-                o = { "<cmd>GHOpenPR<cr>", "Open" },
-                p = { "<cmd>GHPopOutPR<cr>", "PopOut" },
-                r = { "<cmd>GHRefreshPR<cr>", "Refresh" },
-                t = { "<cmd>GHOpenToPR<cr>", "Open To" },
-                z = { "<cmd>GHCollapsePR<cr>", "Collapse" },
-            },
-            t = {
-                name = "+Threads",
-                c = { "<cmd>GHCreateThread<cr>", "Create" },
-                n = { "<cmd>GHNextThread<cr>", "Next" },
-                t = { "<cmd>GHToggleThread<cr>", "Toggle" },
-            },
-        },
-    },
-}, { prefix = "<leader>" })
-LUA
 " }}}
