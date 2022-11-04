@@ -52,6 +52,7 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'lambdalisue/fern.vim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'tpope/vim-fugitive'
+Plug 'sindrets/diffview.nvim'
 
 Plug 'vim-denops/denops.vim'
 Plug 'vim-denops/denops-shared-server.vim'
@@ -89,6 +90,7 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+Plug 'jose-elias-alvarez/null-ls.nvim'
 
 Plug 'vimwiki/vimwiki'
 Plug 'junegunn/fzf'
@@ -341,7 +343,7 @@ call ddu#custom#patch_global({
 call ddu#custom#patch_global({
     \   'sourceParams' : {
     \     'rg' : {
-    \       'args': ['--column', '--no-heading', '--color', 'never'],
+    \       'args': ['-S', '--column', '--no-heading', '--color', 'never'],
     \     },
     \   },
     \ })
@@ -354,6 +356,7 @@ function! s:ddu_ff_my_settings() abort
   nnoremap <buffer> <Tab> <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
   nnoremap <buffer> q <Cmd>call ddu#ui#ff#do_action('quit')<CR>
   nnoremap <buffer> p <Cmd>call ddu#ui#ff#do_action('preview')<CR>
+  nnoremap <buffer> a <Cmd>call ddu#ui#ff#do_action('toggleAllItems')<CR>
 endfunction
 
 autocmd FileType ddu-ff-filter call s:ddu_ff_filter_my_settings()
@@ -396,6 +399,9 @@ lua << LUA
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
+
 local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -436,6 +442,25 @@ require('lspconfig')['solargraph'].setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
+require('lspconfig')['eslint'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    format = true
+  }
+}
+LUA
+" }}}
+
+" null-ls {{{
+lua << LUA
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    -- null_ls.builtins.formatting.prettierd,
+  },
+})
 LUA
 " }}}
 
@@ -473,4 +498,8 @@ call pum#set_option({
 
 " vimwiki {{{
 let g:vimwiki_list = [{'path':'~/Documents/private/wiki/','ext':'.md', 'syntax':'markdown'}]
+" }}}
+
+" vim-fugitive {{{
+nnoremap <leader>g <cmd>tab Git<cr>
 " }}}
