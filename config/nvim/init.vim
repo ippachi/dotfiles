@@ -69,19 +69,25 @@ Plug 'ippachi/ddc-yank'
 Plug 'matsui54/denops-popup-preview.vim'
 Plug 'matsui54/ddc-buffer'
 Plug 'shougo/ddc-line'
+Plug 'Shougo/pum.vim'
+Plug 'Shougo/ddc-cmdline'
+Plug 'Shougo/ddc-cmdline-history'
 
 Plug 'Shougo/ddu.vim'
 Plug 'Shougo/ddu-ui-ff'
 Plug 'Shougo/ddu-kind-file'
 Plug 'Shougo/ddu-filter-matcher_substring'
+Plug 'Shougo/ddu-filter-matcher_relative'
 Plug 'Shougo/ddu-source-file'
 Plug 'Shougo/ddu-commands.vim'
 Plug 'Shougo/ddu-source-file_rec'
 Plug 'matsui54/ddu-source-file_external'
 Plug 'shun/ddu-source-rg'
-Plug 'Shougo/pum.vim'
-Plug 'Shougo/ddc-cmdline'
-Plug 'Shougo/ddc-cmdline-history'
+Plug 'Shougo/ddu-source-file_old'
+Plug 'Shougo/ddu-filter-converter_display_word'
+Plug 'Shougo/ddu-ui-filer'
+Plug 'Shougo/ddu-column-filename'
+Plug 'Shougo/ddu-source-action'
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -311,6 +317,7 @@ call ddu#custom#patch_global({
     \     'floatingBorder': 'rounded',
     \     'previewFloating': v:true,
     \     'previewFloatingBorder': 'rounded',
+    \     'displaySourceName': 'short'
     \   }
     \ }
     \ })
@@ -319,6 +326,9 @@ call ddu#custom#patch_global({
     \     'file': {
     \       'defaultAction': 'open',
     \     },
+    \     'action': {
+    \       'defaultAction': 'do',
+    \     }
     \   }
     \ })
 call ddu#custom#patch_global({
@@ -327,6 +337,12 @@ call ddu#custom#patch_global({
     \       'matchers': ['matcher_substring'],
     \       'ignoreCase': v:true,
     \     },
+    \     'file_old': {
+    \       'matchers': ['matcher_substring', 'matcher_relative'],
+    \     },
+    \     'file': {
+    \       'columns': ['filename']
+    \     }
     \   }
     \ })
 
@@ -365,6 +381,14 @@ function! s:ddu_ff_filter_my_settings() abort
   inoremap <buffer> <cr> <esc><Cmd>call ddu#ui#ff#close()<CR>
 endfunction
 
+autocmd FileType ddu-filer call s:ddu_filer_my_settings()
+function! s:ddu_filer_my_settings() abort
+  nnoremap <buffer> q <Cmd>call ddu#ui#filer#do_action('quit')<CR>
+  nnoremap <buffer> l <Cmd>call ddu#ui#filer#do_action('expandItem', { 'mode': 'toggle' })<CR>
+  nnoremap <buffer> h <Cmd>call ddu#ui#filer#do_action('collapseItem')<CR>
+  nnoremap <buffer> a <Cmd>call ddu#ui#filer#do_action('chooseAction')<CR>
+endfunction
+
 command! DduRgLive call <SID>ddu_rg_live()
 function! s:ddu_rg_live() abort
   call ddu#start({
@@ -380,6 +404,7 @@ function! s:ddu_rg_live() abort
         \ })
 endfunction
 
+nnoremap <space>f <cmd>Ddu file -ui=filer<cr>
 nnoremap <c-p> <cmd>call <SID>open_ddu_files()<cr>
 function! s:open_ddu_files() abort
 call ddu#custom#patch_global({
@@ -390,7 +415,7 @@ call ddu#custom#patch_global({
     \   }
     \ }
     \ })
-Ddu file_rg
+Ddu file_old file_rg
 endfunction
 " }}}
 
@@ -497,7 +522,14 @@ call pum#set_option({
 " }}}
 
 " vimwiki {{{
-let g:vimwiki_list = [{'path':'~/Documents/private/wiki/','ext':'.md', 'syntax':'markdown'}]
+let g:vimwiki_list = [{
+  \ 'path':'~/Documents/private/wiki/',
+  \ 'ext':'.md',
+  \ 'syntax':'markdown',
+  \ 'template_path': '~/Documents/private/wiki/templates',
+  \ 'template_default': 'def_template',
+  \ 'template_ext': '.md'
+  \ }]
 " }}}
 
 " vim-fugitive {{{
