@@ -15,6 +15,7 @@
   ff = only
 [merge]
   tool = vimdiff
+	conflictStyle = diff3
 [mergetool]
   prompt = true
 [mergetool "vimdiff"]
@@ -26,5 +27,3 @@
   br = branch
   co = checkout
   ci = commit
-[init]
-	templateDir = /Users/ippachi/.config/git/template

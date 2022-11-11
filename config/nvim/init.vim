@@ -53,6 +53,9 @@ Plug 'lambdalisue/fern.vim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'tpope/vim-fugitive'
 Plug 'sindrets/diffview.nvim'
+Plug 'AndrewRadev/linediff.vim'
+Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'nvim-treesitter/playground'
 
 Plug 'vim-denops/denops.vim'
 Plug 'vim-denops/denops-shared-server.vim'
@@ -386,7 +389,9 @@ function! s:ddu_filer_my_settings() abort
   nnoremap <buffer> q <Cmd>call ddu#ui#filer#do_action('quit')<CR>
   nnoremap <buffer> l <Cmd>call ddu#ui#filer#do_action('expandItem', { 'mode': 'toggle' })<CR>
   nnoremap <buffer> h <Cmd>call ddu#ui#filer#do_action('collapseItem')<CR>
+  nnoremap <buffer> <bs> <Cmd>call ddu#ui#filer#do_action('itemAction', { 'name': 'narrow', 'params': { 'path': '..' }})<CR>
   nnoremap <buffer> a <Cmd>call ddu#ui#filer#do_action('chooseAction')<CR>
+  nnoremap <buffer> <cr> <cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'open'})<cr>
 endfunction
 
 command! DduRgLive call <SID>ddu_rg_live()
@@ -404,7 +409,7 @@ function! s:ddu_rg_live() abort
         \ })
 endfunction
 
-nnoremap <space>f <cmd>Ddu file -ui=filer<cr>
+nnoremap <space>f <cmd>Ddu file -ui=filer -ui-param-split=no -source-option-path=`expand('%:p:h')`<cr>
 nnoremap <c-p> <cmd>call <SID>open_ddu_files()<cr>
 function! s:open_ddu_files() abort
 call ddu#custom#patch_global({
@@ -431,6 +436,7 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
@@ -496,7 +502,6 @@ local saga = require('lspsaga')
 
 keymap({"n","v"}, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
 keymap("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { silent = true })
-keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>", { silent = true })
 keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
 LUA
 " }}}
@@ -534,4 +539,16 @@ let g:vimwiki_list = [{
 
 " vim-fugitive {{{
 nnoremap <leader>g <cmd>tab Git<cr>
+" }}}
+
+" nvim-treesitter-context {{{
+lua << LUA
+require'treesitter-context'.setup{
+  patterns = {
+    ruby = {
+      'class'
+    }
+  }
+}
+LUA
 " }}}
