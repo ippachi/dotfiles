@@ -69,34 +69,29 @@ require("packer").startup(function(use)
   use({
     "neovim/nvim-lspconfig",
     requires = {
+      { "folke/neodev.nvim" },
       { "williamboman/mason.nvim" },
       { "williamboman/mason-lspconfig.nvim" },
       { "hrsh7th/cmp-nvim-lsp" },
     },
     config = function()
+      require("neodev").setup()
       require("mason").setup()
       require("mason-lspconfig").setup()
-
-      local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
 
       local on_attach = function(client, bufnr)
         vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
         vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
         vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
         vim.keymap.set("n", "<leader>wl", function()
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, bufopts)
         vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
         vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
         vim.keymap.set("n", "<leader>f", function()
           vim.lsp.buf.format({ async = true })
@@ -142,6 +137,15 @@ require("packer").startup(function(use)
       require("lspconfig")["sumneko_lua"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
+        settings = {
+          Lua = {
+            workspace = {
+              -- Make the server aware of Neovim runtime files
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false
+            },
+          }
+        }
       })
     end,
   })
@@ -166,8 +170,8 @@ require("packer").startup(function(use)
           end,
         },
         window = {
-          -- completion = cmp.config.window.bordered(),
-          -- documentation = cmp.config.window.bordered(),
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -204,33 +208,36 @@ require("packer").startup(function(use)
     end,
   })
   use({
-    "nvim-telescope/telescope.nvim",
-    tag = "0.1.0",
-    requires = {
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-      },
-      { "nvim-lua/plenary.nvim" },
-    },
-    setup = function()
-      vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
-    end,
-    cmd = "Telescope",
-    config = function()
-      require("telescope").setup({
-        extensions = {
-          fzf = {
-            fuzzy = false,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
+    {
+      "nvim-telescope/telescope.nvim",
+      tag = "0.1.0",
+      requires = { "nvim-lua/plenary.nvim" },
+      setup = function()
+        vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
+        vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
+      end,
+      cmd = { "Telescope" },
+      config = function()
+        require("telescope").setup({
+          extensions = {
+            fzf = {
+              fuzzy = false,
+              override_generic_sorter = true,
+              override_file_sorter = true,
+              case_mode = "smart_case",
+            },
           },
-        },
-      })
-
-      require("telescope").load_extension("fzf")
-    end,
+        })
+      end,
+    },
+    {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+      config = function()
+        require("telescope").load_extension("fzf")
+      end,
+      after = "telescope.nvim",
+    },
   })
 
   use({
@@ -277,6 +284,31 @@ require("packer").startup(function(use)
     tag = "nightly", -- optional, updated every week. (see issue #1193)
     config = function()
       require("nvim-tree").setup()
+    end,
+  })
+  use({
+    "akinsho/git-conflict.nvim",
+    tag = "*",
+    config = function()
+      require("git-conflict").setup()
+    end,
+  })
+  use({
+    "glepnir/lspsaga.nvim",
+    branch = "main",
+    cmd = "Lspsaga",
+    setup = function()
+      local keymap = vim.keymap.set
+      keymap({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
+      keymap("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { silent = true })
+      keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>", { silent = true })
+      keymap("n", "<leader>e", "<cmd>Lspsaga show_line_diagnostics<CR>", { silent = true })
+      keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
+    end,
+    config = function()
+      local saga = require("lspsaga")
+
+      saga.init_lsp_saga()
     end,
   })
 end)
