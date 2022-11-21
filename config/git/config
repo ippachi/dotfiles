@@ -27,3 +27,5 @@
   br = branch
   co = checkout
   ci = commit
+[rerere]
+	enabled = true
