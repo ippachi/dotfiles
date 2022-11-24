@@ -394,4 +394,10 @@ require("packer").startup(function(use)
     requires = "nvim-lua/plenary.nvim",
     cmd = "DiffviewOpen",
   })
+  use({
+    "gen740/SmoothCursor.nvim",
+    config = function()
+      require("smoothcursor").setup()
+    end,
+  })
 end)
