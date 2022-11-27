@@ -140,6 +140,14 @@ require("packer").startup(function(use)
         on_attach = on_attach,
         capabilities = capabilities,
       })
+      require("lspconfig")["ruby_ls"].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+      require("lspconfig")["yamlls"].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
       require("lspconfig")["eslint"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
@@ -319,6 +327,7 @@ require("packer").startup(function(use)
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.prettier,
         },
       })
     end,
@@ -399,5 +408,10 @@ require("packer").startup(function(use)
     config = function()
       require("smoothcursor").setup()
     end,
+  })
+  use({
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+    ft = { "vimwiki", "markdown" }
   })
 end)
