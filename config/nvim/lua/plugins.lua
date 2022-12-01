@@ -216,6 +216,7 @@ require("packer").startup(function(use)
       { "hrsh7th/cmp-cmdline", after = "nvim-cmp" },
       { "hrsh7th/cmp-vsnip", after = "nvim-cmp" },
       { "hrsh7th/vim-vsnip", after = "nvim-cmp" },
+      { "hrsh7th/cmp-emoji", after = "nvim-cmp" },
     },
     event = { "InsertEnter", "CmdlineEnter" },
     config = function()
@@ -241,7 +242,7 @@ require("packer").startup(function(use)
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "vsnip" }, -- For vsnip users.
-        }, {
+        }, { { name = "emoji" } }, {
           { name = "buffer" },
         }),
       })
@@ -411,7 +412,9 @@ require("packer").startup(function(use)
   })
   use({
     "iamcco/markdown-preview.nvim",
-    run = function() vim.fn["mkdp#util#install"]() end,
-    ft = { "vimwiki", "markdown" }
+    run = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    ft = { "vimwiki", "markdown" },
   })
 end)

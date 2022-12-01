@@ -47,7 +47,7 @@ api.nvim_create_autocmd("QuickFixCmdPost", {
   callback = "copen",
 })
 
-for _, pattern in ipairs({ "vimwiki", "gitcommit" }) do
+for _, pattern in ipairs({ "vimwiki", "gitcommit", "markdown" }) do
   api.nvim_create_autocmd("FileType", {
     group = augroup,
     pattern = pattern,
