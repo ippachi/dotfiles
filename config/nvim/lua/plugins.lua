@@ -417,4 +417,10 @@ require("packer").startup(function(use)
     end,
     ft = { "vimwiki", "markdown" },
   })
+  use({
+    "j-hui/fidget.nvim",
+    config = function()
+      require("fidget").setup({})
+    end,
+  })
 end)
