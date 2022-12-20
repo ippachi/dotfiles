@@ -423,4 +423,10 @@ require("packer").startup(function(use)
       require("fidget").setup({})
     end,
   })
+  use({
+    "tversteeg/registers.nvim",
+    config = function()
+      require("registers").setup()
+    end,
+  })
 end)
