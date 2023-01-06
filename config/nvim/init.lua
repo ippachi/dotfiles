@@ -34,18 +34,13 @@ vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heurist
 vim.opt.updatetime = 300
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
+vim.cmd[[set efm+=%f\|%l\ col\ %c\|%m]]
 
 vim.g.mapleader = ","
 
 keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
 keymap.set("t", "<c-o>", "<c-/><c-n>", { noremap = true })
-
-api.nvim_create_autocmd("QuickFixCmdPost", {
-  group = augroup,
-  pattern = "*",
-  callback = "copen",
-})
 
 for _, pattern in ipairs({ "vimwiki", "markdown" }) do
   api.nvim_create_autocmd("FileType", {

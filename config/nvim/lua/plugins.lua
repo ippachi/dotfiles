@@ -187,7 +187,7 @@ require("packer").startup(function(use)
     {
       "nvim-treesitter/playground",
       cmd = "TSPlaygroundToggle",
-    },
+    }
   })
   use({
     "windwp/nvim-autopairs",
