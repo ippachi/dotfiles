@@ -7,7 +7,7 @@
 	commentchar = ";"
 [diff]
   algorithm = histogram
-  colorMoved = dimmed-zebra
+  colorMoved = default
   colorMovedWS = allow-indentation-change
 [branch]
   sort = -committerdate
@@ -15,7 +15,7 @@
   twohead = ort
   ff = only
 [merge]
-  tool = vimdiff
+	tool = fugitive
 	conflictStyle = diff3
 [mergetool]
   prompt = true
@@ -30,3 +30,5 @@
   ci = commit
 [rerere]
 	enabled = true
+[mergetool "fugitive"]
+	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"

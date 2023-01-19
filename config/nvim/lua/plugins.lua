@@ -140,6 +140,11 @@ require("packer").startup(function(use)
         on_attach = on_attach,
         capabilities = capabilities,
       })
+      require("lspconfig").grammarly.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        filetypes = { "markdown", "gitcommit", "vimwiki" }
+      })
       require("lspconfig")["ruby_ls"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
@@ -187,7 +192,7 @@ require("packer").startup(function(use)
     {
       "nvim-treesitter/playground",
       cmd = "TSPlaygroundToggle",
-    }
+    },
   })
   use({
     "windwp/nvim-autopairs",
@@ -200,8 +205,7 @@ require("packer").startup(function(use)
     "tpope/vim-fugitive",
     setup = function()
       vim.keymap.set("n", "<leader>g", "<cmd>tab Git<cr>")
-    end,
-    cmd = "Git",
+    end
   })
   use({
     "AndrewRadev/linediff.vim",
