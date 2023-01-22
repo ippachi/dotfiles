@@ -3,12 +3,12 @@ local api = vim.api
 local augroup = api.nvim_create_augroup("my-vimrc", { clear = true })
 
 vim.opt.autoindent = true
+vim.opt.smartindent = true
 vim.opt.swapfile = false
 vim.opt.backup = true
 vim.opt.backupdir = vim.env.HOME .. "/.config/nvim/backup/"
 vim.opt.cmdheight = 2
 vim.opt.colorcolumn = "120"
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.splitbelow = true
@@ -34,7 +34,8 @@ vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heurist
 vim.opt.updatetime = 300
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
-vim.cmd[[set efm+=%f\|%l\ col\ %c\|%m]]
+vim.opt.completeopt = { "menu" }
+vim.cmd [[set efm+=%f\|%l\ col\ %c\|%m]]
 
 vim.g.mapleader = ","
 
@@ -42,18 +43,147 @@ keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
 keymap.set("t", "<c-o>", "<c-/><c-n>", { noremap = true })
 
-for _, pattern in ipairs({ "vimwiki", "markdown" }) do
-  api.nvim_create_autocmd("FileType", {
-    group = augroup,
-    pattern = pattern,
-    callback = function() vim.opt_local.tw = 120 end
+vim.api.nvim_create_autocmd("QuickFixcmdPost", {
+  group = augroup,
+  pattern = { "grep", "vimgrep" },
+  callback = function() vim.cmd[[cwindow]] end
+})
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
   })
 end
 
-api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = "gitcommit",
-  callback = function() vim.opt_local.tw = 72 end
-})
+vim.opt.rtp:prepend(lazypath)
 
-require("plugins")
+require("lazy").setup({
+  { "rebelot/kanagawa.nvim", lazy = false, priority = 1000, config = function() vim.cmd [[colorscheme kanagawa]] end },
+  { "nvim-lualine/lualine.nvim", config = true, dependencies = { "kyazdani42/nvim-web-devicons" } },
+  "ntpeters/vim-better-whitespace",
+  { "lewis6991/gitsigns.nvim", config = true },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    dependencies = { "RRethy/nvim-treesitter-endwise" },
+    build = ":TSUpdate",
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        highlight = { enable = true },
+        indent = { enable = true },
+        endwise = { enable = true },
+      }
+    end
+  },
+  "lukas-reineke/indent-blankline.nvim",
+  "rhysd/committia.vim", -- TODO
+  {
+    "tpope/vim-fugitive", init = function()
+      vim.keymap.set("n", "<leader>g", "<cmd>tab Git<cr>")
+    end
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", { "j-hui/fidget.nvim", config = true } },
+    },
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup()
+
+      local opts = { noremap = true, silent = true }
+
+      vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
+      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+      vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
+
+      -- Use an on_attach function to only map the following keys
+      -- after the language server attaches to the current buffer
+      local on_attach = function(client, bufnr)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+        -- Mappings.
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+        vim.keymap.set('n', '<leader>wl', function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, bufopts)
+        vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+        vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+      end
+
+      local lsp_flags = {
+        -- This is the default in Nvim 0.7+
+        debounce_text_changes = 150,
+      }
+
+      require('lspconfig')['sumneko_lua'].setup {
+        on_attach = on_attach,
+        flags = lsp_flags,
+      }
+    end
+  },
+  { "stevearc/dressing.nvim", config = true },
+
+  { "machakann/vim-sandwich", keys = { "sr", "sd" } },
+  { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
+  {
+    "nvim-telescope/telescope.nvim",
+    branch = "0.1.x",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    init = function()
+      vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
+      vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
+      vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
+    end,
+    cmd = { "Telescope" },
+  },
+  {
+    "vimwiki/vimwiki",
+    init = function()
+      vim.g.vimwiki_list = {
+        {
+          path = "~/Documents/private/wiki/",
+          ext = ".md",
+          syntax = "markdown",
+          template_path = "~/Documents/private/wiki/templates",
+          template_default = "def_template",
+          template_ext = ".md",
+        },
+      }
+      vim.keymap.set("n", "<leader>ww", "<cmd>VimwikiIndex<cr>")
+    end,
+    cmd = "VimwikiIndex",
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { { "nvim-tree/nvim-web-devicons", name = "nvim-tree-nvim-web-devicons" } },
+    tag = "nightly",
+    init = function() vim.keymap.set("n", "<space>f", "<cmd>NvimTreeFindFileToggle<cr>") end,
+    cmd = "NvimTreeFindFileToggle",
+    opts = {
+      actions = {
+        open_file = {
+          quit_on_open = true,
+        },
+      },
+    }
+  },
+})
