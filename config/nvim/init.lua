@@ -134,10 +134,12 @@ require("lazy").setup({
         debounce_text_changes = 150,
       }
 
-      require('lspconfig')['sumneko_lua'].setup {
-        on_attach = on_attach,
-        flags = lsp_flags,
-      }
+      for _, name in ipairs({ 'sumneko_lua', 'tsserver' }) do
+        require('lspconfig')[name].setup {
+          on_attach = on_attach,
+          flags = lsp_flags,
+        }
+      end
     end
   },
   { "stevearc/dressing.nvim", config = true },
