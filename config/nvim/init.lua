@@ -46,7 +46,7 @@ keymap.set("t", "<c-o>", "<c-/><c-n>", { noremap = true })
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   group = augroup,
   pattern = { "grep", "vimgrep" },
-  callback = function() vim.cmd[[cwindow]] end
+  callback = function() vim.cmd [[cwindow]] end
 })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -81,7 +81,6 @@ require("lazy").setup({
     end
   },
   "lukas-reineke/indent-blankline.nvim",
-  "rhysd/committia.vim", -- TODO
   {
     "tpope/vim-fugitive", init = function()
       vim.keymap.set("n", "<leader>g", "<cmd>tab Git<cr>")
@@ -188,4 +187,9 @@ require("lazy").setup({
       },
     }
   },
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "DiffviewOpen"
+  }
 })
