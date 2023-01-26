@@ -34,7 +34,7 @@ vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heurist
 vim.opt.updatetime = 300
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
-vim.opt.completeopt = { "menu" }
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.cmd [[set efm+=%f\|%l\ col\ %c\|%m]]
 
 vim.g.mapleader = ","
@@ -67,7 +67,34 @@ require("lazy").setup({
   { "rebelot/kanagawa.nvim", lazy = false, priority = 1000, config = function() vim.cmd [[colorscheme kanagawa]] end },
   { "nvim-lualine/lualine.nvim", config = true, dependencies = { "kyazdani42/nvim-web-devicons" } },
   "ntpeters/vim-better-whitespace",
-  { "lewis6991/gitsigns.nvim", config = true },
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require('gitsigns').setup({
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+
+          end
+
+          map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+          map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+          map('n', '<leader>hS', gs.stage_buffer)
+          map('n', '<leader>hu', gs.undo_stage_hunk)
+          map('n', '<leader>hR', gs.reset_buffer)
+          map('n', '<leader>hp', gs.preview_hunk)
+          map('n', '<leader>hb', function() gs.blame_line { full = true } end)
+          map('n', '<leader>tb', gs.toggle_current_line_blame)
+          map('n', '<leader>hd', gs.diffthis)
+          map('n', '<leader>hD', function() gs.diffthis('~') end)
+          map('n', '<leader>td', gs.toggle_deleted)
+        end
+      })
+    end
+  },
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "RRethy/nvim-treesitter-endwise" },
@@ -89,7 +116,8 @@ require("lazy").setup({
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", { "j-hui/fidget.nvim", config = true } },
+      { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", { "j-hui/fidget.nvim", config = true },
+        "hrsh7th/cmp-nvim-lsp", { "folke/neodev.nvim", config = true } },
     },
     config = function()
       require("mason").setup()
@@ -128,15 +156,21 @@ require("lazy").setup({
         vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
       end
 
-      local lsp_flags = {
-        -- This is the default in Nvim 0.7+
-        debounce_text_changes = 150,
-      }
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-      for _, name in ipairs({ 'sumneko_lua', 'tsserver' }) do
+      -- Mason
+      for _, name in ipairs({ 'sumneko_lua', 'tsserver', 'eslint' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
-          flags = lsp_flags,
+          capabilities = capabilities,
+        }
+      end
+
+      -- Manual
+      for _, name in ipairs({ 'solargraph' }) do
+        require('lspconfig')[name].setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
         }
       end
     end
@@ -191,5 +225,25 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = "DiffviewOpen"
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path" },
+    config = function()
+      local cmp = require 'cmp'
+
+      cmp.setup({
+        mapping = cmp.mapping.preset.insert({
+          ['<C-e>'] = cmp.mapping.abort(),
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        }),
+        sources = cmp.config.sources({
+          { name = "buffer" }
+        })
+      })
+
+      keymap.set("i", "<C-x><C-o>", cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }))
+    end
   }
 })
