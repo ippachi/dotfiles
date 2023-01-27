@@ -30,7 +30,7 @@ vim.opt.formatoptions:append({
   m = true,
   M = true,
 })
-vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "iwhite" }
+vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic" }
 vim.opt.updatetime = 300
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
