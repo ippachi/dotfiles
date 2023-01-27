@@ -109,11 +109,6 @@ require("lazy").setup({
   },
   "lukas-reineke/indent-blankline.nvim",
   {
-    "tpope/vim-fugitive", init = function()
-      vim.keymap.set("n", "<leader>g", "<cmd>tab Git<cr>")
-    end
-  },
-  {
     "neovim/nvim-lspconfig",
     dependencies = {
       { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", { "j-hui/fidget.nvim", config = true },
@@ -224,6 +219,9 @@ require("lazy").setup({
   {
     "sindrets/diffview.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
+    init = function()
+      keymap.set("n", "<leader>g", "<Cmd>DiffviewOpen<CR>", { noremap = true })
+    end,
     cmd = "DiffviewOpen"
   },
   {
@@ -245,5 +243,8 @@ require("lazy").setup({
 
       keymap.set("i", "<C-x><C-o>", cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }))
     end
+  },
+  {
+    "tpope/vim-fugitive", cmd = "Git"
   }
 })
