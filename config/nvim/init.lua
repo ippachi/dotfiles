@@ -171,6 +171,7 @@ require("lazy").setup({
     end
   },
   { "stevearc/dressing.nvim", config = true },
+  { "xiyaowong/nvim-transparent", opts = { enable = true } },
 
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
   { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
