@@ -173,6 +173,7 @@ require("lazy").setup({
   { "stevearc/dressing.nvim", config = true },
   { "xiyaowong/nvim-transparent", opts = { enable = true } },
 
+  -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
   { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
   {
@@ -247,5 +248,6 @@ require("lazy").setup({
   },
   {
     "tpope/vim-fugitive", cmd = "Git"
-  }
+  },
+  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end }
 })
