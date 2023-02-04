@@ -253,5 +253,5 @@ require("lazy").setup({
   {
     "tpope/vim-fugitive", cmd = "Git"
   },
-  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end }
+  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
 })
