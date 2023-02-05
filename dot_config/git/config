@@ -1,0 +1,34 @@
+[user]
+  name = ippachi
+  email = ippachi1018@gmail.com
+[core]
+  editor = nvim
+	hooksPath = ~/.config/git/hooks
+	commentchar = ";"
+[diff]
+  algorithm = histogram
+  colorMoved = default
+  colorMovedWS = allow-indentation-change
+[branch]
+  sort = -committerdate
+[pull]
+  twohead = ort
+  ff = only
+[merge]
+	tool = fugitive
+	conflictStyle = diff3
+[mergetool]
+  prompt = true
+[mergetool "vimdiff"]
+  cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[alias]
+  df = diff --word-diff=color -w
+  lg = log --oneline --graph
+  st = status
+  br = branch
+  co = checkout
+  ci = commit
+[rerere]
+	enabled = true
+[mergetool "fugitive"]
+	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
