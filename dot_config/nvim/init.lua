@@ -97,7 +97,8 @@ require("lazy").setup({
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "RRethy/nvim-treesitter-endwise" },
+    dependencies = { "RRethy/nvim-treesitter-endwise", "nvim-treesitter/nvim-treesitter-context",
+      "nvim-treesitter/playground" },
     build = ":TSUpdate",
     config = function()
       require('nvim-treesitter.configs').setup {
@@ -192,11 +193,24 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", { "nvim-telescope/telescope-fzf-native.nvim", build = "make" } },
     init = function()
       vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
       vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
       vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
+    end,
+    config = function()
+      require('telescope').setup {
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          }
+        }
+      }
+      require('telescope').load_extension('fzf')
     end,
     cmd = { "Telescope" },
   },
@@ -228,11 +242,16 @@ require("lazy").setup({
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
-    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path" },
+    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path", "hrsh7th/vim-vsnip" },
     config = function()
       local cmp = require 'cmp'
 
       cmp.setup({
+        snippet = {
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+          end,
+        },
         mapping = cmp.mapping.preset.insert({
           ['<C-e>'] = cmp.mapping.abort(),
           ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
@@ -252,5 +271,5 @@ require("lazy").setup({
   {
     "tpope/vim-fugitive", cmd = "Git"
   },
-  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
+  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end }
 })
