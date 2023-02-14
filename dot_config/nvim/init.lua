@@ -155,7 +155,7 @@ require("lazy").setup({
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Mason
-      for _, name in ipairs({ 'lua_lsp', 'tsserver', 'eslint' }) do
+      for _, name in ipairs({ 'lua_ls', 'tsserver', 'eslint', 'tflint', 'terraformls' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
