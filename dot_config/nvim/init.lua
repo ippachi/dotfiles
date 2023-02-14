@@ -97,7 +97,7 @@ require("lazy").setup({
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "RRethy/nvim-treesitter-endwise", "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "RRethy/nvim-treesitter-endwise",
       "nvim-treesitter/playground" },
     build = ":TSUpdate",
     config = function()
@@ -155,7 +155,7 @@ require("lazy").setup({
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Mason
-      for _, name in ipairs({ 'sumneko_lua', 'tsserver', 'eslint' }) do
+      for _, name in ipairs({ 'lua_lsp', 'tsserver', 'eslint' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
