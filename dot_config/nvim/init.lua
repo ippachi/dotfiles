@@ -37,6 +37,8 @@ vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.cmd [[set efm+=%f\|%l\ col\ %c\|%m]]
 
+vim.cmd [[packadd Cfilter]]
+
 vim.g.mapleader = ","
 
 keymap.set("n", "j", "gj", { noremap = true })
@@ -257,19 +259,19 @@ require("lazy").setup({
           ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
         }),
         sources = cmp.config.sources({
-          { name = "buffer", option = {
-            get_bufnrs = function()
-              return vim.api.nvim_list_bufs()
-            end
-          } }
-        })
+          {
+            name = "buffer", option = {
+              get_bufnrs = function()
+                return vim.api.nvim_list_bufs()
+              end
+            },
+          },
+        }),
       })
 
       keymap.set("i", "<C-x><C-o>", cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }))
     end
   },
-  {
-    "tpope/vim-fugitive", cmd = "Git"
-  },
+  { "tpope/vim-fugitive", cmd = "Git" },
   { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end }
 })
