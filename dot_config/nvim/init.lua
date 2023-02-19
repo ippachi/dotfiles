@@ -168,7 +168,7 @@ require("lazy").setup({
       end
 
       -- Manual
-      for _, name in ipairs({ 'solargraph' }) do
+      for _, name in ipairs({ 'solargraph', 'ruby_ls' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
@@ -276,5 +276,9 @@ require("lazy").setup({
     end
   },
   { "tpope/vim-fugitive", cmd = "Git" },
-  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end }
+  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
+  {
+    "lukas-reineke/headlines.nvim", ft = { "vimwiki", "markdown" }, dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true
+  }
 })
