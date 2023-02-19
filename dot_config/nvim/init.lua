@@ -104,7 +104,10 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = function()
       require('nvim-treesitter.configs').setup {
-        highlight = { enable = true },
+        highlight = {
+          enable = true,
+          disable = { "embedded_template" }
+        },
         indent = { enable = true },
         endwise = { enable = true },
       }
