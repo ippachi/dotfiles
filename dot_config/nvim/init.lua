@@ -269,6 +269,7 @@ require("lazy").setup({
               end
             },
           },
+          { name = "neorg" }
         }),
       })
 
@@ -278,7 +279,34 @@ require("lazy").setup({
   { "tpope/vim-fugitive", cmd = "Git" },
   { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
   {
-    "lukas-reineke/headlines.nvim", ft = { "vimwiki", "markdown" }, dependencies = "nvim-treesitter/nvim-treesitter",
-    config = true
+    "lukas-reineke/headlines.nvim", ft = { "markdown", "norg" }, dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true, enabled = false
+  },
+  {
+    "nvim-neorg/neorg",
+    cmd = "Neorg",
+    ft = { "norg" },
+    build = ":Neorg sync-parsers",
+    opts = {
+      load = {
+        ["core.defaults"] = {}, -- Loads default behaviour
+        ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.norg.completion"] = {
+          config = {
+            engine = "nvim-cmp"
+          }
+        },
+        ["core.norg.dirman"] = { -- Manages Neorg workspaces
+          config = {
+            workspaces = {
+              notes = "~/notes",
+              work = "~/Documents/work/notes",
+              home = "~/Documents/home/notes",
+            },
+          },
+        },
+      },
+    },
+    dependencies = { { "nvim-lua/plenary.nvim" } },
   }
 })
