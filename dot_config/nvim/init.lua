@@ -168,7 +168,7 @@ require("lazy").setup({
       end
 
       -- Manual
-      for _, name in ipairs({ 'solargraph', 'ruby_ls' }) do
+      for _, name in ipairs({ 'solargraph' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
