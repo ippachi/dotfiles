@@ -106,7 +106,8 @@ require("lazy").setup({
       require('nvim-treesitter.configs').setup {
         highlight = {
           enable = true,
-          disable = { "embedded_template" }
+          disable = { "embedded_template" },
+          additional_vim_regex_highlighting = { 'org' },
         },
         indent = { enable = true },
         endwise = { enable = true },
@@ -191,6 +192,17 @@ require("lazy").setup({
       },
     }
   },
+  {
+    "nvim-orgmode/orgmode",
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('orgmode').setup_ts_grammar()
+      require('orgmode').setup({
+        org_agenda_files = { '~/Documents/org/*', '~/my-orgs/**/*' },
+        org_default_notes_file = '~/Documents/org/refile.org',
+      })
+    end
+  },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
@@ -247,7 +259,8 @@ require("lazy").setup({
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
-    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path", "hrsh7th/vim-vsnip" },
+    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path", "hrsh7th/vim-vsnip",
+      "nvim-orgmode/orgmode" },
     config = function()
       local cmp = require 'cmp'
 
@@ -263,13 +276,15 @@ require("lazy").setup({
         }),
         sources = cmp.config.sources({
           {
+            name = "orgmode"
+          },
+          {
             name = "buffer", option = {
               get_bufnrs = function()
                 return vim.api.nvim_list_bufs()
               end
             },
-          },
-          { name = "neorg" }
+          }
         }),
       })
 
@@ -278,35 +293,4 @@ require("lazy").setup({
   },
   { "tpope/vim-fugitive", cmd = "Git" },
   { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
-  {
-    "lukas-reineke/headlines.nvim", ft = { "markdown", "norg" }, dependencies = "nvim-treesitter/nvim-treesitter",
-    config = true, enabled = false
-  },
-  {
-    "nvim-neorg/neorg",
-    cmd = "Neorg",
-    ft = { "norg" },
-    build = ":Neorg sync-parsers",
-    opts = {
-      load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.norg.completion"] = {
-          config = {
-            engine = "nvim-cmp"
-          }
-        },
-        ["core.norg.dirman"] = { -- Manages Neorg workspaces
-          config = {
-            workspaces = {
-              notes = "~/notes",
-              work = "~/Documents/work/notes",
-              home = "~/Documents/home/notes",
-            },
-          },
-        },
-      },
-    },
-    dependencies = { { "nvim-lua/plenary.nvim" } },
-  }
 })
