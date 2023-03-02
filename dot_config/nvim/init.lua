@@ -191,6 +191,23 @@ require("lazy").setup({
       },
     }
   },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function()
+      local null_ls = require("null-ls")
+
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+          null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+        },
+        on_attach = function(client, bufnr)
+          local bufopts = { noremap = true, silent = true, buffer = bufnr }
+          vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+        end
+      })
+    end
+  },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
@@ -302,9 +319,15 @@ require("lazy").setup({
               notes = "~/notes",
               work = "~/Documents/work/notes",
               home = "~/Documents/home/notes",
+              journal = "~/Documents/journal/notes",
             },
           },
         },
+        ["core.norg.journal"] = {
+          config = {
+            workspace = "journal"
+          }
+        }
       },
     },
     dependencies = { { "nvim-lua/plenary.nvim" } },
