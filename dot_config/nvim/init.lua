@@ -99,8 +99,11 @@ require("lazy").setup({
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "RRethy/nvim-treesitter-endwise",
-      "nvim-treesitter/playground" },
+    dependencies = {
+      "RRethy/nvim-treesitter-endwise",
+      "nvim-treesitter/playground",
+      "nvim-treesitter/nvim-treesitter-textobjects"
+    },
     build = ":TSUpdate",
     config = function()
       require('nvim-treesitter.configs').setup {
@@ -110,6 +113,15 @@ require("lazy").setup({
         },
         indent = { enable = true },
         endwise = { enable = true },
+        textobjects = {
+          select = {
+            enable = true,
+            keymaps = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+            }
+          }
+        }
       }
     end
   },
@@ -200,6 +212,7 @@ require("lazy").setup({
         sources = {
           null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
           null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+          null_ls.builtins.diagnostics.markdownlint,
         },
         on_attach = function(client, bufnr)
           local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -241,12 +254,9 @@ require("lazy").setup({
     init = function()
       vim.g.vimwiki_list = {
         {
-          path = "~/Documents/private/wiki/",
+          path = "~/Documents/wiki/",
           ext = ".md",
           syntax = "markdown",
-          template_path = "~/Documents/private/wiki/templates",
-          template_default = "def_template",
-          template_ext = ".md",
         },
       }
       vim.keymap.set("n", "<leader>ww", "<cmd>VimwikiIndex<cr>")
@@ -327,9 +337,10 @@ require("lazy").setup({
           config = {
             workspace = "journal"
           }
-        }
+        },
+        ["core.integrations.telescope"] = {},
       },
     },
-    dependencies = { { "nvim-lua/plenary.nvim" } },
-  }
+    dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
+  },
 })
