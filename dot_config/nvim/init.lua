@@ -343,4 +343,12 @@ require("lazy").setup({
     },
     dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
   },
+  {
+    'Wansmer/treesj',
+    keys = { '<space>m', '<space>j', '<space>s' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('treesj').setup({--[[ your config ]]})
+    end,
+  }
 })
