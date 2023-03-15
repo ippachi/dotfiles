@@ -172,7 +172,7 @@ require("lazy").setup({
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Mason
-      for _, name in ipairs({ 'lua_ls', 'tsserver', 'eslint', 'tflint', 'terraformls' }) do
+      for _, name in ipairs({ 'lua_ls', 'tsserver', 'eslint', 'tflint', 'terraformls', 'dockerls' }) do
         require('lspconfig')[name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
@@ -213,6 +213,7 @@ require("lazy").setup({
           null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
           null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
           null_ls.builtins.diagnostics.markdownlint,
+          null_ls.builtins.diagnostics.hadolint,
         },
         on_attach = function(client, bufnr)
           local bufopts = { noremap = true, silent = true, buffer = bufnr }
