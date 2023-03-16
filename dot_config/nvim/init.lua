@@ -5,7 +5,8 @@ local augroup = api.nvim_create_augroup("my-vimrc", { clear = true })
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.swapfile = false
-vim.opt.backup = true
+vim.opt.backup = false
+vim.opt.writebackup = false
 vim.opt.backupdir = vim.env.HOME .. "/.config/nvim/backup/"
 vim.opt.cmdheight = 2
 vim.opt.colorcolumn = "120"
@@ -66,8 +67,13 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  { "rebelot/kanagawa.nvim", lazy = false, priority = 1000, config = function() vim.cmd [[colorscheme kanagawa]] end },
-  { "nvim-lualine/lualine.nvim", config = true, dependencies = { "kyazdani42/nvim-web-devicons" } },
+  { "rebelot/kanagawa.nvim",  lazy = false,          priority = 1000,
+                                                                        config = function() vim.cmd [[colorscheme kanagawa]] end },
+  {
+    "nvim-lualine/lualine.nvim",
+    config = true,
+    dependencies = { "kyazdani42/nvim-web-devicons" }
+  },
   "ntpeters/vim-better-whitespace",
   {
     "lewis6991/gitsigns.nvim",
@@ -79,7 +85,6 @@ require("lazy").setup({
             opts = opts or {}
             opts.buffer = bufnr
             vim.keymap.set(mode, l, r, opts)
-
           end
 
           map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>')
@@ -127,70 +132,6 @@ require("lazy").setup({
   },
   "lukas-reineke/indent-blankline.nvim",
   {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", { "j-hui/fidget.nvim", config = true },
-        "hrsh7th/cmp-nvim-lsp", { "folke/neodev.nvim", config = true } },
-    },
-    config = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup()
-
-      local opts = { noremap = true, silent = true }
-
-      vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-      vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
-
-      -- Use an on_attach function to only map the following keys
-      -- after the language server attaches to the current buffer
-      local on_attach = function(client, bufnr)
-        -- Enable completion triggered by <c-x><c-o>
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-        -- Mappings.
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
-        local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-        vim.keymap.set('n', '<leader>wl', function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, bufopts)
-        vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-        vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-      end
-
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-      -- Mason
-      for _, name in ipairs({ 'lua_ls', 'tsserver', 'eslint', 'tflint', 'terraformls', 'dockerls' }) do
-        require('lspconfig')[name].setup {
-          on_attach = on_attach,
-          capabilities = capabilities,
-        }
-      end
-
-      -- Manual
-      for _, name in ipairs({ 'solargraph' }) do
-        require('lspconfig')[name].setup {
-          on_attach = on_attach,
-          capabilities = capabilities,
-        }
-      end
-    end
-  },
-  { "stevearc/dressing.nvim", config = true },
-  { "xiyaowong/nvim-transparent", opts = { enable = true } },
-  {
     "nvim-tree/nvim-tree.lua",
     dependencies = { { "nvim-tree/nvim-web-devicons", name = "nvim-tree-nvim-web-devicons" } },
     tag = "nightly",
@@ -204,28 +145,127 @@ require("lazy").setup({
     }
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    config = function()
-      local null_ls = require("null-ls")
+    "neoclide/coc.nvim",
+    branch = "release",
+    init = function()
+      local keyset = vim.keymap.set
+      keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
 
-      null_ls.setup({
-        sources = {
-          null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
-          null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
-          null_ls.builtins.diagnostics.markdownlint,
-          null_ls.builtins.diagnostics.hadolint,
-        },
-        on_attach = function(client, bufnr)
-          local bufopts = { noremap = true, silent = true, buffer = bufnr }
-          vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+      keyset("i", "<c-l>", "coc#refresh()", { silent = true, expr = true })
+
+      keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
+      keyset("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
+
+      keyset("n", "gd", "<Plug>(coc-definition)", { silent = true })
+      keyset("n", "gy", "<Plug>(coc-type-definition)", { silent = true })
+      keyset("n", "gi", "<Plug>(coc-implementation)", { silent = true })
+      keyset("n", "gr", "<Plug>(coc-references)", { silent = true })
+
+      function _G.show_docs()
+        local cw = vim.fn.expand('<cword>')
+        if vim.fn.index({ 'vim', 'help' }, vim.bo.filetype) >= 0 then
+          vim.api.nvim_command('h ' .. cw)
+        elseif vim.api.nvim_eval('coc#rpc#ready()') then
+          vim.fn.CocActionAsync('doHover')
+        else
+          vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
         end
+      end
+
+      keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', { silent = true })
+      -- Highlight the symbol and its references on a CursorHold event(cursor is idle)
+      vim.api.nvim_create_augroup("CocGroup", {})
+      vim.api.nvim_create_autocmd("CursorHold", {
+        group = "CocGroup",
+        command = "silent call CocActionAsync('highlight')",
+        desc = "Highlight symbol under cursor on CursorHold"
       })
+
+      -- Symbol renaming
+      keyset("n", "<leader>rn", "<Plug>(coc-rename)", { silent = true })
+
+      -- Formatting selected code
+      keyset("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+      keyset("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+
+      -- Setup formatexpr specified filetype(s)
+      vim.api.nvim_create_autocmd("FileType", {
+        group = "CocGroup",
+        pattern = "typescript,json",
+        command = "setl formatexpr=CocAction('formatSelected')",
+        desc = "Setup formatexpr specified filetype(s)."
+      })
+
+      -- Update signature help on jump placeholder
+      vim.api.nvim_create_autocmd("User", {
+        group = "CocGroup",
+        pattern = "CocJumpPlaceholder",
+        command = "call CocActionAsync('showSignatureHelp')",
+        desc = "Update signature help on jump placeholder"
+      })
+
+      -- Apply codeAction to the selected region
+      -- Example: `<leader>aap` for current paragraph
+      local opts = { silent = true, nowait = true }
+      keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+      keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+
+      -- Remap keys for apply code actions at the cursor position.
+      keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
+      -- Remap keys for apply code actions affect whole buffer.
+      keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
+      -- Remap keys for applying codeActions to the current buffer
+      keyset("n", "<leader>ac", "<Plug>(coc-codeaction)", opts)
+      -- Apply the most preferred quickfix action on the current line.
+      keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
+
+      -- Remap keys for apply refactor code actions.
+      keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
+      keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+      keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+
+      -- Run the Code Lens actions on the current line
+      keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
+
+
+      -- Map function and class text objects
+      -- NOTE: Requires 'textDocument.documentSymbol' support from the language server
+      keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
+      keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
+      keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
+      keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
+      keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
+      keyset("o", "ic", "<Plug>(coc-classobj-i)", opts)
+      keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
+      keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
+
+
+      -- Remap <C-f> and <C-b> to scroll float windows/popups
+      ---@diagnostic disable-next-line: redefined-local
+      local opts = { silent = true, nowait = true, expr = true }
+      keyset("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+      keyset("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+      keyset("i", "<C-f>",
+        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
+      keyset("i", "<C-b>",
+        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
+      keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+      keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+
+      -- Use CTRL-S for selections ranges
+      -- Requires 'textDocument/selectionRange' support of language server
+      keyset("n", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
+      keyset("x", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
+
+      vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
+      vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", { nargs = '?' })
+      vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
     end
   },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
-  { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
+  { "windwp/nvim-autopairs",  event = "InsertEnter", config = true },
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
@@ -251,20 +291,6 @@ require("lazy").setup({
     cmd = { "Telescope" },
   },
   {
-    "vimwiki/vimwiki",
-    init = function()
-      vim.g.vimwiki_list = {
-        {
-          path = "~/Documents/wiki/",
-          ext = ".md",
-          syntax = "markdown",
-        },
-      }
-      vim.keymap.set("n", "<leader>ww", "<cmd>VimwikiIndex<cr>")
-    end,
-    cmd = "VimwikiIndex",
-  },
-  {
     "sindrets/diffview.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
@@ -272,44 +298,7 @@ require("lazy").setup({
     end,
     cmd = "DiffviewOpen"
   },
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = { "hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-path", "hrsh7th/vim-vsnip" },
-    config = function()
-      local cmp = require 'cmp'
-
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ['<C-e>'] = cmp.mapping.abort(),
-          ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        }),
-        sources = cmp.config.sources({
-          {
-            name = "buffer", option = {
-              get_bufnrs = function()
-                return vim.api.nvim_list_bufs()
-              end
-            },
-          },
-          { name = "neorg" }
-        }),
-      })
-
-      keymap.set("i", "<C-x><C-o>", cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }))
-    end
-  },
   { "tpope/vim-fugitive", cmd = "Git" },
-  { "iamcco/markdown-preview.nvim", ft = { "vimwiki" }, build = function() vim.fn["mkdp#util#install"]() end },
-  {
-    "lukas-reineke/headlines.nvim", ft = { "markdown", "norg" }, dependencies = "nvim-treesitter/nvim-treesitter",
-    config = true, enabled = false
-  },
   {
     "nvim-neorg/neorg",
     cmd = "Neorg",
@@ -317,7 +306,7 @@ require("lazy").setup({
     build = ":Neorg sync-parsers",
     opts = {
       load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
+        ["core.defaults"] = {},       -- Loads default behaviour
         ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
         ["core.norg.completion"] = {
           config = {
@@ -343,13 +332,5 @@ require("lazy").setup({
       },
     },
     dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
-  },
-  {
-    'Wansmer/treesj',
-    keys = { '<space>m', '<space>j', '<space>s' },
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      require('treesj').setup({--[[ your config ]]})
-    end,
   }
 })
