@@ -332,5 +332,9 @@ require("lazy").setup({
       },
     },
     dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
+  },
+  {
+    "github/copilot.vim",
+    event = "InsertEnter"
   }
 })
