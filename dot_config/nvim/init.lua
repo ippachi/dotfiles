@@ -308,11 +308,6 @@ require("lazy").setup({
       load = {
         ["core.defaults"] = {},       -- Loads default behaviour
         ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.norg.completion"] = {
-          config = {
-            engine = "nvim-cmp"
-          }
-        },
         ["core.norg.dirman"] = { -- Manages Neorg workspaces
           config = {
             workspaces = {
@@ -336,5 +331,18 @@ require("lazy").setup({
   {
     "github/copilot.vim",
     event = "InsertEnter"
+  },
+  {
+    "jackMort/ChatGPT.nvim",
+    config = function()
+      require("chatgpt").setup({
+        -- optional configuration
+      })
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
   }
 })
