@@ -294,7 +294,19 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
-      keymap.set("n", "<leader>g", "<Cmd>DiffviewOpen<CR>", { noremap = true })
+      keymap.set("n", "<leader>g", function()
+        vim.cmd([[
+        CocDisable
+        DiffviewOpen
+        ]])
+      end, { noremap = true })
+    end,
+    config = function()
+      require("diffview").setup({
+        hooks = {
+          view_closed = function() vim.cmd [[CocEnable]] end
+        }
+      })
     end,
     cmd = "DiffviewOpen"
   },
@@ -310,11 +322,6 @@ require("lazy").setup({
         ["core.norg.concealer"] = {
           config = {
             folds = false
-          }
-        },                         -- Adds pretty icons to your documents
-        ["core.norg.completion"] = {
-          config = {
-            engine = "nvim-cmp"
           }
         },
         ["core.norg.dirman"] = { -- Manages Neorg workspaces
@@ -336,10 +343,6 @@ require("lazy").setup({
       },
     },
     dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
-  },
-  {
-    "github/copilot.vim",
-    event = "InsertEnter"
   },
   {
     "jackMort/ChatGPT.nvim",
