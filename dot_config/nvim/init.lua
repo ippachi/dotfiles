@@ -67,8 +67,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  { "rebelot/kanagawa.nvim",  lazy = false,          priority = 1000,
-                                                                        config = function() vim.cmd [[colorscheme kanagawa]] end },
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function() vim.cmd [[colorscheme kanagawa]] end
+  },
   {
     "nvim-lualine/lualine.nvim",
     config = true,
@@ -291,7 +295,8 @@ require("lazy").setup({
     cmd = { "Telescope" },
   },
   {
-    "sindrets/diffview.nvim",
+    -- "sindrets/diffview.nvim",
+    "3699394/diffview.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
       keymap.set("n", "<leader>g", function()
@@ -318,7 +323,7 @@ require("lazy").setup({
     build = ":Neorg sync-parsers",
     opts = {
       load = {
-        ["core.defaults"] = {},       -- Loads default behaviour
+        ["core.defaults"] = {}, -- Loads default behaviour
         ["core.norg.concealer"] = {
           config = {
             folds = false
