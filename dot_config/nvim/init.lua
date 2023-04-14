@@ -349,18 +349,4 @@ require("lazy").setup({
     },
     dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
   },
-  {
-    "jackMort/ChatGPT.nvim",
-    config = function()
-      require("chatgpt").setup({
-        -- optional configuration
-      })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
-  },
-  require("local_plugins"),
 })
