@@ -316,37 +316,4 @@ require("lazy").setup({
     cmd = "DiffviewOpen"
   },
   { "tpope/vim-fugitive", cmd = "Git" },
-  {
-    "nvim-neorg/neorg",
-    cmd = "Neorg",
-    ft = { "norg" },
-    build = ":Neorg sync-parsers",
-    opts = {
-      load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.norg.concealer"] = {
-          config = {
-            folds = false
-          }
-        },
-        ["core.norg.dirman"] = { -- Manages Neorg workspaces
-          config = {
-            workspaces = {
-              notes = "~/notes",
-              work = "~/Documents/work/notes",
-              home = "~/Documents/home/notes",
-              journal = "~/Documents/journal/notes",
-            },
-          },
-        },
-        ["core.norg.journal"] = {
-          config = {
-            workspace = "journal"
-          }
-        },
-        ["core.integrations.telescope"] = {},
-      },
-    },
-    dependencies = { { "nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope" } },
-  },
 })
