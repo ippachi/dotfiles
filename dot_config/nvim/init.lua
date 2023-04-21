@@ -316,4 +316,8 @@ require("lazy").setup({
     cmd = "DiffviewOpen"
   },
   { "tpope/vim-fugitive", cmd = "Git" },
+  {
+    "akinsho/git-conflict.nvim",
+    cmd = "GitConflictListQf"
+  }
 })
