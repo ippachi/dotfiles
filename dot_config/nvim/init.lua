@@ -68,10 +68,16 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
-    "rebelot/kanagawa.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd [[colorscheme kanagawa]] end
+    config = function()
+      require("catppuccin").setup({
+        flavour = "macchiato"
+      })
+      vim.cmd [[colorscheme catppuccin]]
+    end
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -318,6 +324,7 @@ require("lazy").setup({
   { "tpope/vim-fugitive", cmd = "Git" },
   {
     "akinsho/git-conflict.nvim",
-    cmd = "GitConflictListQf"
+    cmd = "GitConflictListQf",
+    config = true
   }
 })
