@@ -68,16 +68,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
-    config = function()
-      require("catppuccin").setup({
-        flavour = "macchiato"
-      })
-      vim.cmd [[colorscheme catppuccin]]
-    end
+    config = function() vim.cmd [[colorscheme kanagawa]] end
   },
   {
     "nvim-lualine/lualine.nvim",
