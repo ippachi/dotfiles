@@ -266,6 +266,7 @@ require("lazy").setup({
       vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
     end
   },
+  { "itchyny/vim-qfedit" },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
