@@ -321,5 +321,9 @@ require("lazy").setup({
     "akinsho/git-conflict.nvim",
     cmd = "GitConflictListQf",
     config = true
+  },
+  {
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode"
   }
 })
