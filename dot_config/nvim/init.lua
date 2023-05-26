@@ -44,7 +44,7 @@ vim.g.mapleader = ","
 
 keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
-keymap.set("t", "<c-o>", "<c-/><c-n>", { noremap = true })
+keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
 
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   group = augroup,
@@ -78,7 +78,16 @@ require("lazy").setup({
     config = true,
     dependencies = { "kyazdani42/nvim-web-devicons" }
   },
-  "ntpeters/vim-better-whitespace",
+  {
+    "ntpeters/vim-better-whitespace",
+    init = function()
+      vim.api.nvim_create_autocmd("TermOpen", {
+        group = augroup,
+        pattern = "*",
+        callback = function() vim.cmd [[DisableWhitespace]] end
+      })
+    end
+  },
   {
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -135,19 +144,6 @@ require("lazy").setup({
     end
   },
   "lukas-reineke/indent-blankline.nvim",
-  {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { { "nvim-tree/nvim-web-devicons", name = "nvim-tree-nvim-web-devicons" } },
-    tag = "nightly",
-    init = function() vim.keymap.set("n", "<space>f", "<cmd>NvimTreeFindFileToggle<cr>") end,
-    opts = {
-      actions = {
-        open_file = {
-          quit_on_open = true,
-        },
-      },
-    }
-  },
   {
     "neoclide/coc.nvim",
     branch = "release",
@@ -267,6 +263,14 @@ require("lazy").setup({
     end
   },
   { "itchyny/vim-qfedit" },
+  {
+    "xiyaowong/transparent.nvim",
+    config = true
+  },
+  {
+    "stevearc/oil.nvim",
+    config = true,
+  },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
