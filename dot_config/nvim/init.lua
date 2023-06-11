@@ -52,6 +52,12 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   callback = function() vim.cmd [[cwindow]] end
 })
 
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = augroup,
+  pattern = { "*" },
+  callback = function() vim.cmd [[DisableWhitespace]] end
+})
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -325,9 +331,5 @@ require("lazy").setup({
     "akinsho/git-conflict.nvim",
     cmd = "GitConflictListQf",
     config = true
-  },
-  {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode"
   }
 })
