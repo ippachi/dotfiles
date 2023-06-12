@@ -284,7 +284,10 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
-    dependencies = { "nvim-lua/plenary.nvim", { "nvim-telescope/telescope-fzf-native.nvim", build = "make" } },
+    dependencies = {
+      "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ghq.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+    },
     init = function()
       vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
       vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
@@ -302,6 +305,7 @@ require("lazy").setup({
         }
       }
       require('telescope').load_extension('fzf')
+      require('telescope').load_extension('ghq')
     end,
     cmd = { "Telescope" },
   },
@@ -331,5 +335,9 @@ require("lazy").setup({
     "akinsho/git-conflict.nvim",
     cmd = "GitConflictListQf",
     config = true
+  },
+  {
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode"
   }
 })
