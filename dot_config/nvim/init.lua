@@ -286,7 +286,8 @@ require("lazy").setup({
     branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ghq.nvim",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      { "danielfalk/smart-open.nvim", branch = "0.2.x", dependencies = { "kkharji/sqlite.lua" } }
     },
     init = function()
       vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
@@ -301,11 +302,15 @@ require("lazy").setup({
             override_generic_sorter = true,
             override_file_sorter = true,
             case_mode = "smart_case",
+          },
+          smart_open = {
+            match_algorithm = "fzf"
           }
         }
       }
       require('telescope').load_extension('fzf')
       require('telescope').load_extension('ghq')
+      require('telescope').load_extension('smart_open')
     end,
     cmd = { "Telescope" },
   },
