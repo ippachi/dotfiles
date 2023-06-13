@@ -31,7 +31,7 @@ vim.opt.formatoptions:append({
   m = true,
   M = true,
 })
-vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic" }
+vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
@@ -81,8 +81,34 @@ require("lazy").setup({
   },
   {
     "nvim-lualine/lualine.nvim",
-    config = true,
-    dependencies = { "kyazdani42/nvim-web-devicons" }
+    dependencies = { "kyazdani42/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup {
+        sections = {
+          lualine_c = {
+            {
+              'filename',
+              file_status = true,     -- Displays file status (readonly status, modified status)
+              newfile_status = false, -- Display new file status (new file means no write after created)
+              path = 1,               -- 0: Just the filename
+              -- 1: Relative path
+              -- 2: Absolute path
+              -- 3: Absolute path, with tilde as the home directory
+              -- 4: Filename and parent dir, with tilde as the home directory
+
+              shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+              -- for other components. (terrible name, any suggestions?)
+              symbols = {
+                modified = '[+]',      -- Text to show when the file is modified.
+                readonly = '[-]',      -- Text to show when the file is non-modifiable or readonly.
+                unnamed = '[No Name]', -- Text to show for unnamed buffers.
+                newfile = '[New]',     -- Text to show for newly created file before first write
+              }
+            }
+          }
+        }
+      }
+    end,
   },
   {
     "ntpeters/vim-better-whitespace",
@@ -277,20 +303,17 @@ require("lazy").setup({
     "stevearc/oil.nvim",
     config = true,
   },
-
-  -- lazy
-  { "machakann/vim-sandwich", keys = { "sr", "sd" } },
-  { "windwp/nvim-autopairs",  event = "InsertEnter", config = true },
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ghq.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      { "danielfalk/smart-open.nvim", branch = "0.2.x", dependencies = { "kkharji/sqlite.lua" } }
+      { "danielfalk/smart-open.nvim",               branch = "0.2.x", dependencies = { "kkharji/sqlite.lua" } }
     },
     init = function()
-      vim.keymap.set("n", "<c-p>", "<cmd>Telescope find_files<cr>")
+      vim.keymap.set("n", "<c-p>",
+        function() require('telescope').extensions.smart_open.smart_open({ cwd_only = true }) end)
       vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
       vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
     end,
@@ -304,7 +327,8 @@ require("lazy").setup({
             case_mode = "smart_case",
           },
           smart_open = {
-            match_algorithm = "fzf"
+            match_algorithm = "fzf",
+
           }
         }
       }
@@ -312,8 +336,11 @@ require("lazy").setup({
       require('telescope').load_extension('ghq')
       require('telescope').load_extension('smart_open')
     end,
-    cmd = { "Telescope" },
   },
+
+  -- lazy
+  { "machakann/vim-sandwich", keys = { "sr", "sd" } },
+  { "windwp/nvim-autopairs",  event = "InsertEnter", config = true },
   {
     -- "sindrets/diffview.nvim",
     "3699394/diffview.nvim",
