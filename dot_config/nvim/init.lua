@@ -337,6 +337,7 @@ require("lazy").setup({
       require('telescope').load_extension('smart_open')
     end,
   },
+  { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } },
 
   -- lazy
   { "machakann/vim-sandwich", keys = { "sr", "sd" } },
