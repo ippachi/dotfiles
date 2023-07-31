@@ -5,7 +5,6 @@
 [core]
   editor = nvim
 	hooksPath = ~/.config/git/hooks
-	commentchar = ";"
 [diff]
   algorithm = histogram
   colorMoved = default
