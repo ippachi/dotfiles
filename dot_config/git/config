@@ -3,8 +3,15 @@
   email = ippachi1018@gmail.com
   signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFtgsJgNbpshux1jRKXEj9btfoI1XIA2XdfOokzdUP9c
 [core]
+  pager = delta
   editor = nvim
 	hooksPath = ~/.config/git/hooks
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true
+  light = false
+  line-numbers = true
 [diff]
   algorithm = histogram
   colorMoved = default
@@ -14,13 +21,6 @@
 [pull]
   twohead = ort
   ff = only
-[alias]
-  df = diff --word-diff=color -w
-  lg = log --oneline --graph
-  st = status
-  br = branch
-  co = checkout
-  ci = commit
 [rerere]
 	enabled = true
 [merge]

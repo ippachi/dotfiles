@@ -207,6 +207,9 @@ require("lazy").setup({
 			lspconfig.tsserver.setup({ capabilities = capabilities })
 			lspconfig.tailwindcss.setup({ capabilities = capabilities })
 			lspconfig.lua_ls.setup({ capabilities = capabilities })
+			lspconfig.dockerls.setup({ capabilities = capabilities })
+			lspconfig.rubocop.setup({ capabilities = capabilities })
+			lspconfig.eslint.setup({ capabilities = capabilities })
 			lspconfig.jsonls.setup({
 				capabilities = capabilities,
 				settings = {
@@ -278,6 +281,7 @@ require("lazy").setup({
 			"hrsh7th/nvim-cmp",
 			"hrsh7th/cmp-vsnip",
 			"hrsh7th/vim-vsnip",
+			"lukas-reineke/cmp-rg",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -312,6 +316,7 @@ require("lazy").setup({
 					-- { name = 'snippy' }, -- For snippy users.
 				}, {
 					{ name = "buffer" },
+					{ name = "rg" },
 				}),
 			})
 
@@ -350,9 +355,7 @@ require("lazy").setup({
 			{ "danielfalk/smart-open.nvim", branch = "0.2.x", dependencies = { "kkharji/sqlite.lua" } },
 		},
 		init = function()
-			vim.keymap.set("n", "<c-p>", function()
-				require("telescope").extensions.smart_open.smart_open({ cwd_only = true })
-			end)
+			vim.keymap.set("n", "<c-p>", require('telescope.builtin').find_files)
 			vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
 			vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
 		end,
@@ -363,47 +366,51 @@ require("lazy").setup({
 						fuzzy = true,
 						override_generic_sorter = true,
 						override_file_sorter = true,
-						case_mode = "smart_case",
-					},
-					smart_open = {
-						match_algorithm = "fzf",
 					},
 				},
 			})
 			require("telescope").load_extension("fzf")
 			require("telescope").load_extension("ghq")
-			require("telescope").load_extension("smart_open")
 		end,
 	},
-	{ "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } },
 	{
 		"mfussenegger/nvim-lint",
+		init = function()
+			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+				callback = function()
+					require("lint").try_lint()
+				end,
+			})
+		end,
 		config = function()
-			require("lint").linters_by_ft = {}
+			require("lint").linters_by_ft = {
+				dockerfile = { "hadolint" },
+			}
 		end,
 	},
 	{
 		"mhartington/formatter.nvim",
 		init = function()
+			local settings = { lua = 1, typescript = 1, typescriptreact = 1, javascript = 1 }
 			vim.keymap.set("n", "<leader>f", function()
-				vim.cmd([[Format]])
+				if settings[vim.bo.filetype] ~= nil then
+					vim.cmd([[Format]])
+				else
+					vim.lsp.buf.format()
+				end
 			end)
 		end,
+
 		config = function()
 			local util = require("formatter.util")
 			require("formatter").setup({
 				logging = true,
-				log_level = vim.log.levels.WARN,
+				log_level = vim.log.levels.DEBUG,
 				filetype = {
-					lua = {
-						require("formatter.filetypes.lua").stylua,
-					},
-					typescript = {
-						require("formatter.filetypes.typescript").prettier,
-					},
-					javascript = {
-						require("formatter.filetypes.javascript").prettier,
-					},
+					lua = { require("formatter.filetypes.lua").stylua },
+					typescript = { require("formatter.filetypes.typescript").prettier },
+					typescriptreact = { require("formatter.filetypes.typescript").prettier },
+					javascript = { require("formatter.filetypes.javascript").prettier },
 				},
 			})
 		end,
@@ -427,5 +434,13 @@ require("lazy").setup({
 	{
 		"folke/zen-mode.nvim",
 		cmd = "ZenMode",
+	},
+	{
+		"kdheepak/lazygit.nvim",
+		-- optional for floating window border decoration
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		cmd = "LazyGit",
 	},
 })
