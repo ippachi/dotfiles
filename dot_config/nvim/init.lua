@@ -23,7 +23,6 @@ vim.opt.number = true
 vim.opt.signcolumn = "number"
 vim.opt.pumblend = 15
 vim.opt.pumheight = 10
-vim.opt.termguicolors = true
 vim.opt.title = true
 vim.opt.undofile = true
 vim.opt.mouse = ""
@@ -95,37 +94,10 @@ require("lazy").setup({
           lualine_c = {
             {
               "filename",
-              file_status = true,     -- Displays file status (readonly status, modified status)
-              newfile_status = false, -- Display new file status (new file means no write after created)
-              path = 1,               -- 0: Just the filename
-              -- 1: Relative path
-              -- 2: Absolute path
-              -- 3: Absolute path, with tilde as the home directory
-              -- 4: Filename and parent dir, with tilde as the home directory
-
-              shorting_target = 40, -- Shortens path to leave 40 spaces in the window
-              -- for other components. (terrible name, any suggestions?)
-              symbols = {
-                modified = "[+]",      -- Text to show when the file is modified.
-                readonly = "[-]",      -- Text to show when the file is non-modifiable or readonly.
-                unnamed = "[No Name]", -- Text to show for unnamed buffers.
-                newfile = "[New]",     -- Text to show for newly created file before first write
-              },
+              path = 1
             },
           },
         },
-      })
-    end,
-  },
-  {
-    "ntpeters/vim-better-whitespace",
-    init = function()
-      vim.api.nvim_create_autocmd("TermOpen", {
-        group = augroup,
-        pattern = "*",
-        callback = function()
-          vim.cmd([[DisableWhitespace]])
-        end,
       })
     end,
   },
@@ -187,7 +159,6 @@ require("lazy").setup({
       })
     end,
   },
-  "lukas-reineke/indent-blankline.nvim",
   { "itchyny/vim-qfedit" },
   {
     "stevearc/oil.nvim",
@@ -203,7 +174,7 @@ require("lazy").setup({
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
-      local cycle = require "cycle" (
+      local cycle = require "telescope.cycle" (
         require 'telescope'.extensions.frecency.frecency,
         require "telescope.builtin".find_files
       )
@@ -237,6 +208,7 @@ require("lazy").setup({
 
       vim.keymap.set("n", "<c-p>", function () cycle() end)
       vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
+      vim.keymap.set("n", ":h<space>", "<cmd>Telescope help_tags<cr>")
       vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
     end,
   },
@@ -343,24 +315,25 @@ require("lazy").setup({
       vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
     end
   },
+  {
+    'echasnovski/mini.nvim', version = false,
+    config = function()
+      require('mini.pairs').setup()
+      require('mini.comment').setup()
+      require('mini.surround').setup()
+      require('mini.trailspace').setup()
+
+      vim.api.nvim_set_hl(0, "MiniTrailspace", { link = "@text.danger" })
+    end
+  },
+  { "koron/vim-budoux" },
+  {
+    "ippachi/vim-kaigyo", dir = "~/ghq/github.com/ippachi/vim-kaigyo",
+    config = function()
+      vim.opt.formatexpr = 'kaigyo#formatexpr()'
+    end
+  },
 
   -- lazy
-  { "machakann/vim-sandwich", keys = { "sr", "sd" } },
-  { "windwp/nvim-autopairs",  event = "InsertEnter", config = true },
-  {
-    -- "sindrets/diffview.nvim",
-    "3699394/diffview.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = "DiffviewOpen",
-  },
   { "tpope/vim-fugitive", cmd = "Git" },
-  {
-    "akinsho/git-conflict.nvim",
-    cmd = "GitConflictListQf",
-    config = true,
-  },
-  {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode",
-  },
 })
