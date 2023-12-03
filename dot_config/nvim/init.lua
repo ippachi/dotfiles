@@ -4,25 +4,26 @@ local augroup = api.nvim_create_augroup("my-vimrc", { clear = true })
 
 vim.opt.autoindent = true
 vim.opt.smartindent = true
+
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.backupdir = vim.env.HOME .. "/.config/nvim/backup/"
-vim.opt.cmdheight = 2
-vim.opt.colorcolumn = "100"
-vim.opt.cursorline = true
+
 vim.opt.expandtab = true
-vim.opt.splitbelow = true
-vim.opt.splitright = true
 vim.opt.tabstop = 2
-vim.opt.ignorecase = true
 vim.opt.shiftwidth = 2
-vim.opt.foldmethod = "marker"
+
+vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.number = true
-vim.opt.signcolumn = "number"
+
 vim.opt.pumblend = 15
 vim.opt.pumheight = 10
+
+vim.opt.number = true
+vim.opt.signcolumn = "number"
+
+vim.opt.cmdheight = 2
 vim.opt.title = true
 vim.opt.undofile = true
 vim.opt.mouse = ""
@@ -33,8 +34,6 @@ vim.opt.formatoptions:append({
 })
 vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
-vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
-vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.cmd([[set efm+=%f\|%l\ col\ %c\|%m]])
 
@@ -51,14 +50,6 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   pattern = { "grep", "vimgrep" },
   callback = function()
     vim.cmd([[cwindow]])
-  end,
-})
-
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = augroup,
-  pattern = { "*" },
-  callback = function()
-    vim.cmd([[DisableWhitespace]])
   end,
 })
 
@@ -327,12 +318,6 @@ require("lazy").setup({
     end
   },
   { "koron/vim-budoux" },
-  {
-    "ippachi/vim-kaigyo", dir = "~/ghq/github.com/ippachi/vim-kaigyo",
-    config = function()
-      vim.opt.formatexpr = 'kaigyo#formatexpr()'
-    end
-  },
 
   -- lazy
   { "tpope/vim-fugitive", cmd = "Git" },
