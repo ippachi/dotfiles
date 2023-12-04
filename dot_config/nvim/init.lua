@@ -174,7 +174,7 @@ require("lazy").setup({
           layout_strategy = "vertical",
           mappings = {
             i = {
-              ["<C-l>"] = function () cycle.next() end,
+              ["<C-l>"] = function() cycle.next() end,
             },
           },
         },
@@ -189,7 +189,6 @@ require("lazy").setup({
             show_filter_column = false,
             default_workspace = "CWD",
             show_unindexed = false,
-            show_scores = true
           }
         },
       })
@@ -197,7 +196,7 @@ require("lazy").setup({
       require("telescope").load_extension("ghq")
       require("telescope").load_extension("frecency")
 
-      vim.keymap.set("n", "<c-p>", function () cycle() end)
+      vim.keymap.set("n", "<c-p>", function() cycle() end)
       vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
       vim.keymap.set("n", ":h<space>", "<cmd>Telescope help_tags<cr>")
       vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
@@ -210,7 +209,7 @@ require("lazy").setup({
       local keymap = vim.keymap
 
       -- Use <c-l> to trigger completion
-      keymap.set("i", "<c-l>", "coc#refresh()", {silent = true, expr = true})
+      keymap.set("i", "<c-l>", "coc#refresh()", { silent = true, expr = true })
 
       -- GoTo code navigation
       keymap.set("n", "gd", "<Plug>(coc-definition)", { silent = true })
@@ -307,7 +306,8 @@ require("lazy").setup({
     end
   },
   {
-    'echasnovski/mini.nvim', version = false,
+    'echasnovski/mini.nvim',
+    version = false,
     config = function()
       require('mini.pairs').setup()
       require('mini.comment').setup()
