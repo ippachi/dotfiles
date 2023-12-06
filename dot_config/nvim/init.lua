@@ -17,7 +17,6 @@ vim.opt.shiftwidth = 2
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.pumblend = 15
 vim.opt.pumheight = 10
 
 vim.opt.number = true
@@ -69,11 +68,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
-    "rebelot/kanagawa.nvim",
+    "sainnhe/gruvbox-material",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd([[colorscheme kanagawa]])
+      vim.cmd([[colorscheme gruvbox-material]])
     end,
   },
   {
@@ -154,53 +153,6 @@ require("lazy").setup({
   {
     "stevearc/oil.nvim",
     config = true,
-  },
-  {
-    "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-ghq.nvim",
-      "nvim-telescope/telescope-frecency.nvim",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    },
-    config = function()
-      local cycle = require "telescope.cycle" (
-        require 'telescope'.extensions.frecency.frecency,
-        require "telescope.builtin".find_files
-      )
-      require("telescope").setup({
-        defaults = {
-          layout_strategy = "vertical",
-          mappings = {
-            i = {
-              ["<C-l>"] = function() cycle.next() end,
-            },
-          },
-        },
-        extensions = {
-          fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
-          },
-          frecency = {
-            show_filter_column = false,
-            default_workspace = "CWD",
-            show_unindexed = false,
-          }
-        },
-      })
-      require("telescope").load_extension("fzf")
-      require("telescope").load_extension("ghq")
-      require("telescope").load_extension("frecency")
-
-      vim.keymap.set("n", "<c-p>", function() cycle() end)
-      vim.keymap.set("n", "<space>r", "<cmd>Telescope resume<cr>")
-      vim.keymap.set("n", ":h<space>", "<cmd>Telescope help_tags<cr>")
-      vim.api.nvim_create_user_command("Grep", "Telescope live_grep", { force = true })
-    end,
   },
   {
     "neoclide/coc.nvim",
@@ -318,7 +270,20 @@ require("lazy").setup({
     end
   },
   { "koron/vim-budoux" },
+  {
+    "junegunn/fzf.vim",
+    dependencies = {
+      {
+        "junegunn/fzf", run = function() vim.fn['fzf#install']() end
+      }
+    },
+    config = function()
+      vim.keymap.set("n", "<c-p>", "<cmd>Files<cr>", { silent = true })
+      vim.keymap.set("n", "<c-h>", "<cmd>Helptags<cr>", { silent = true })
+    end,
+  },
 
   -- lazy
   { "tpope/vim-fugitive", cmd = "Git" },
+  { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" }
 })
