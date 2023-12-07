@@ -76,22 +76,6 @@ require("lazy").setup({
     end,
   },
   {
-    "nvim-lualine/lualine.nvim",
-    dependencies = { "kyazdani42/nvim-web-devicons" },
-    config = function()
-      require("lualine").setup({
-        sections = {
-          lualine_c = {
-            {
-              "filename",
-              path = 1
-            },
-          },
-        },
-      })
-    end,
-  },
-  {
     "lewis6991/gitsigns.nvim",
     config = function()
       require("gitsigns").setup({
@@ -150,10 +134,6 @@ require("lazy").setup({
     end,
   },
   { "itchyny/vim-qfedit" },
-  {
-    "stevearc/oil.nvim",
-    config = true,
-  },
   {
     "neoclide/coc.nvim",
     branch = "release",
@@ -259,31 +239,34 @@ require("lazy").setup({
   },
   {
     'echasnovski/mini.nvim',
+    dependencies = {
+      "nvim-tree/nvim-web-devicons"
+    },
     version = false,
     config = function()
       require('mini.pairs').setup()
       require('mini.comment').setup()
       require('mini.surround').setup()
       require('mini.trailspace').setup()
+      require('mini.statusline').setup()
+      require('mini.files').setup()
+      require('mini.ai').setup()
+      require('mini.hipatterns').setup()
+      require('mini.indentscope').setup()
+      require('mini.pick').setup({
+        mappings = {
+          choose_marked = '<C-q>'
+        }
+      })
 
-      vim.api.nvim_set_hl(0, "MiniTrailspace", { link = "@text.danger" })
+      vim.keymap.set("n", "<c-p>", function() MiniPick.builtin.files() end, { noremap = true })
+      vim.keymap.set("n", "<c-h>", function() MiniPick.builtin.help() end, { noremap = true })
+
+      vim.keymap.set("n", "<space>f", function() MiniFiles.open(vim.api.nvim_buf_get_name(0)) end, { noremap = true })
     end
   },
   { "koron/vim-budoux" },
-  {
-    "junegunn/fzf.vim",
-    dependencies = {
-      {
-        "junegunn/fzf", run = function() vim.fn['fzf#install']() end
-      }
-    },
-    config = function()
-      vim.keymap.set("n", "<c-p>", "<cmd>Files<cr>", { silent = true })
-      vim.keymap.set("n", "<c-h>", "<cmd>Helptags<cr>", { silent = true })
-    end,
-  },
 
-  -- lazy
   { "tpope/vim-fugitive", cmd = "Git" },
   { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" }
 })
