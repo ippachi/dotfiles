@@ -159,12 +159,18 @@ require("lazy").setup({
 			vim.keymap.set("n", "<space>f", function()
 				MiniFiles.open(vim.api.nvim_buf_get_name(0))
 			end, { noremap = true })
+
+			vim.ui.select = MiniPick.ui_select
 		end,
 	},
 	{ "tpope/vim-fugitive" },
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
+		dependencies = {
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			{ "j-hui/fidget.nvim", config = true },
+		},
 		config = function()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
@@ -218,18 +224,43 @@ require("lazy").setup({
 	},
 	{
 		"stevearc/conform.nvim",
-		config = function()
-			require("conform").setup({
-				formatters_by_ft = {
-					lua = { "stylua" },
-					typescriptreact = { { "prettierd", "prettier" } },
-					typescript = { { "prettierd", "prettier" } },
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				typescriptreact = { { "prettierd", "prettier" } },
+				typescript = { { "prettierd", "prettier" } },
+			},
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_fallback = true,
+			},
+		},
+	},
+	{
+		"sindrets/diffview.nvim",
+		opts = {
+			keymaps = {
+				file_panel = {
+					{
+						"n",
+						"cc",
+						"<Cmd>Git commit <bar> wincmd J<CR>",
+						{ desc = "Commit staged changes" },
+					},
+					{
+						"n",
+						"ca",
+						"<Cmd>Git commit --amend <bar> wincmd J<CR>",
+						{ desc = "Amend the last commit" },
+					},
+					{
+						"n",
+						"c<space>",
+						":Git commit ",
+						{ desc = 'Populate command line with ":Git commit "' },
+					},
 				},
-				format_on_save = {
-					timeout_ms = 500,
-					lsp_fallback = true,
-				},
-			})
-		end,
+			},
+		},
 	},
 })
