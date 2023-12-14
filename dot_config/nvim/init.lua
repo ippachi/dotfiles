@@ -155,12 +155,21 @@ require("lazy").setup({
 			vim.keymap.set("n", "<c-h>", function()
 				MiniPick.builtin.help()
 			end, { noremap = true })
-
 			vim.keymap.set("n", "<space>f", function()
 				MiniFiles.open(vim.api.nvim_buf_get_name(0))
 			end, { noremap = true })
 
 			vim.ui.select = MiniPick.ui_select
+
+			_G.cr_action = function()
+				if vim.fn.pumvisible() ~= 0 then
+					return vim.api.nvim_replace_termcodes("<C-y><CR>", true, true, true)
+				else
+					return require("mini.pairs").cr()
+				end
+			end
+
+			vim.keymap.set("i", "<CR>", "v:lua._G.cr_action()", { expr = true })
 		end,
 	},
 	{ "tpope/vim-fugitive" },
