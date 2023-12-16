@@ -79,6 +79,7 @@ require("lazy").setup({
 	},
 	{
 		"lewis6991/gitsigns.nvim",
+		event = "BufReadPre",
 		config = function()
 			require("gitsigns").setup({
 				on_attach = function(bufnr)
@@ -114,6 +115,7 @@ require("lazy").setup({
 			"RRethy/nvim-treesitter-endwise",
 		},
 		build = ":TSUpdate",
+		event = "BufReadPre",
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				highlight = {
@@ -124,7 +126,7 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{ "itchyny/vim-qfedit" },
+	{ "itchyny/vim-qfedit", event = "QuickFixCmdPost" },
 	{
 		"echasnovski/mini.nvim",
 		dependencies = {
@@ -159,27 +161,17 @@ require("lazy").setup({
 			end, { noremap = true })
 
 			vim.ui.select = MiniPick.ui_select
-
-			_G.cr_action = function()
-				if vim.fn.pumvisible() ~= 0 then
-					return vim.api.nvim_replace_termcodes("<C-y><CR>", true, true, true)
-				else
-					return require("mini.pairs").cr()
-				end
-			end
-
-			vim.keymap.set("i", "<CR>", "v:lua._G.cr_action()", { expr = true })
 		end,
 	},
-	{ "tpope/vim-fugitive" },
+	{ "tpope/vim-fugitive", cmd = "Git" },
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			{ "j-hui/fidget.nvim", config = true },
 			"hrsh7th/cmp-nvim-lsp",
 		},
+		event = "BufReadPre",
 		config = function()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
@@ -235,9 +227,12 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{ "j-hui/fidget.nvim", dependencies = { "neovim/nvim-lspconfig" }, config = true, event = "LspAttach" },
 	{
 		"stevearc/conform.nvim",
+		event = "BufReadPre",
 		opts = {
+			notify_on_error = false,
 			formatters_by_ft = {
 				lua = { "stylua" },
 				typescriptreact = { { "prettierd", "prettier" } },
@@ -251,6 +246,10 @@ require("lazy").setup({
 	},
 	{
 		"sindrets/diffview.nvim",
+		cmd = "DiffviewOpen",
+		init = function()
+			vim.api.nvim_create_user_command("DO", "DiffviewOpen", {})
+		end,
 		opts = {
 			keymaps = {
 				file_panel = {
@@ -285,6 +284,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-vsnip",
 			"hrsh7th/vim-vsnip",
 		},
+		event = "InsertEnter",
 		config = function()
 			local cmp = require("cmp")
 
