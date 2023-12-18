@@ -159,6 +159,12 @@ require("lazy").setup({
 			vim.keymap.set("n", "<space>f", function()
 				MiniFiles.open(vim.api.nvim_buf_get_name(0))
 			end, { noremap = true })
+			vim.api.nvim_create_user_command("Buffers", function()
+				MiniPick.builtin.buffers()
+			end, {})
+			vim.api.nvim_create_user_command("Grep", function()
+				MiniPick.builtin.grep_live()
+			end, {})
 
 			vim.ui.select = MiniPick.ui_select
 		end,
@@ -170,17 +176,33 @@ require("lazy").setup({
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
+			"folke/neodev.nvim",
 		},
 		event = "BufReadPre",
 		config = function()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
+			require("neodev").setup()
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			require("mason-lspconfig").setup_handlers({
 				function(server_name)
 					require("lspconfig")[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+
+				["tsserver"] = function()
+					require("lspconfig")["tsserver"].setup({
+						on_attach = function()
+							vim.api.nvim_create_user_command("OR", function()
+								vim.lsp.buf.execute_command({
+									command = "_typescript.organizeImports",
+									arguments = { vim.api.nvim_buf_get_name(0) },
+								})
+							end, { desc = "Organize Imports" })
+						end,
 						capabilities = capabilities,
 					})
 				end,
