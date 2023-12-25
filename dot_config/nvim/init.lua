@@ -307,4 +307,8 @@ require("lazy").setup({
       )
     end,
   },
+  {
+    "AndrewRadev/linediff.vim",
+    cmd = "Linediff"
+  }
 })
