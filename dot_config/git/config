@@ -17,6 +17,9 @@
 	enabled = true
 [merge]
   conflictStyle = diff3
+  tool = nvim
+[mergetool "nvim"]
+	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
 [gpg]
   format = ssh
 [gpg "ssh"]
