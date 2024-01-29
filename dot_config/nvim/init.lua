@@ -45,6 +45,25 @@ vim.g.mapleader = ","
 keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
 keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
+for _, keycode in pairs({
+	"<C-x><C-n>",
+	"<C-x><C-p>",
+	"<C-n>",
+	"<C-p>",
+}) do
+	keymap.set("i", keycode, function()
+		vim.opt.completeopt = { "menu", "menuone" }
+		return keycode
+	end, { noremap = true, expr = true })
+end
+
+vim.api.nvim_create_autocmd("CompleteDone", {
+	group = augroup,
+	pattern = { "*" },
+	callback = function()
+		vim.opt.completeopt = { "menu", "menuone", "noselect" }
+	end,
+})
 
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
 	group = augroup,
@@ -220,8 +239,6 @@ require("lazy").setup({
 			"j-hui/fidget.nvim",
 		},
 		config = function()
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities.textDocument.completion.completionItem.snippetSupport = true
 			require("fidget").setup()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
@@ -233,9 +250,7 @@ require("lazy").setup({
 					if server_name == "rubocop" then
 						return
 					else
-						require("lspconfig")[server_name].setup({
-							capabilities = capabilities,
-						})
+						require("lspconfig")[server_name].setup({})
 					end
 				end,
 				-- Next, you can provide a dedicated handler for specific servers.
@@ -275,11 +290,18 @@ require("lazy").setup({
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 					vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+
+					vim.api.nvim_create_user_command("OR", function()
+						vim.lsp.buf.execute_command({
+							command = "_typescript.organizeImports",
+							arguments = { vim.fn.expand("%:p") },
+						})
+					end, {})
+
+					require("additional-text-edits")
+					vim.keymap.set("i", "<C-y>", "<C-y><Cmd>ApplyAdditionalTextEdits<CR>", { noremap = true })
 				end,
 			})
-
-			require("additional-text-edits")
-			vim.keymap.set("i", "<C-y>", "<C-y><Cmd>ApplyAdditionalTextEdits<CR>", { noremap = true })
 		end,
 	},
 	{
@@ -313,26 +335,6 @@ require("lazy").setup({
 					lint.try_lint()
 				end,
 			})
-		end,
-	},
-	{
-		"hrsh7th/vim-vsnip",
-		dependencies = {
-			"hrsh7th/vim-vsnip-integ",
-		},
-		config = function()
-			vim.keymap.set(
-				"i",
-				"<C-l>",
-				"vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
-				{ expr = true }
-			)
-			vim.keymap.set(
-				"s",
-				"<C-l>",
-				"vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
-				{ expr = true }
-			)
 		end,
 	},
 	{

@@ -18,7 +18,7 @@ local function get_completion_item()
 end
 
 local function resolve_completion_item(completion_item)
-	local responses, err = vim.lsp.buf_request_sync(0, "completionItem/resolve", completion_item, 100)
+	local responses, err = vim.lsp.buf_request_sync(0, "completionItem/resolve", completion_item, 500)
 	if err ~= nil then
 		print(err)
 		return nil
