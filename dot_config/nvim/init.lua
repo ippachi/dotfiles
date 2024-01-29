@@ -344,4 +344,7 @@ require("lazy").setup({
 			temp_dir = "~/.config/nvim/templates",
 		},
 	},
+	{
+		"github/copilot.vim",
+	},
 })

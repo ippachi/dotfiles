@@ -18,13 +18,15 @@ local function get_completion_item()
 end
 
 local function resolve_completion_item(completion_item)
-	local responses, err = vim.lsp.buf_request_sync(0, "completionItem/resolve", completion_item, 500)
-	if err ~= nil then
-		print(err)
-		return nil
+	local results = {}
+	for _, client in pairs(vim.lsp.get_clients({ bufnr = 0, method = "completionItem/resolve" })) do
+		local result = client.request_sync("completionItem/resolve", completion_item, 500, 0)
+		if result ~= nil and result ~= "timeout" and result.err == nil then
+			table.insert(results, result)
+		end
 	end
 
-	return responses
+	return results
 end
 
 local function apply_additional_text_edits_by_client_id(client_id, res)
@@ -39,12 +41,9 @@ local function apply_additional_text_edits()
 	end
 
 	local responses = resolve_completion_item(completion_item)
-	if responses == nil then
-		return
-	end
 
 	for client_id, res in ipairs(responses) do
-		if res.error == nil and res.result.additionalTextEdits ~= nil then
+		if res.result.additionalTextEdits ~= nil then
 			apply_additional_text_edits_by_client_id(client_id, res)
 		end
 	end
