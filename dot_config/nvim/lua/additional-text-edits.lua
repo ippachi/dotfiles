@@ -34,7 +34,18 @@ local function apply_additional_text_edits_by_client_id(client_id, res)
 	vim.lsp.util.apply_text_edits(res.result.additionalTextEdits, 0, client.offset_encoding)
 end
 
-local function apply_additional_text_edits()
+local function expand_snippet(res)
+	local completion_start = vim.fn.col(".") - #vim.v.completed_item.word
+	local completion_end = vim.fn.col(".")
+	local cursor_line_content = vim.fn.getline(".")
+	local before_cursor_content = string.sub(cursor_line_content, 1, completion_start - 1)
+	local after_cursor_content = string.sub(cursor_line_content, completion_end + 1)
+	vim.fn.setline(".", before_cursor_content .. after_cursor_content)
+	vim.fn.cursor({ ".", completion_start })
+	vim.snippet.expand(res.result.insertText)
+end
+
+local function resolve_lsp_completion_item()
 	local completion_item = get_completion_item()
 	if completion_item == nil then
 		return
@@ -46,9 +57,13 @@ local function apply_additional_text_edits()
 		if res.result.additionalTextEdits ~= nil then
 			apply_additional_text_edits_by_client_id(client_id, res)
 		end
+
+		if res.result.insertText ~= nil and res.result.insertTextFormat == 2 then
+			expand_snippet(res)
+		end
 	end
 end
 
 vim.api.nvim_create_user_command("ApplyAdditionalTextEdits", function()
-	apply_additional_text_edits()
+	resolve_lsp_completion_item()
 end, {})

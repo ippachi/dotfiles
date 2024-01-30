@@ -248,6 +248,9 @@ require("lazy").setup({
 			"j-hui/fidget.nvim",
 		},
 		config = function()
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 			require("fidget").setup()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
@@ -259,7 +262,9 @@ require("lazy").setup({
 					if server_name == "rubocop" then
 						return
 					else
-						require("lspconfig")[server_name].setup({})
+						require("lspconfig")[server_name].setup({
+							capabilities = capabilities,
+						})
 					end
 				end,
 				-- Next, you can provide a dedicated handler for specific servers.
@@ -356,12 +361,6 @@ require("lazy").setup({
 	},
 	{
 		"github/copilot.vim",
-	},
-	{
-		"hrsh7th/vim-vsnip",
-	},
-	{
-		"hrsh7th/vim-vsnip-integ",
 	},
 	{
 		"rbong/vim-flog",
