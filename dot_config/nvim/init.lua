@@ -45,6 +45,9 @@ vim.g.mapleader = ","
 keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
 keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
+
+vim.cmd([[cabbr t tab]])
+vim.cmd([[cabbr tt tab terminal]])
 for _, keycode in pairs({
 	"<C-x><C-n>",
 	"<C-x><C-p>",
@@ -71,6 +74,12 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
 	callback = function()
 		vim.cmd([[cwindow]])
 	end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+	group = augroup,
+	pattern = { "*" },
+	command = "startinsert",
 })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -312,6 +321,7 @@ require("lazy").setup({
 					lua = { "stylua" },
 					ruby = { "rubocop" },
 					typescriptreact = { { "prettierd", "prettier" } },
+					typescript = { { "prettierd", "prettier" } },
 				},
 				format_on_save = {
 					timeout_ms = 500,
@@ -346,5 +356,19 @@ require("lazy").setup({
 	},
 	{
 		"github/copilot.vim",
+	},
+	{
+		"hrsh7th/vim-vsnip",
+	},
+	{
+		"hrsh7th/vim-vsnip-integ",
+	},
+	{
+		"rbong/vim-flog",
+		lazy = true,
+		cmd = { "Flog", "Flogsplit", "Floggit" },
+		dependencies = {
+			"tpope/vim-fugitive",
+		},
 	},
 })
