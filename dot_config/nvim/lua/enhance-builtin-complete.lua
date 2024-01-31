@@ -66,34 +66,6 @@ end
 
 local augroup = vim.api.nvim_create_augroup("resolve-lsp-completion-item", {})
 
-vim.api.nvim_create_autocmd("CompleteChanged", {
-	group = augroup,
-	pattern = { "*" },
-	callback = function()
-		-- TODO: コピペ
-		local completion_item = get_completion_item()
-		if completion_item == nil then
-			return
-		end
-
-		-- TODO: コピペ
-		local responses = resolve_completion_item(completion_item)
-
-		for _, res in ipairs(responses) do
-			local text = ""
-
-			if res.result.detail ~= nil then
-				text = text .. res.result.detail
-			end
-
-			if res.result.documentation ~= nil then
-				text = text .. "\n==========\n\n" .. res.result.documentation.value
-			end
-			local complete_set_res = vim.api.nvim_complete_set(vim.fn.complete_info().selected, { info = text })
-		end
-	end,
-})
-
-vim.api.nvim_create_user_command("ApplyAdditionalTextEdits", function()
+vim.api.nvim_create_user_command("ResolveCompletionItem", function()
 	resolve_lsp_completion_item()
 end, {})

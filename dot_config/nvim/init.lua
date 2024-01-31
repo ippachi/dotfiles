@@ -312,8 +312,8 @@ require("lazy").setup({
 						})
 					end, {})
 
-					-- require("additional-text-edits")
-					-- vim.keymap.set("i", "<C-y>", "<C-y><Cmd>ApplyAdditionalTextEdits<CR>", { noremap = true })
+					require("enhance-builtin-complete")
+					vim.keymap.set("i", "<C-y>", "<C-y><Cmd>ResolveCompletionItem<CR>", { noremap = true })
 				end,
 			})
 		end,
@@ -361,9 +361,6 @@ require("lazy").setup({
 	},
 	{
 		"github/copilot.vim",
-		init = function()
-			vim.g.copilot_no_maps = true
-		end,
 	},
 	{
 		"rbong/vim-flog",
@@ -372,42 +369,5 @@ require("lazy").setup({
 		dependencies = {
 			"tpope/vim-fugitive",
 		},
-	},
-	{
-		"Shougo/ddc.vim",
-		dependencies = {
-			"vim-denops/denops.vim",
-			"Shougo/ddc-ui-native",
-			"Shougo/ddc-source-around",
-			"Shougo/ddc-source-lsp",
-			"Shougo/ddc-source-copilot",
-			"Shougo/ddc-matcher_head",
-			"Shougo/ddc-sorter_rank",
-			"hrsh7th/vim-vsnip",
-			"hrsh7th/vim-vsnip-integ",
-		},
-		config = function()
-			vim.fn["ddc#custom#patch_global"]("ui", "native")
-			vim.fn["ddc#custom#patch_global"]("sources", { "copilot", "lsp", "around" })
-			vim.fn["ddc#custom#patch_global"]("sourceOptions", {
-				_ = {
-					matchers = { "matcher_head" },
-					sorters = { "sorter_rank" },
-				},
-				around = { mark = "A" },
-				lsp = { mark = "lsp", forceCompletionPattern = "\\.\\w*|:\\w*|->\\w*" },
-				copilot = { mark = "copilot", matchers = {}, minAutoCompleteLength = 0 },
-			})
-			vim.fn["ddc#custom#patch_global"]("sourceParams", {
-				lsp = {
-					snippetEngine = vim.fn["denops#callback#register"](function(body)
-						return vim.fn["vsnip#anonymous"](body)
-					end),
-					enableResolveItem = true,
-					enableAdditionalTextEdit = true,
-				},
-			})
-			vim.fn["ddc#enable"]()
-		end,
 	},
 })
