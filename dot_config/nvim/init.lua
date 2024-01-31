@@ -173,7 +173,6 @@ require("lazy").setup({
 			require("mini.trailspace").setup()
 			require("mini.statusline").setup()
 			require("mini.files").setup()
-			require("mini.pairs").setup()
 			require("mini.ai").setup()
 			require("mini.hipatterns").setup()
 			require("mini.indentscope").setup()
@@ -246,10 +245,11 @@ require("lazy").setup({
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"j-hui/fidget.nvim",
-			"Shougo/ddc-source-lsp",
+			"b0o/schemastore.nvim",
 		},
 		config = function()
-			local capabilities = require("ddc_source_lsp").make_client_capabilities()
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 			require("fidget").setup()
 			require("mason").setup()
@@ -261,6 +261,32 @@ require("lazy").setup({
 				function(server_name) -- default handler (optional)
 					if server_name == "rubocop" then
 						return
+					elseif server_name == "jsonls" then
+						require("lspconfig")[server_name].setup({
+							settings = {
+								json = {
+									schemas = require("schemastore").json.schemas(),
+									validate = { enable = true },
+								},
+							},
+							capabilities = capabilities,
+						})
+					elseif server_name == "yamlls" then
+						require("lspconfig")[server_name].setup({
+							settings = {
+								yaml = {
+									schemaStore = {
+										-- You must disable built-in schemaStore support if you want to use
+										-- this plugin and its advanced options like `ignore`.
+										enable = false,
+										-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+										url = "",
+									},
+									schemas = require("schemastore").yaml.schemas(),
+								},
+							},
+							capabilities = capabilities,
+						})
 					else
 						require("lspconfig")[server_name].setup({
 							capabilities = capabilities,
@@ -332,6 +358,7 @@ require("lazy").setup({
 					timeout_ms = 500,
 					lsp_fallback = true,
 				},
+				notify_on_error = false,
 			})
 			vim.keymap.set("n", "<leader>f", function()
 				require("conform").format({ lsp_fallback = true })
