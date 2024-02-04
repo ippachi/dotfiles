@@ -240,18 +240,26 @@ require("lazy").setup({
 		cmd = "Linediff",
 	},
 	{
+		"j-hui/fidget.nvim",
+		config = function()
+			require("fidget").setup()
+			vim.notify = require("fidget.notification").notify
+		end,
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"j-hui/fidget.nvim",
 			"b0o/schemastore.nvim",
+			"folke/neodev.nvim",
 		},
 		config = function()
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-			require("fidget").setup()
+			require("neodev").setup()
 			require("mason").setup()
 			require("mason-lspconfig").setup()
 			require("mason-lspconfig").setup_handlers({
@@ -396,5 +404,61 @@ require("lazy").setup({
 		dependencies = {
 			"tpope/vim-fugitive",
 		},
+	},
+	{
+		dir = "~/ghq/github.com/ippachi/nvim-test-runner",
+		dependencies = { "j-hui/fidget.nvim" },
+		config = function()
+			local test_runner = require("nvim-test-runner").setup({
+				command_functions_by_ft = {
+					ruby = {
+						["bin/rails"] = {
+							function()
+								return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
+							end,
+							function()
+								return "bin/rails test " .. vim.fn.expand("%")
+							end,
+							function()
+								return "bin/rails test"
+							end,
+							function()
+								return "bin/rails test:system"
+							end,
+						},
+						["rspec"] = {
+							function()
+								return "bundle exec rspec " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
+							end,
+							function()
+								return "bundle exec rspec " .. vim.fn.expand("%")
+							end,
+							function()
+								return "bundle exec rspec"
+							end,
+						},
+					},
+				},
+			})
+
+			vim.keymap.set("n", "<leader>tt", function()
+				test_runner.run_test(1)
+			end, { noremap = true })
+			vim.keymap.set("n", "<leader>tf", function()
+				test_runner.run_test(2)
+			end, { noremap = true })
+			vim.keymap.set("n", "<leader>ta", function()
+				test_runner.run_test(3)
+			end, { noremap = true })
+			vim.keymap.set("n", "<leader>tl", function()
+				test_runner.run_last()
+			end, { noremap = true })
+			vim.keymap.set("n", "<leader>to", function()
+				test_runner.open_output()
+			end, { noremap = true })
+			vim.api.nvim_create_user_command("SetTestCommandFunc", function()
+				test_runner.set_test_command_func()
+			end, {})
+		end,
 	},
 })
