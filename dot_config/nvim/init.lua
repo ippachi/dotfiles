@@ -98,11 +98,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
-		"sainnhe/gruvbox-material",
+		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd([[colorscheme gruvbox-material]])
+			vim.cmd([[colorscheme kanagawa]])
 		end,
 	},
 	{
