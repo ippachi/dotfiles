@@ -181,27 +181,6 @@ require("lazy").setup({
 			require("mini.hipatterns").setup()
 			require("mini.indentscope").setup()
 			require("mini.extra").setup()
-			require("mini.pick").setup({
-				mappings = {
-					choose_marked = "<C-q>",
-				},
-			})
-
-			vim.keymap.set("n", "<c-p>", function()
-				MiniPick.builtin.files()
-			end, { noremap = true })
-			vim.keymap.set("n", "<c-h>", function()
-				MiniPick.builtin.help()
-			end, { noremap = true })
-			vim.api.nvim_create_user_command("Buffers", function()
-				MiniPick.builtin.buffers()
-			end, {})
-			vim.api.nvim_create_user_command("Grep", function()
-				MiniPick.builtin.grep_live()
-			end, {})
-			vim.api.nvim_create_user_command("Registers", function()
-				MiniExtra.pickers.registers()
-			end, {})
 		end,
 	},
 	{ "tpope/vim-fugitive", cmd = "Git" },
@@ -364,10 +343,6 @@ require("lazy").setup({
 					typescriptreact = { { "prettierd", "prettier" } },
 					typescript = { { "prettierd", "prettier" } },
 				},
-				format_on_save = {
-					timeout_ms = 500,
-					lsp_fallback = true,
-				},
 				notify_on_error = false,
 			})
 			vim.keymap.set("n", "<leader>f", function()
@@ -410,7 +385,7 @@ require("lazy").setup({
 	{
 		dir = "~/ghq/github.com/ippachi/nvim-test-runner",
 		dependencies = { "j-hui/fidget.nvim" },
-		opts = function()
+		config = function()
 			local test_runner = require("nvim-test-runner").setup({
 				settings = {
 					["bin/rails"] = {
@@ -488,10 +463,13 @@ require("lazy").setup({
 				"test/factories/%s.rb"
 			)
 			vim.fn["altr#define"](
+				"app/jobs/%.rb",
+				"spec/jobs/%_spec.rb",
+			)
+			vim.fn["altr#define"](
 				"app/controllers/%_controller.rb",
 				"spec/controllers/%_controller_spec.rb",
 				"test/controllers/%_controller_test.rb",
-				"app/views/%"
 			)
 			vim.fn["altr#define"]("%.tsx", "%.stories.tsx")
 		end,
@@ -507,5 +485,61 @@ require("lazy").setup({
 	},
 	{
 		"tpope/vim-rails",
+	},
+	{
+		"nvim-telescope/telescope.nvim",
+		branch = "0.1.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		init = function()
+			vim.keymap.set("n", "<C-p>", function()
+				require("telescope.builtin").find_files()
+			end, { noremap = true })
+		end,
+		config = function()
+			local actions = require("telescope.actions")
+			local finders = require("telescope.finders")
+			local pickers = require("telescope.pickers")
+			local conf = require("telescope.config").values
+
+			local rails_search = function(opts)
+				opts = opts or {}
+
+				local rails_dirs = {
+					"models",
+					"controllers",
+					"views",
+					"javascript",
+					"helpers",
+					"jobs",
+					"mailers",
+				}
+
+				pickers
+					.new(opts, {
+						prompt_title = "Search Rails",
+						finder = finders.new_table({
+							results = rails_dirs,
+						}),
+						sorter = conf.generic_sorter(opts),
+
+						-- 選択されたディレクトリに対するアクション
+						attach_mappings = function(prompt_bufnr, map)
+							actions.select_default:replace(function()
+								actions.close(prompt_bufnr)
+								local selection = require("telescope.actions.state").get_selected_entry()
+								local search_dir = "app/" .. selection[1] -- 選択されたディレクトリへのパス
+								require("telescope.builtin").find_files({ cwd = search_dir })
+							end)
+							return true
+						end,
+					})
+					:find()
+			end
+			vim.keymap.set("n", "<leader>p", function()
+				rails_search()
+			end, { noremap = true })
+		end,
 	},
 })
