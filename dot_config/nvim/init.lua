@@ -38,16 +38,27 @@ vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heurist
 vim.opt.updatetime = 300
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
+vim.opt.linebreak = true
+vim.opt.breakindent = true
+vim.opt.breakindentopt = "shift:2,sbr"
+vim.opt.breakat:remove(":@!")
+vim.opt.showbreak = "\\"
+
+vim.opt.grepprg = "rg --pcre2 --vimgrep"
+vim.opt.grepformat:prepend("%f:%l:%c:%m")
+
 vim.cmd([[packadd Cfilter]])
 
 vim.g.mapleader = ","
 
 keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
+keymap.set("n", "\\", ",", { noremap = true })
 keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
+keymap.set("n", "<leader>gg", function()
+	return ":silent grep ''<Left>"
+end, { noremap = true, expr = true })
 
-vim.cmd([[cabbr t tab]])
-vim.cmd([[cabbr tt tab terminal]])
 for _, keycode in pairs({
 	"<C-x><C-n>",
 	"<C-x><C-p>",
@@ -74,12 +85,6 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
 	callback = function()
 		vim.cmd([[cwindow]])
 	end,
-})
-
-vim.api.nvim_create_autocmd("TermOpen", {
-	group = augroup,
-	pattern = { "*" },
-	command = "startinsert",
 })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -172,7 +177,6 @@ require("lazy").setup({
 			require("mini.surround").setup()
 			require("mini.trailspace").setup()
 			require("mini.statusline").setup()
-			require("mini.files").setup()
 			require("mini.ai").setup()
 			require("mini.hipatterns").setup()
 			require("mini.indentscope").setup()
@@ -188,9 +192,6 @@ require("lazy").setup({
 			end, { noremap = true })
 			vim.keymap.set("n", "<c-h>", function()
 				MiniPick.builtin.help()
-			end, { noremap = true })
-			vim.keymap.set("n", "<space>f", function()
-				MiniFiles.open(vim.api.nvim_buf_get_name(0))
 			end, { noremap = true })
 			vim.api.nvim_create_user_command("Buffers", function()
 				MiniPick.builtin.buffers()
@@ -309,6 +310,7 @@ require("lazy").setup({
 			})
 
 			local lspconfig = require("lspconfig")
+			lspconfig.sourcekit.setup({})
 
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
@@ -408,35 +410,33 @@ require("lazy").setup({
 	{
 		dir = "~/ghq/github.com/ippachi/nvim-test-runner",
 		dependencies = { "j-hui/fidget.nvim" },
-		config = function()
+		opts = function()
 			local test_runner = require("nvim-test-runner").setup({
-				command_functions_by_ft = {
-					ruby = {
-						["bin/rails"] = {
-							function()
-								return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
-							end,
-							function()
-								return "bin/rails test " .. vim.fn.expand("%")
-							end,
-							function()
-								return "bin/rails test"
-							end,
-							function()
-								return "bin/rails test:system"
-							end,
-						},
-						["rspec"] = {
-							function()
-								return "bundle exec rspec " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
-							end,
-							function()
-								return "bundle exec rspec " .. vim.fn.expand("%")
-							end,
-							function()
-								return "bundle exec rspec"
-							end,
-						},
+				settings = {
+					["bin/rails"] = {
+						function()
+							return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".") .. " 2>/dev/null"
+						end,
+						function()
+							return "bin/rails test " .. vim.fn.expand("%")
+						end,
+						function()
+							return "bin/rails test"
+						end,
+						function()
+							return "bin/rails test:system"
+						end,
+					},
+					["rspec"] = {
+						function()
+							return "bundle exec rspec " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
+						end,
+						function()
+							return "bundle exec rspec " .. vim.fn.expand("%")
+						end,
+						function()
+							return "bundle exec rspec"
+						end,
 					},
 				},
 			})
@@ -456,9 +456,56 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>to", function()
 				test_runner.open_output()
 			end, { noremap = true })
-			vim.api.nvim_create_user_command("SetTestCommandFunc", function()
-				test_runner.set_test_command_func()
+			vim.api.nvim_create_user_command("SetTestRunnerSetting", function()
+				test_runner.set_setting()
 			end, {})
 		end,
+	},
+	{
+		"stevearc/dressing.nvim",
+		opts = {},
+	},
+	{
+		"stevearc/oil.nvim",
+		init = function()
+			vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { noremap = true })
+		end,
+		opts = {},
+	},
+	{
+		"kana/vim-altr",
+		init = function()
+			vim.keymap.set("n", "]t", "<Plug>(altr-forward)", {})
+			vim.keymap.set("n", "[t", "<Plug>(altr-back)", {})
+		end,
+		config = function()
+			vim.fn["altr#remove_all"]()
+			vim.fn["altr#define"](
+				"app/models/%.rb",
+				"spec/models/%_spec.rb",
+				"spec/factories/%s.rb",
+				"test/models/%_test.rb",
+				"test/factories/%s.rb"
+			)
+			vim.fn["altr#define"](
+				"app/controllers/%_controller.rb",
+				"spec/controllers/%_controller_spec.rb",
+				"test/controllers/%_controller_test.rb",
+				"app/views/%"
+			)
+			vim.fn["altr#define"]("%.tsx", "%.stories.tsx")
+		end,
+	},
+	{
+		"wojciech-kulik/xcodebuild.nvim",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+			"MunifTanjim/nui.nvim",
+			"nvim-lua/plenary.nvim",
+		},
+		opts = {},
+	},
+	{
+		"tpope/vim-rails",
 	},
 })
