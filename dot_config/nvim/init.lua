@@ -149,7 +149,6 @@ require("lazy").setup({
 			"RRethy/nvim-treesitter-endwise",
 		},
 		build = ":TSUpdate",
-		event = "BufReadPre",
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				highlight = {
@@ -176,7 +175,6 @@ require("lazy").setup({
 			require("mini.comment").setup()
 			require("mini.surround").setup()
 			require("mini.trailspace").setup()
-			require("mini.statusline").setup()
 			require("mini.ai").setup()
 			require("mini.hipatterns").setup()
 			require("mini.indentscope").setup()
@@ -462,14 +460,11 @@ require("lazy").setup({
 				"test/models/%_test.rb",
 				"test/factories/%s.rb"
 			)
-			vim.fn["altr#define"](
-				"app/jobs/%.rb",
-				"spec/jobs/%_spec.rb",
-			)
+			vim.fn["altr#define"]("app/jobs/%.rb", "spec/jobs/%_spec.rb")
 			vim.fn["altr#define"](
 				"app/controllers/%_controller.rb",
 				"spec/controllers/%_controller_spec.rb",
-				"test/controllers/%_controller_test.rb",
+				"test/controllers/%_controller_test.rb"
 			)
 			vim.fn["altr#define"]("%.tsx", "%.stories.tsx")
 		end,
@@ -541,5 +536,10 @@ require("lazy").setup({
 				rails_search()
 			end, { noremap = true })
 		end,
+	},
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {}
 	},
 })
