@@ -36,7 +36,7 @@ vim.opt.formatoptions:append({
 })
 vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
 
 vim.opt.linebreak = true
 vim.opt.breakindent = true
@@ -58,26 +58,6 @@ keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
 keymap.set("n", "<leader>gg", function()
 	return ":silent grep ''<Left>"
 end, { noremap = true, expr = true })
-
-for _, keycode in pairs({
-	"<C-x><C-n>",
-	"<C-x><C-p>",
-	"<C-n>",
-	"<C-p>",
-}) do
-	keymap.set("i", keycode, function()
-		vim.opt.completeopt = { "menu", "menuone", "popup" }
-		return keycode
-	end, { noremap = true, expr = true })
-end
-
-vim.api.nvim_create_autocmd("CompleteDone", {
-	group = augroup,
-	pattern = { "*" },
-	callback = function()
-		vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
-	end,
-})
 
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
 	group = augroup,
@@ -381,17 +361,17 @@ require("lazy").setup({
 		},
 	},
 	{
-		dir = "~/ghq/github.com/ippachi/nvim-test-runner",
+		dir = "~/ghq/github.com/ippachi/nvim-script-runner",
 		dependencies = { "j-hui/fidget.nvim" },
 		config = function()
-			local test_runner = require("nvim-test-runner").setup({
-				settings = {
+			local script_runner = require("nvim-script-runner").setup({
+				presets = {
 					["bin/rails"] = {
 						function()
 							return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".") .. " 2>/dev/null"
 						end,
 						function()
-							return "bin/rails test " .. vim.fn.expand("%")
+							return "env -u VIM bin/rails test " .. vim.fn.expand("%")
 						end,
 						function()
 							return "bin/rails test"
@@ -415,23 +395,26 @@ require("lazy").setup({
 			})
 
 			vim.keymap.set("n", "<leader>tt", function()
-				test_runner.run_test(1)
+				script_runner.run_preset(1)
 			end, { noremap = true })
 			vim.keymap.set("n", "<leader>tf", function()
-				test_runner.run_test(2)
+				script_runner.run_preset(2)
 			end, { noremap = true })
 			vim.keymap.set("n", "<leader>ta", function()
-				test_runner.run_test(3)
+				script_runner.run_preset(3)
 			end, { noremap = true })
 			vim.keymap.set("n", "<leader>tl", function()
-				test_runner.run_last()
+				script_runner.run_last()
 			end, { noremap = true })
 			vim.keymap.set("n", "<leader>to", function()
-				test_runner.open_output()
+				script_runner.open_output()
 			end, { noremap = true })
-			vim.api.nvim_create_user_command("SetTestRunnerSetting", function()
-				test_runner.set_setting()
+			vim.api.nvim_create_user_command("SetScriptRunnerPreset", function()
+				script_runner.set_preset()
 			end, {})
+			vim.api.nvim_create_user_command("SR", function(opts)
+				script_runner.run(opts.args)
+			end, { nargs = 1 })
 		end,
 	},
 	{
