@@ -32,7 +32,7 @@ end
 
 local function apply_additional_text_edits_by_client_id(client_id, res)
 	local client = vim.lsp.get_client_by_id(client_id)
-	vim.lsp.util.apply_text_edits(res.result.additionalTextEdits, 0, client.offset_encoding)
+	vim.lsp.util.apply_text_edits(res.result.additionalTextEdits, vim.fn.bufnr(), client.offset_encoding)
 end
 
 local function expand_snippet(text)

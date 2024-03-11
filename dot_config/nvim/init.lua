@@ -37,6 +37,7 @@ vim.opt.formatoptions:append({
 vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
 vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
+vim.opt.exrc = true
 
 vim.opt.linebreak = true
 vim.opt.breakindent = true
@@ -159,6 +160,7 @@ require("lazy").setup({
 			require("mini.hipatterns").setup()
 			require("mini.indentscope").setup()
 			require("mini.extra").setup()
+			require("mini.align").setup()
 		end,
 	},
 	{ "tpope/vim-fugitive", cmd = "Git" },
@@ -297,6 +299,9 @@ require("lazy").setup({
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 					vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+					vim.keymap.set("n", "<leader>f", function()
+						vim.lsp.buf.format({ async = true })
+					end, opts)
 
 					vim.api.nvim_create_user_command("OR", function()
 						vim.lsp.buf.execute_command({
@@ -311,37 +316,37 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{
-		"stevearc/conform.nvim",
-		config = function()
-			require("conform").setup({
-				formatters_by_ft = {
-					lua = { "stylua" },
-					ruby = { "rubocop" },
-					typescriptreact = { { "prettierd", "prettier" } },
-					typescript = { { "prettierd", "prettier" } },
-				},
-				notify_on_error = false,
-			})
-			vim.keymap.set("n", "<leader>f", function()
-				require("conform").format({ lsp_fallback = true })
-			end, {})
-		end,
-	},
-	{
-		"mfussenegger/nvim-lint",
-		config = function()
-			local lint = require("lint")
-			lint.linters_by_ft = {
-				ruby = { "rubocop" },
-			}
-			vim.api.nvim_create_autocmd({ "TextChanged", "BufReadPost", "BufWritePost" }, {
-				callback = function()
-					lint.try_lint()
-				end,
-			})
-		end,
-	},
+	-- {
+	-- 	"stevearc/conform.nvim",
+	-- 	config = function()
+	-- 		require("conform").setup({
+	-- 			formatters_by_ft = {
+	-- 				lua = { "stylua" },
+	-- 				ruby = { "rubocop" },
+	-- 				typescriptreact = { { "prettierd", "prettier" } },
+	-- 				typescript = { { "prettierd", "prettier" } },
+	-- 			},
+	-- 			notify_on_error = false,
+	-- 		})
+	-- 		vim.keymap.set("n", "<leader>f", function()
+	-- 			require("conform").format({ lsp_fallback = true })
+	-- 		end, {})
+	-- 	end,
+	-- },
+	-- {
+	-- 	"mfussenegger/nvim-lint",
+	-- 	config = function()
+	-- 		local lint = require("lint")
+	-- 		lint.linters_by_ft = {
+	-- 			ruby = { "rubocop" },
+	-- 		}
+	-- 		vim.api.nvim_create_autocmd({ "TextChanged", "BufReadPost", "BufWritePost" }, {
+	-- 			callback = function()
+	-- 				lint.try_lint()
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"nvimdev/template.nvim",
 		cmd = { "Template", "TemProject" },
@@ -523,6 +528,22 @@ require("lazy").setup({
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {}
+		opts = {},
+	},
+	{
+		"nvimtools/none-ls.nvim",
+		config = function()
+			local null_ls = require("null-ls")
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.formatting.rubocop,
+					null_ls.builtins.diagnostics.rubocop,
+
+					null_ls.builtins.formatting.prettierd,
+
+					null_ls.builtins.formatting.stylua,
+				},
+			})
+		end,
 	},
 })
