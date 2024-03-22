@@ -166,11 +166,12 @@ require("lazy").setup({
 	{ "tpope/vim-fugitive", cmd = "Git" },
 	{
 		"sindrets/diffview.nvim",
-		cmd = "DiffviewOpen",
-		init = function()
-			vim.api.nvim_create_user_command("DO", "DiffviewOpen", {})
-		end,
 		opts = {
+			view = {
+				merge_tool = {
+					layout = "diff3_mixed",
+				},
+			},
 			keymaps = {
 				file_panel = {
 					{
@@ -373,7 +374,7 @@ require("lazy").setup({
 				presets = {
 					["bin/rails"] = {
 						function()
-							return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".") .. " 2>/dev/null"
+							return "bin/rails test " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
 						end,
 						function()
 							return "env -u VIM bin/rails test " .. vim.fn.expand("%")
@@ -448,7 +449,7 @@ require("lazy").setup({
 				"test/models/%_test.rb",
 				"test/factories/%s.rb"
 			)
-			vim.fn["altr#define"]("app/jobs/%.rb", "spec/jobs/%_spec.rb")
+			vim.fn["altr#define"]("app/jobs/%.rb", "spec/jobs/%_spec.rb", "test/jobs/%_test.rb")
 			vim.fn["altr#define"](
 				"app/controllers/%_controller.rb",
 				"spec/controllers/%_controller_spec.rb",
@@ -545,5 +546,10 @@ require("lazy").setup({
 				},
 			})
 		end,
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
 	},
 })
