@@ -166,6 +166,11 @@ require("lazy").setup({
   { "tpope/vim-fugitive", cmd = "Git" },
   {
     "sindrets/diffview.nvim",
+    init = function ()
+      vim.api.nvim_create_user_command("DO", function ()
+        vim.cmd[[DiffviewOpen]]
+      end, {})
+    end,
     opts = {
       view = {
         merge_tool = {
