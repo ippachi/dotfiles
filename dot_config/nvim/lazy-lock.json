@@ -34,5 +34,6 @@
   "vim-fugitive": { "branch": "master", "commit": "193ba9b393931bad768c1d2eed688b0bcc240858" },
   "vim-qfedit": { "branch": "master", "commit": "d05f2f31f3e04df26bbebc4cc3343b954c96be85" },
   "vim-rails": { "branch": "master", "commit": "3a155462d1c346e291595400ca238037d02a357f" },
+  "vim-rhubarb": { "branch": "master", "commit": "ee69335de176d9325267b0fd2597a22901d927b1" },
   "xcodebuild.nvim": { "branch": "main", "commit": "76aad8a30aee28fa5d819581915b0085a1956546" }
 }
