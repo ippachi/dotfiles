@@ -153,7 +153,6 @@ require("lazy").setup({
 		},
 		version = false,
 		config = function()
-			require("mini.comment").setup()
 			require("mini.surround").setup()
 			require("mini.trailspace").setup()
 			require("mini.ai").setup()
@@ -533,4 +532,7 @@ require("lazy").setup({
 		"ray-x/lsp_signature.nvim",
 		opts = {},
 	},
+  {
+    "tpope/vim-abolish"
+  }
 })
