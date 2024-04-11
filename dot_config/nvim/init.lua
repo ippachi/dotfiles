@@ -44,6 +44,7 @@ vim.opt.breakindent = true
 vim.opt.breakindentopt = "shift:2,sbr"
 vim.opt.breakat:remove(":@!")
 vim.opt.showbreak = "\\"
+vim.opt.wildmode = { "longest:full" }
 
 vim.opt.grepprg = "rg --pcre2 --vimgrep"
 vim.opt.grepformat:prepend("%f:%l:%c:%m")
@@ -532,7 +533,7 @@ require("lazy").setup({
 		"ray-x/lsp_signature.nvim",
 		opts = {},
 	},
-  {
-    "tpope/vim-abolish"
-  }
+	{
+		"tpope/vim-abolish",
+	},
 })
