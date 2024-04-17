@@ -361,9 +361,6 @@ require("lazy").setup({
 		},
 	},
 	{
-		"github/copilot.vim",
-	},
-	{
 		"rbong/vim-flog",
 		lazy = true,
 		cmd = { "Flog", "Flogsplit", "Floggit" },
@@ -520,6 +517,8 @@ require("lazy").setup({
 					null_ls.builtins.formatting.prettierd,
 
 					null_ls.builtins.formatting.stylua,
+
+					null_ls.builtins.formatting.sql_formatter,
 				},
 			})
 		end,
