@@ -489,7 +489,7 @@ require("lazy").setup({
 		},
 		init = function()
 			vim.keymap.set("n", "<C-p>", function()
-				require("telescope").extensions.smart_open.smart_open()
+				require("telescope").extensions.smart_open.smart_open({ cwd_only = true })
 			end, { noremap = true })
 		end,
 		opts = {
@@ -514,6 +514,8 @@ require("lazy").setup({
 					null_ls.builtins.formatting.rubocop,
 					null_ls.builtins.diagnostics.rubocop,
 
+					null_ls.builtins.formatting.erb_format,
+
 					null_ls.builtins.formatting.prettierd,
 
 					null_ls.builtins.formatting.stylua,
@@ -535,4 +537,11 @@ require("lazy").setup({
 	{
 		"tpope/vim-abolish",
 	},
+  {
+    "akinsho/toggleterm.nvim",
+    opts = {
+      open_mapping = [[<c-\>]],
+      direction = 'tab'
+    }
+  }
 })
