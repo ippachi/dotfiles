@@ -4,3 +4,4 @@
 wt
 .envrc
 /.nvim.lua
+/openv

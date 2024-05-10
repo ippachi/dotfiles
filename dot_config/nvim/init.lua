@@ -57,9 +57,6 @@ keymap.set("n", "j", "gj", { noremap = true })
 keymap.set("n", "k", "gk", { noremap = true })
 keymap.set("n", "\\", ",", { noremap = true })
 keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
-keymap.set("n", "<leader>gg", function()
-  return ":silent grep ''<Left>"
-end, { noremap = true, expr = true })
 
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   group = augroup,
@@ -233,9 +230,7 @@ require("lazy").setup({
         -- and will be called for each installed server that doesn't have
         -- a dedicated handler.
         function(server_name) -- default handler (optional)
-          if server_name == "rubocop" then
-            return
-          elseif server_name == "jsonls" then
+          if server_name == "jsonls" then
             require("lspconfig")[server_name].setup({
               settings = {
                 json = {
@@ -275,7 +270,6 @@ require("lazy").setup({
       })
 
       local lspconfig = require("lspconfig")
-      lspconfig.sourcekit.setup({})
 
       vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
       vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
@@ -322,37 +316,6 @@ require("lazy").setup({
       })
     end,
   },
-  -- {
-  -- 	"stevearc/conform.nvim",
-  -- 	config = function()
-  -- 		require("conform").setup({
-  -- 			formatters_by_ft = {
-  -- 				lua = { "stylua" },
-  -- 				ruby = { "rubocop" },
-  -- 				typescriptreact = { { "prettierd", "prettier" } },
-  -- 				typescript = { { "prettierd", "prettier" } },
-  -- 			},
-  -- 			notify_on_error = false,
-  -- 		})
-  -- 		vim.keymap.set("n", "<leader>f", function()
-  -- 			require("conform").format({ lsp_fallback = true })
-  -- 		end, {})
-  -- 	end,
-  -- },
-  -- {
-  -- 	"mfussenegger/nvim-lint",
-  -- 	config = function()
-  -- 		local lint = require("lint")
-  -- 		lint.linters_by_ft = {
-  -- 			ruby = { "rubocop" },
-  -- 		}
-  -- 		vim.api.nvim_create_autocmd({ "TextChanged", "BufReadPost", "BufWritePost" }, {
-  -- 			callback = function()
-  -- 				lint.try_lint()
-  -- 			end,
-  -- 		})
-  -- 	end,
-  -- },
   {
     "nvimdev/template.nvim",
     cmd = { "Template", "TemProject" },
@@ -461,20 +424,10 @@ require("lazy").setup({
     end,
   },
   {
-    "wojciech-kulik/xcodebuild.nvim",
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-    },
-    opts = {},
-  },
-  {
     "tpope/vim-rails",
   },
   {
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -483,11 +436,21 @@ require("lazy").setup({
       vim.keymap.set("n", "<C-p>", function()
         require("telescope.builtin").find_files()
       end, { noremap = true })
+      keymap.set("n", "<leader>gg", function()
+        require("telescope.builtin").live_grep()
+      end, { noremap = true })
     end,
     config = function()
       -- You dont need to set any of these options. These are the default ones. Only
       -- the loading is important
       require("telescope").setup({
+        defaults = {
+          path_display = {
+            filename_first = {
+              reverse_directories = true
+            }
+          }
+        },
         extensions = {
           fzf = {
             fuzzy = true,             -- false will only do exact matching
