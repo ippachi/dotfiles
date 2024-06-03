@@ -223,6 +223,7 @@ require("lazy").setup({
       require("mason").setup()
       require("mason-lspconfig").setup()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
       require("mason-lspconfig").setup_handlers({
         -- The first entry (without a key) will be the default handler
         -- and will be called for each installed server that doesn't have
@@ -254,6 +255,13 @@ require("lazy").setup({
               },
               capabilities = capabilities,
             })
+          elseif server_name == "tsserver" then
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+              on_attach = function(client, bufnr)
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = false })
+              end
+            })
           else
             require("lspconfig")[server_name].setup({
               capabilities = capabilities,
@@ -276,7 +284,7 @@ require("lazy").setup({
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
           -- Enable completion triggered by <c-x><c-o>
-          vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+          -- vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
           -- Buffer local mappings.
           -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -298,6 +306,9 @@ require("lazy").setup({
           vim.keymap.set("n", "<leader>f", function()
             vim.lsp.buf.format({ async = true })
           end, opts)
+          keymap.set("i", "<c-x><c-o>", function()
+            vim.lsp.completion.trigger()
+          end, opts)
 
           vim.api.nvim_create_user_command("OR", function()
             vim.lsp.buf.execute_command({
@@ -305,10 +316,6 @@ require("lazy").setup({
               arguments = { vim.fn.expand("%:p") },
             })
           end, {})
-
-          for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/completion" })) do
-            vim.lsp.completion.enable(true, client.id, 0, { autotrigger = false })
-          end
         end,
       })
     end,
