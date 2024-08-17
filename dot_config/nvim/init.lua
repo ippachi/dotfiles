@@ -30,9 +30,9 @@ vim.opt.title = true
 vim.opt.undofile = true
 vim.opt.mouse = ""
 vim.opt.formatoptions:append({
-	t = true,
-	m = true,
-	M = true,
+  t = true,
+  m = true,
+  M = true,
 })
 vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
@@ -59,322 +59,357 @@ keymap.set("n", "\\", ",", { noremap = true })
 keymap.set("t", "<c-o>", "<c-\\><c-n>", { noremap = true })
 
 vim.api.nvim_create_autocmd("QuickFixcmdPost", {
-	group = augroup,
-	pattern = { "grep", "vimgrep" },
-	callback = function()
-		vim.cmd([[cwindow]])
-	end,
+  group = augroup,
+  pattern = { "grep", "vimgrep" },
+  callback = function()
+    vim.cmd([[cwindow]])
+  end,
 })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
 
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{
-		"rebelot/kanagawa.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			vim.cmd([[colorscheme kanagawa]])
-		end,
-	},
-	{
-		"lewis6991/gitsigns.nvim",
-		opts = {},
-	},
-	{
-		"windwp/nvim-ts-autotag",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter",
-		},
-		ft = { "html", "javascriptreact", "typescriptreact" },
-		opts = {},
-	},
-	{
-		"nvim-treesitter/nvim-treesitter",
-		dependencies = {
-			"RRethy/nvim-treesitter-endwise",
-		},
-		build = ":TSUpdate",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				highlight = {
-					enable = true,
-					disable = { "embedded_template" },
-				},
-				endwise = {
-					enable = true,
-				},
-			})
-		end,
-	},
-	{
-		"echasnovski/mini.nvim",
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
-		version = false,
-		config = function()
-			require("mini.surround").setup()
-			require("mini.trailspace").setup()
-			require("mini.ai").setup()
-			require("mini.hipatterns").setup()
-			require("mini.indentscope").setup()
-			require("mini.extra").setup()
-			require("mini.align").setup()
-		end,
-	},
-	{ "tpope/vim-fugitive" },
-	{
-		"sindrets/diffview.nvim",
-		cmd = "DiffviewOpen",
-		keys = {
-			{ "<leader>do", "<cmd>DiffviewOpen<cr>" },
-		},
-		dependencies = {
-			"tpope/vim-fugitive",
-		},
-		opts = {
-			view = {
-				merge_tool = {
-					layout = "diff3_mixed",
-				},
-			},
-			keymaps = {
-				file_panel = {
-					{
-						"n",
-						"cc",
-						"<Cmd>Git commit <bar> wincmd J<CR>",
-						{ desc = "Commit staged changes" },
-					},
-					{
-						"n",
-						"ca",
-						"<Cmd>Git commit --amend <bar> wincmd J<CR>",
-						{ desc = "Amend the last commit" },
-					},
-				},
-			},
-		},
-	},
-	{
-		"AndrewRadev/linediff.vim",
-		cmd = "Linediff",
-	},
-	{
-		"j-hui/fidget.nvim",
-		config = function()
-			require("fidget").setup({})
-			vim.notify = require("fidget.notification").notify
-		end,
-	},
-	{
-		"neovim/nvim-lspconfig",
-		dependencies = {
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
-			"j-hui/fidget.nvim",
-			"b0o/schemastore.nvim",
-			"folke/neodev.nvim",
-		},
-		config = function()
-			require("neodev").setup()
-			require("mason").setup()
-			require("mason-lspconfig").setup()
-			require("mason-lspconfig").setup_handlers({
-				-- The first entry (without a key) will be the default handler
-				-- and will be called for each installed server that doesn't have
-				-- a dedicated handler.
-				function(server_name) -- default handler (optional)
-					require("lspconfig")[server_name].setup({})
-				end,
-				["jsonls"] = function()
-					require("lspconfig").jsonls.setup({
-						settings = {
-							json = {
-								schemas = require("schemastore").json.schemas(),
-								validate = { enable = true },
-							},
-						},
-					})
-				end,
-				["yamlls"] = function()
-					require("lspconfig").yamlls.setup({
-						settings = {
-							yaml = {
-								schemaStore = {
-									-- You must disable built-in schemaStore support if you want to use
-									-- this plugin and its advanced options like `ignore`.
-									enable = false,
-									-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-									url = "",
-								},
-								schemas = require("schemastore").yaml.schemas(),
-							},
-						},
-					})
-				end,
-				["tsserver"] = function() end,
-			})
-
-			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-			vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
-
-			vim.api.nvim_create_autocmd("LspAttach", {
-				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					if client.supports_method("textDocument/completion") then
-						-- Enable auto-completion
-						vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
-					end
-					-- Enable completion triggered by <c-x><c-o>
-					-- vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-
-					-- Buffer local mappings.
-					-- See `:help vim.lsp.*` for documentation on any of the below functions
-					local opts = { buffer = args.buf }
-					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-					vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-					vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
-					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-					vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-					vim.keymap.set("n", "<leader>f", function()
-						vim.lsp.buf.format({ async = true })
-					end, opts)
-					keymap.set("i", "<c-x><c-o>", function()
-						vim.lsp.completion.trigger()
-					end, opts)
-				end,
-			})
-		end,
-	},
-	{
-		"pmizio/typescript-tools.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-		opts = {},
-	},
-	{
-		"rbong/vim-flog",
-		cmd = { "Flog", "Flogsplit", "Floggit" },
-		dependencies = { "tpope/vim-fugitive" },
-	},
-	{
-		"stevearc/dressing.nvim",
-		opts = {},
-	},
-	{
-		"stevearc/oil.nvim",
-		keys = { { "-", "<cmd>Oil<cr>" } },
-		opts = {},
-	},
-	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-		},
-		init = function()
-			vim.keymap.set("n", "<C-p>", function()
-				require("telescope.builtin").find_files()
-			end, { noremap = true })
-			keymap.set("n", "<leader>gg", function()
-				require("telescope.builtin").live_grep()
-			end, { noremap = true })
-		end,
-		config = function()
-			-- You dont need to set any of these options. These are the default ones. Only
-			-- the loading is important
-			require("telescope").setup({
-				defaults = {
-					path_display = {
-						filename_first = {
-							reverse_directories = true,
-						},
-					},
-				},
-				extensions = {
-					fzf = {
-						fuzzy = true, -- false will only do exact matching
-						override_generic_sorter = true, -- override the generic sorter
-						override_file_sorter = true, -- override the file sorter
-						case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-						-- the default case_mode is "smart_case"
-					},
-				},
-			})
-			-- To get fzf loaded and working with telescope, you need to call
-			-- load_extension, somewhere after setup function:
-			require("telescope").load_extension("fzf")
-		end,
-	},
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {},
-	},
-	{
-		"nvimtools/none-ls.nvim",
-		config = function()
-			local null_ls = require("null-ls")
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.formatting.erb_format,
-					null_ls.builtins.formatting.prettierd,
-					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.sql_formatter,
-				},
-			})
-		end,
-	},
-	{
-		"akinsho/toggleterm.nvim",
-		opts = {
-			open_mapping = [[<c-\>]],
-			direction = "tab",
-		},
-	},
-	{
-		"nvim-neotest/neotest",
-		dependencies = {
-			"nvim-neotest/nvim-nio",
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"zidhuss/neotest-minitest",
-		},
-    keys = {
-      { "<leader>tn", function() require("neotest").run.run() end },
-      { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end },
-      { "<leader>ta", function() require("neotest").run.attach() end },
-      { "<leader>to", function() require("neotest").output.open() end },
-      { "<leader>tp", function() require("neotest").output_panel.toggle() end },
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd([[colorscheme kanagawa]])
+    end,
+  },
+  {
+    "lewis6991/gitsigns.nvim",
+    opts = {},
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
     },
-		config = function()
+    ft = { "html", "javascriptreact", "typescriptreact" },
+    opts = {},
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      "RRethy/nvim-treesitter-endwise",
+    },
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        highlight = {
+          enable = true,
+          disable = { "embedded_template" },
+        },
+        endwise = {
+          enable = true,
+        },
+      })
+    end,
+  },
+  {
+    "echasnovski/mini.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    version = false,
+    config = function()
+      require("mini.surround").setup()
+      require("mini.trailspace").setup()
+      require("mini.ai").setup()
+      require("mini.hipatterns").setup()
+      require("mini.indentscope").setup()
+      require("mini.extra").setup()
+      require("mini.align").setup()
+    end,
+  },
+  {
+    "tpope/vim-fugitive",
+    cmd = "Git",
+  },
+  {
+    "sindrets/diffview.nvim",
+    keys = {
+      { "<leader>do", "<cmd>DiffviewOpen<cr>" },
+    },
+    dependencies = {
+      "tpope/vim-fugitive",
+    },
+    opts = {
+      view = {
+        merge_tool = {
+          layout = "diff3_mixed",
+        },
+      },
+      keymaps = {
+        file_panel = {
+          {
+            "n",
+            "cc",
+            "<Cmd>Git commit <bar> wincmd J<CR>",
+            { desc = "Commit staged changes" },
+          },
+          {
+            "n",
+            "ca",
+            "<Cmd>Git commit --amend <bar> wincmd J<CR>",
+            { desc = "Amend the last commit" },
+          },
+        },
+      },
+    },
+  },
+  {
+    "AndrewRadev/linediff.vim",
+    cmd = "Linediff",
+  },
+  {
+    "j-hui/fidget.nvim",
+    event = "LspAttach",
+    config = function()
+      require("fidget").setup({})
+      vim.notify = require("fidget.notification").notify
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "b0o/schemastore.nvim",
+      "folke/neodev.nvim",
+    },
+    config = function()
+      require("neodev").setup()
+      require("mason").setup()
+      require("mason-lspconfig").setup()
+      require("mason-lspconfig").setup_handlers({
+        -- The first entry (without a key) will be the default handler
+        -- and will be called for each installed server that doesn't have
+        -- a dedicated handler.
+        function(server_name) -- default handler (optional)
+          require("lspconfig")[server_name].setup({})
+        end,
+        ["jsonls"] = function()
+          require("lspconfig").jsonls.setup({
+            settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+            },
+          })
+        end,
+        ["yamlls"] = function()
+          require("lspconfig").yamlls.setup({
+            settings = {
+              yaml = {
+                schemaStore = {
+                  -- You must disable built-in schemaStore support if you want to use
+                  -- this plugin and its advanced options like `ignore`.
+                  enable = false,
+                  -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                  url = "",
+                },
+                schemas = require("schemastore").yaml.schemas(),
+              },
+            },
+          })
+        end,
+        ["tsserver"] = function() end,
+      })
+
+      vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+      vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+      vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client.supports_method("textDocument/completion") then
+            -- Enable auto-completion
+            vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
+          end
+          -- Enable completion triggered by <c-x><c-o>
+          -- vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
+          -- Buffer local mappings.
+          -- See `:help vim.lsp.*` for documentation on any of the below functions
+          local opts = { buffer = args.buf }
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+          vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+          vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "<leader>f", function()
+            vim.lsp.buf.format({ async = true })
+          end, opts)
+          keymap.set("i", "<c-x><c-o>", function()
+            vim.lsp.completion.trigger()
+          end, opts)
+        end,
+      })
+    end,
+  },
+  {
+    "pmizio/typescript-tools.nvim",
+    ft = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
+  {
+    "rbong/vim-flog",
+    cmd = { "Flog", "Flogsplit", "Floggit" },
+    dependencies = { "tpope/vim-fugitive" },
+  },
+  {
+    "stevearc/dressing.nvim",
+    event = "LspAttach",
+    opts = {},
+  },
+  {
+    "stevearc/oil.nvim",
+    keys = { { "-", "<cmd>Oil<cr>" } },
+    opts = {},
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      {
+        "<C-p>",
+        function()
+          require("telescope.builtin").find_files()
+        end,
+      },
+      {
+        "<C-p>",
+        function()
+          require("telescope.builtin").live_grep()
+        end,
+      },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
+    config = function()
+      -- You dont need to set any of these options. These are the default ones. Only
+      -- the loading is important
+      require("telescope").setup({
+        defaults = {
+          path_display = {
+            filename_first = {
+              reverse_directories = true,
+            },
+          },
+        },
+        extensions = {
+          fzf = {
+            fuzzy = true,             -- false will only do exact matching
+            override_generic_sorter = true, -- override the generic sorter
+            override_file_sorter = true, -- override the file sorter
+            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+            -- the default case_mode is "smart_case"
+          },
+        },
+      })
+      -- To get fzf loaded and working with telescope, you need to call
+      -- load_extension, somewhere after setup function:
+      require("telescope").load_extension("fzf")
+    end,
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {},
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.erb_format,
+          null_ls.builtins.formatting.prettierd,
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.sql_formatter,
+        },
+      })
+    end,
+  },
+  {
+    "akinsho/toggleterm.nvim",
+    opts = {
+      open_mapping = [[<c-\>]],
+      direction = "tab",
+    },
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "zidhuss/neotest-minitest",
+    },
+    keys = {
+      {
+        "<leader>tn",
+        function()
+          require("neotest").run.run()
+        end,
+      },
+      {
+        "<leader>tf",
+        function()
+          require("neotest").run.run(vim.fn.expand("%"))
+        end,
+      },
+      {
+        "<leader>ta",
+        function()
+          require("neotest").run.attach()
+        end,
+      },
+      {
+        "<leader>to",
+        function()
+          require("neotest").output.open()
+        end,
+      },
+      {
+        "<leader>tp",
+        function()
+          require("neotest").output_panel.toggle()
+        end,
+      },
+    },
+    config = function()
       vim.diagnostic.config({ virtual_text = true }, api.nvim_get_namespaces().neotest)
 
-			require("neotest").setup({
-				adapters = {
-					require("neotest-minitest"),
-				},
-			})
-		end,
-	},
+      require("neotest").setup({
+        adapters = {
+          require("neotest-minitest"),
+        },
+      })
+    end,
+  },
 })
