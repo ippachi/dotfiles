@@ -300,7 +300,7 @@ require("lazy").setup({
         end,
       },
       {
-        "<C-p>",
+        "<leader>gg",
         function()
           require("telescope.builtin").live_grep()
         end,
