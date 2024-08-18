@@ -231,9 +231,11 @@ require("lazy").setup({
         ["tsserver"] = function() end,
       })
 
+      require("lspconfig").ruby_lsp.setup({})
+
       vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-      vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+      -- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+      -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -244,6 +246,15 @@ require("lazy").setup({
             -- Enable auto-completion
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
           end
+
+          if client.supports_method("textDocument/codeLens") then
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = args.buf,
+              callback = function()
+                vim.lsp.codelens.refresh({ bufnr = 0 })
+              end,
+            })
+          end
           -- Enable completion triggered by <c-x><c-o>
           -- vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
@@ -251,13 +262,14 @@ require("lazy").setup({
           -- See `:help vim.lsp.*` for documentation on any of the below functions
           local opts = { buffer = args.buf }
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          -- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
           vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
           vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
           vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-          vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+          -- vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+          vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts)
           vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
           vim.keymap.set("n", "<leader>f", function()
             vim.lsp.buf.format({ async = true })
@@ -408,6 +420,60 @@ require("lazy").setup({
       require("neotest").setup({
         adapters = {
           require("neotest-minitest"),
+        },
+      })
+    end,
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    config = function()
+      require("lspsaga").setup({})
+      vim.keymap.set({ "n", "v" }, "<leader>ca", "<Cmd>Lspsaga code_action<cr>", {})
+      vim.keymap.set("n", "gd", "<Cmd>Lspsaga peek_definition<cr>", {})
+      vim.keymap.set("n", "K", "<Cmd>Lspsaga hover_doc<cr>", {})
+
+      vim.keymap.set("n", "[d", "<Cmd>Lspsaga diagnostic_jump_prev<cr>", {})
+      vim.keymap.set("n", "]d", "<Cmd>Lspsaga diagnostic_jump_next<cr>", {})
+    end,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter", -- optional
+      "nvim-tree/nvim-web-devicons",  -- optional
+    },
+  },
+  {
+    "onsails/lspkind.nvim",
+    event = "InsertEnter",
+    config = function()
+      -- setup() is also available as an alias
+      require("lspkind").init({
+        mode = "symbol_text",
+        preset = "codicons",
+        symbol_map = {
+          Text = "󰉿",
+          Method = "󰆧",
+          Function = "󰊕",
+          Constructor = "",
+          Field = "󰜢",
+          Variable = "󰀫",
+          Class = "󰠱",
+          Interface = "",
+          Module = "",
+          Property = "󰜢",
+          Unit = "󰑭",
+          Value = "󰎠",
+          Enum = "",
+          Keyword = "󰌋",
+          Snippet = "",
+          Color = "󰏘",
+          File = "󰈙",
+          Reference = "󰈇",
+          Folder = "󰉋",
+          EnumMember = "",
+          Constant = "󰏿",
+          Struct = "󰙅",
+          Event = "",
+          Operator = "󰆕",
+          TypeParameter = "",
         },
       })
     end,
