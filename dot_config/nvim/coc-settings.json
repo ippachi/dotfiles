@@ -1,0 +1,17 @@
+{
+  "suggest.noselect": true,
+  "codeLens.enable": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.implementationsCodeLens.enabled": true,
+  "languageserver": {
+    "ruby-lsp": {
+      "command": "ruby-lsp",
+      "initializationOptions": {
+        "experimentalFeaturesEnabled": false,
+        "formatter": "auto"
+      },
+      "filetypes": ["ruby"]
+    }
+  },
+  "snippets.ultisnips.pythonPrompt": false
+}
