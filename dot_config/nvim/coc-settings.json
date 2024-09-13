@@ -12,6 +12,5 @@
       },
       "filetypes": ["ruby"]
     }
-  },
-  "snippets.ultisnips.pythonPrompt": false
+  }
 }

@@ -260,6 +260,12 @@ require("lazy").setup({
         end,
       },
       {
+        "<leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+      },
+      {
         "<leader>tf",
         function()
           require("neotest").run.run(vim.fn.expand("%"))
