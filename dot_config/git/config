@@ -17,12 +17,10 @@
 	enabled = true
 [merge]
   conflictStyle = diff3
-  tool = nvim
-[mergetool "nvim"]
-	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
+  tool = nvimdiff
+[mergetool "nvimdiff"]
+  cmd = nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l' -c 'wincmd J'
 [gpg]
   format = ssh
-[gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [commit]
   gpgsign = true

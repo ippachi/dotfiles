@@ -2,7 +2,6 @@ local keymap = vim.keymap
 local api = vim.api
 local augroup = api.nvim_create_augroup("my-vimrc", { clear = true })
 
-vim.opt.title = false
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 
@@ -27,6 +26,7 @@ vim.opt.number = true
 vim.opt.signcolumn = "number"
 
 vim.opt.cmdheight = 2
+vim.opt.title = false
 vim.opt.undofile = true
 vim.opt.mouse = ""
 vim.opt.formatoptions:append({
@@ -48,6 +48,7 @@ vim.opt.wildmode = { "longest:full" }
 
 vim.opt.grepprg = "rg --pcre2 --vimgrep"
 vim.opt.grepformat:prepend("%f:%l:%c:%m")
+vim.opt.cursorline = true
 
 vim.cmd([[packadd Cfilter]])
 
@@ -137,13 +138,14 @@ require("lazy").setup({
     keys = {
       { "<leader>do", "<cmd>DiffviewOpen<cr>" },
     },
+    cmd = { "DiffviewOpen" },
     dependencies = {
       "tpope/vim-fugitive",
     },
     opts = {
       view = {
         merge_tool = {
-          layout = "diff3_mixed",
+          layout = "diff4_mixed",
         },
       },
       keymaps = {
@@ -250,12 +252,6 @@ require("lazy").setup({
     opts = {
       open_mapping = [[<c-\>]],
       direction = "tab",
-      close_on_exit = false,
-      on_close = vim.schedule_wrap(function (t)
-        if (vim.api.nvim_buf_is_valid(t.bufnr)) then
-          t:shutdown()
-        end
-      end)
     },
   },
   {
@@ -264,6 +260,7 @@ require("lazy").setup({
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
+      'nvim-neotest/neotest-jest',
       { "ippachi/neotest-minitest", branch = "filter-some-directories" },
     },
     keys = {

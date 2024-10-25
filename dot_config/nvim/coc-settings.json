@@ -11,13 +11,6 @@
         "formatter": "auto"
       },
       "filetypes": ["ruby"]
-    },
-    "terraform": {
-      "command": "terraform-ls",
-      "args": ["serve"],
-      "filetypes": ["terraform", "tf"],
-      "initializationOptions": {},
-      "settings": {}
     }
   }
 }
