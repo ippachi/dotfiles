@@ -197,7 +197,10 @@ require("lazy").setup({
       {
         "<C-p>",
         function()
-          require("telescope.builtin").find_files()
+          require("telescope").extensions.frecency.frecency {
+            workspace = "CWD",
+            show_scores = true,
+          }
         end,
       },
       {
@@ -209,7 +212,12 @@ require("lazy").setup({
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      {
+        "nvim-telescope/telescope-frecency.nvim",
+        dependencies = {
+          "nvim-tree/nvim-web-devicons"
+        }
+      }
     },
     config = function()
       -- You dont need to set any of these options. These are the default ones. Only
@@ -228,18 +236,13 @@ require("lazy").setup({
           },
         },
         extensions = {
-          fzf = {
-            fuzzy = true,                   -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true,    -- override the file sorter
-            case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
-            -- the default case_mode is "smart_case"
-          },
+          frecency = {
+            show_scores = true
+          }
         },
       })
-      -- To get fzf loaded and working with telescope, you need to call
-      -- load_extension, somewhere after setup function:
-      require("telescope").load_extension("fzf")
+
+      require("telescope").load_extension "frecency"
     end,
   },
   {

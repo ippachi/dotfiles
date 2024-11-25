@@ -12,5 +12,7 @@
       },
       "filetypes": ["ruby"]
     }
-  }
+  },
+  "snippets.ultisnips.pythonPrompt": false,
+  "eslint.experimental.useFlatConfig": true
 }
