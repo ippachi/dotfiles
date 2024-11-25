@@ -264,7 +264,7 @@ require("lazy").setup({
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       'nvim-neotest/neotest-jest',
-      { "ippachi/neotest-minitest", branch = "filter-some-directories" },
+      "zidhuss/neotest-minitest",
     },
     keys = {
       {
