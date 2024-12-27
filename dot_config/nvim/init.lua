@@ -135,10 +135,11 @@ require("lazy").setup({
   },
   {
     "sindrets/diffview.nvim",
+    lazy = false,
     keys = {
       { "<leader>do", "<cmd>DiffviewOpen<cr>" },
+      { "<leader>df", "<cmd>DiffviewFileHistory<cr>" },
     },
-    cmd = { "DiffviewOpen" },
     dependencies = {
       "tpope/vim-fugitive",
     },
@@ -197,10 +198,7 @@ require("lazy").setup({
       {
         "<C-p>",
         function()
-          require("telescope").extensions.frecency.frecency {
-            workspace = "CWD",
-            show_scores = true,
-          }
+          require("telescope.builtin").find_files()
         end,
       },
       {
@@ -209,15 +207,15 @@ require("lazy").setup({
           require("telescope.builtin").live_grep()
         end,
       },
+      {
+        ":h ",
+        function()
+          require("telescope.builtin").help_tags()
+        end,
+      },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      {
-        "nvim-telescope/telescope-frecency.nvim",
-        dependencies = {
-          "nvim-tree/nvim-web-devicons"
-        }
-      }
     },
     config = function()
       -- You dont need to set any of these options. These are the default ones. Only
@@ -235,14 +233,7 @@ require("lazy").setup({
             additional_args = { "--hidden", "--glob", "!**/.git/*" }
           },
         },
-        extensions = {
-          frecency = {
-            show_scores = true
-          }
-        },
       })
-
-      require("telescope").load_extension "frecency"
     end,
   },
   {
@@ -258,61 +249,16 @@ require("lazy").setup({
     },
   },
   {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-neotest/nvim-nio",
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      'nvim-neotest/neotest-jest',
-      "zidhuss/neotest-minitest",
-    },
+    "vim-test/vim-test",
     keys = {
-      {
-        "<leader>tn",
-        function()
-          require("neotest").run.run()
-        end,
-      },
-      {
-        "<leader>tl",
-        function()
-          require("neotest").run.run_last()
-        end,
-      },
-      {
-        "<leader>tf",
-        function()
-          require("neotest").run.run(vim.fn.expand("%"))
-        end,
-      },
-      {
-        "<leader>ta",
-        function()
-          require("neotest").run.attach()
-        end,
-      },
-      {
-        "<leader>to",
-        function()
-          require("neotest").output.open()
-        end,
-      },
-      {
-        "<leader>tp",
-        function()
-          require("neotest").output_panel.toggle()
-        end,
-      },
+      { "<leader>tn", "<Cmd>TestNearest<cr>" },
+      { "<leader>tf", "<Cmd>TestFile<cr>" },
+      { "<leader>tl", "<Cmd>TestLast<cr>" }
     },
-    config = function()
-      vim.diagnostic.config({ virtual_text = true }, api.nvim_get_namespaces().neotest)
-
-      require("neotest").setup({
-        adapters = {
-          require("neotest-minitest"),
-        },
-      })
-    end,
+    init = function()
+      vim.g["test#strategy"] = "neovim_sticky"
+      vim.g["test#neovim_sticky#reopen_window"] = 1
+    end
   },
   {
     "neoclide/coc.nvim",
