@@ -233,6 +233,7 @@ require("lazy").setup({
     "vim-test/vim-test",
     lazy = false,
     keys = {
+      { "<leader>ts", "<Cmd>TestSuit<cr>" },
       { "<leader>tn", "<Cmd>TestNearest<cr>" },
       { "<leader>tf", "<Cmd>TestFile<cr>" },
       { "<leader>tl", "<Cmd>TestLast<cr>" },
