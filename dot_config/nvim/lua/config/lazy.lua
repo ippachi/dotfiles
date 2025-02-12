@@ -262,11 +262,15 @@ require("lazy").setup({
     },
     {
       "nvimtools/none-ls.nvim",
+      dependencies = {
+        "nvimtools/none-ls-extras.nvim",
+      },
       config = function()
         local null_ls = require("null-ls")
         null_ls.setup({
           sources = {
             null_ls.builtins.formatting.prettierd,
+            require("none-ls.diagnostics.eslint_d")
           },
         })
       end
@@ -309,7 +313,26 @@ require("lazy").setup({
           }, {
             { name = 'path' }
           }, {
-            { name = 'buffer' },
+            {
+              name = 'buffer',
+              option = {
+                get_bufnrs = function()
+                  local bufnrs = vim.api.nvim_list_bufs()
+                  local result = {}
+
+                  for _, buf in ipairs(bufnrs) do
+                    local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+                    if byte_size > 1024 * 1024 then -- 1 Megabyte max
+                      goto continue
+                    end
+                    result[#result + 1] = buf
+                    ::continue::
+                  end
+
+                  return result
+                end,
+              }
+            },
           })
         })
 
