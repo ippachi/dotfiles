@@ -66,4 +66,3 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
 })
 
 require("config.lazy")
-

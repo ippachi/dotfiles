@@ -169,7 +169,9 @@ require("lazy").setup({
               default_workspace = "CWD",
               workspaces = {
                 NVIM = "~/.config/nvim"
-              }
+              },
+              unregister_hidden = true,
+              show_scores = true
             }
           },
         })
@@ -270,7 +272,8 @@ require("lazy").setup({
         null_ls.setup({
           sources = {
             null_ls.builtins.formatting.prettierd,
-            require("none-ls.diagnostics.eslint_d")
+            require("none-ls.diagnostics.eslint_d"),
+            require("none-ls.code_actions.eslint_d")
           },
         })
       end
@@ -359,6 +362,10 @@ require("lazy").setup({
     {
       "github/copilot.vim",
       event = { "InsertEnter" }
+    },
+    {
+      'stevearc/dressing.nvim',
+      opts = {},
     }
   },
   -- Configure any other settings here. See the documentation for more details.
