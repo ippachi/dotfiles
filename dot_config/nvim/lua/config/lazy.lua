@@ -200,7 +200,9 @@ require("lazy").setup({
     {
       "neovim/nvim-lspconfig",
       dependencies = {
-        "hrsh7th/cmp-nvim-lsp"
+        "hrsh7th/cmp-nvim-lsp",
+         "williamboman/mason.nvim",
+         "williamboman/mason-lspconfig.nvim",
       },
       config = function()
         vim.api.nvim_create_autocmd('LspAttach', {
@@ -212,6 +214,8 @@ require("lazy").setup({
           end,
         })
 
+        require("mason").setup()
+        require("mason-lspconfig").setup()
         local lspconfig = require("lspconfig")
         local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -272,6 +276,7 @@ require("lazy").setup({
         null_ls.setup({
           sources = {
             null_ls.builtins.formatting.prettierd,
+            null_ls.builtins.diagnostics.hadolint,
             require("none-ls.diagnostics.eslint_d"),
             require("none-ls.code_actions.eslint_d")
           },
@@ -366,6 +371,10 @@ require("lazy").setup({
     {
       'stevearc/dressing.nvim',
       opts = {},
+    },
+    {
+      "j-hui/fidget.nvim",
+      opts = {}
     }
   },
   -- Configure any other settings here. See the documentation for more details.
