@@ -171,7 +171,8 @@ require("lazy").setup({
                 NVIM = "~/.config/nvim"
               },
               unregister_hidden = true,
-              show_scores = true
+              show_scores = true,
+              db_version = "v2"
             }
           },
         })
@@ -201,8 +202,8 @@ require("lazy").setup({
       "neovim/nvim-lspconfig",
       dependencies = {
         "hrsh7th/cmp-nvim-lsp",
-         "williamboman/mason.nvim",
-         "williamboman/mason-lspconfig.nvim",
+        "williamboman/mason.nvim",
+        "williamboman/mason-lspconfig.nvim",
       },
       config = function()
         vim.api.nvim_create_autocmd('LspAttach', {
@@ -369,12 +370,29 @@ require("lazy").setup({
       event = { "InsertEnter" }
     },
     {
-      'stevearc/dressing.nvim',
-      opts = {},
+      'folke/snacks.nvim',
+      priority = 1000,
+      lazy = false,
+      opts = {
+        input = { enabled = true }
+      },
     },
     {
       "j-hui/fidget.nvim",
       opts = {}
+    },
+    {
+      'nvimdev/lspsaga.nvim',
+      dependencies = {
+        'nvim-treesitter/nvim-treesitter', -- optional
+        'nvim-tree/nvim-web-devicons',     -- optional
+      },
+      keys = {
+        { "gra", "<Cmd>Lspsaga code_action<cr>" }
+      },
+      config = function()
+        require('lspsaga').setup({})
+      end,
     }
   },
   -- Configure any other settings here. See the documentation for more details.
