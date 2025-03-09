@@ -5,3 +5,4 @@ wt
 .envrc
 /.nvim.lua
 /openv
+*.avanterules
