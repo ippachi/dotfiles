@@ -413,6 +413,9 @@ require("lazy").setup({
             close = "q"
           }
         },
+        behavior = {
+          enable_claude_text_editor_tool_mode = true,
+        }
       },
       -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
       build = "make",
