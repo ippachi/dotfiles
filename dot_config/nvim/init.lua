@@ -36,7 +36,7 @@ vim.opt.formatoptions:append({
 })
 vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
-vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
+vim.opt.completeopt = { "menu", "menuone", "noselect", "popup", "fuzzy" }
 vim.opt.exrc = true
 
 vim.opt.linebreak = true
@@ -62,6 +62,64 @@ vim.api.nvim_create_autocmd("QuickFixcmdPost", {
   pattern = { "grep", "vimgrep" },
   callback = function()
     vim.cmd([[cwindow]])
+  end,
+})
+
+vim.lsp.config('*', {
+  root_markers = { '.git' },
+})
+
+vim.lsp.config("ruby-lsp", {
+  root_markers = { 'Gemfile' },
+  cmd = { "ruby-lsp" },
+  filetypes = { "ruby" }
+})
+
+vim.lsp.config("ts-ls", {
+  root_markers = { 'package.json' },
+  cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+})
+
+vim.lsp.config("lua-ls", {
+  cmd = { "lua-language-server" },
+  filetypes = { "lua" },
+  settings = {
+    Lua = {
+      runtime = {
+        version = "LuaJIT"
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME
+        }
+      }
+    }
+  },
+  on_init = function (client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+        return
+      end
+    end
+  end
+})
+
+vim.lsp.enable({ "ruby-lsp", "ts-ls", "lua-ls" })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end)
+    vim.keymap.set("n", "<leader>e", function() vim.diagnostic.open_float() end)
+    vim.api.nvim_buf_create_user_command(args.buf, "Format",
+      function() vim.lsp.buf.format({ async = true }) end, {})
+
+    local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+    if client:supports_method("textDocument/completion") then
+      vim.bo.completefunc = "v:lua.MiniCompletion.completefunc_lsp"
+    end
   end,
 })
 
