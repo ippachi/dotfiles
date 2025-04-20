@@ -72,7 +72,12 @@ vim.lsp.config('*', {
 vim.lsp.config("ruby-lsp", {
   root_markers = { 'Gemfile' },
   cmd = { "ruby-lsp" },
-  filetypes = { "ruby" }
+  filetypes = { "ruby" },
+  commands = {
+    ["rubyLsp.runTestInTerminal"] = function (a, b)
+      vim.print(a, b)
+    end
+  }
 })
 
 vim.lsp.config("ts-ls", {
@@ -97,7 +102,7 @@ vim.lsp.config("lua-ls", {
       }
     }
   },
-  on_init = function (client)
+  on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
       if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
@@ -120,6 +125,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     if client:supports_method("textDocument/completion") then
       vim.bo.completefunc = "v:lua.MiniCompletion.completefunc_lsp"
     end
+
+    vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+      buffer = args.buf,
+      callback = function()
+        vim.lsp.codelens.refresh({ bufnr = args.buf })
+      end
+    })
   end,
 })
 
