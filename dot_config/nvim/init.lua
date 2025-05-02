@@ -135,4 +135,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+vim.diagnostic.config({
+  virtual_text = { current_line = true }
+})
+
 require("config.lazy")
