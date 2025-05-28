@@ -26,7 +26,7 @@ vim.opt.number = true
 vim.opt.signcolumn = "number"
 
 vim.opt.cmdheight = 2
-vim.opt.title = false
+vim.opt.title = true
 vim.opt.undofile = true
 vim.opt.mouse = ""
 vim.opt.formatoptions:append({
