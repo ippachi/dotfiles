@@ -6,3 +6,5 @@ wt
 /.nvim.lua
 /openv
 *.avanterules
+
+**/.claude/settings.local.json

@@ -287,14 +287,14 @@ require("lazy").setup({
         -- for example
         provider = "copilot",
         copilot = {
-          -- model = "gpt-4.1"
+          model = "gpt-4.1"
           -- model = "claude-3.5-sonnet"
           -- model = "claude-3.7-sonnet"
-          model = "claude-sonnet-4"
+          -- model = "claude-sonnet-4"
         },
         file_selector = {
           provider = "telescope"
-        }
+        },
       },
       -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
       build = "make",
@@ -306,9 +306,9 @@ require("lazy").setup({
         "MunifTanjim/nui.nvim",
         --- The below dependencies are optional,
         "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-        "hrsh7th/nvim-cmp",          -- autocompletion for avante commands and mentions
-        "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-        "zbirenbaum/copilot.lua",    -- for providers='copilot'
+        "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
+        "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
+        "zbirenbaum/copilot.lua",        -- for providers='copilot'
         {
           -- support for image pasting
           "HakonHarnes/img-clip.nvim",
