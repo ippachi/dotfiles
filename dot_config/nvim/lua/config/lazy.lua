@@ -63,23 +63,16 @@ require("lazy").setup({
       },
     },
     {
-      "nvim-treesitter/nvim-treesitter-context",
-      opts = {},
-      init = function()
-        vim.keymap.set("n", "<leader>tc", "<Cmd>TSContextToggle<CR>")
-      end
-    },
-    {
       "echasnovski/mini.nvim",
       version = false,
       config = function()
         require("mini.ai").setup()
         require("mini.align").setup()
-        -- require("mini.pairs").setup()
         require("mini.surround").setup()
         require("mini.hipatterns").setup()
         require("mini.indentscope").setup()
         require("mini.trailspace").setup()
+        require("mini.statusline").setup()
         require("mini.completion").setup({
           lsp_completion = { auto_setup = false },
         })
@@ -180,7 +173,7 @@ require("lazy").setup({
           defaults = {
             path_display = {
               filename_first = {
-                reverse_directories = true,
+                reverse_directories = false,
               },
             },
           },
@@ -204,11 +197,11 @@ require("lazy").setup({
         telescope.load_extension("frecency")
       end,
     },
-    {
-      "nvim-lualine/lualine.nvim",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {},
-    },
+    -- {
+    --   "nvim-lualine/lualine.nvim",
+    --   dependencies = { "nvim-tree/nvim-web-devicons" },
+    --   opts = {},
+    -- },
     {
       "vim-test/vim-test",
       keys = {
@@ -216,11 +209,10 @@ require("lazy").setup({
         { "<leader>tn", "<Cmd>TestNearest<cr>" },
         { "<leader>tf", "<Cmd>TestFile<cr>" },
         { "<leader>tl", "<Cmd>TestLast<cr>" },
-        { "<leader>ts", "<Cmd>TestSuit<cr>" },
       },
       init = function()
-        vim.g["test#strategy"] = "neovim_sticky"
-        vim.g["test#neovim_sticky#reopen_window"] = 1
+        vim.g["test#strategy"] = "dispatch"
+        -- vim.g["test#neovim_sticky#reopen_window"] = 1
       end
     },
     {
@@ -286,11 +278,13 @@ require("lazy").setup({
         -- add any opts here
         -- for example
         provider = "copilot",
-        copilot = {
-          model = "gpt-4.1"
-          -- model = "claude-3.5-sonnet"
-          -- model = "claude-3.7-sonnet"
-          -- model = "claude-sonnet-4"
+        providers = {
+          copilot = {
+            -- model = "gpt-4.1"
+            -- model = "claude-3.5-sonnet"
+            -- model = "claude-3.7-sonnet"
+            model = "claude-sonnet-4"
+          }
         },
         file_selector = {
           provider = "telescope"
@@ -335,6 +329,12 @@ require("lazy").setup({
           ft = { "markdown", "Avante" },
         },
       },
+    },
+    {
+      "tpope/vim-rails"
+    },
+    {
+      "tpope/vim-dispatch"
     }
   },
   -- Configure any other settings here. See the documentation for more details.

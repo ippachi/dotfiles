@@ -69,15 +69,10 @@ vim.lsp.config('*', {
   root_markers = { '.git' },
 })
 
-vim.lsp.config("ruby-lsp", {
+vim.lsp.config("rubocop-lsp", {
   root_markers = { 'Gemfile' },
-  cmd = { "ruby-lsp" },
+  cmd = { "rubocop", "--lsp" },
   filetypes = { "ruby" },
-  commands = {
-    ["rubyLsp.runTestInTerminal"] = function (a, b)
-      vim.print(a, b)
-    end
-  }
 })
 
 vim.lsp.config("ts-ls", {
@@ -112,7 +107,7 @@ vim.lsp.config("lua-ls", {
   end
 })
 
-vim.lsp.enable({ "ruby-lsp", "ts-ls", "lua-ls" })
+vim.lsp.enable({ "rubocop-lsp", "ts-ls", "lua-ls" })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
