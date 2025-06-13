@@ -14,7 +14,7 @@
   twohead = ort
   ff = only
 [rerere]
-	enabled = true
+  enabled = true
 [merge]
   conflictStyle = diff3
   tool = nvimdiff
