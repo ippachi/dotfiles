@@ -228,12 +228,20 @@ require("lazy").setup({
       config = function()
         local null_ls = require("null-ls")
         null_ls.setup({
+          debounce = 2000,
           sources = {
             null_ls.builtins.formatting.prettierd,
             null_ls.builtins.diagnostics.hadolint,
             require("none-ls.diagnostics.eslint_d"),
             require("none-ls.code_actions.eslint_d")
           },
+          should_attach = function(bufnr)
+            local name = vim.api.nvim_buf_get_name(bufnr)
+            if name:match("^diffview://") then
+              return false
+            end
+            return true
+          end,
         })
       end
     },
