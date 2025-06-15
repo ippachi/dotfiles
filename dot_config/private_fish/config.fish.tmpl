@@ -1,0 +1,31 @@
+if status is-interactive
+  set -x EDITOR nvim
+  set -x OBJC_DISABLE_INITIALIZE_FORK_SAFETY YES
+
+  # Commands to run in interactive sessions can go here
+  /opt/homebrew/bin/brew shellenv | source
+
+  # fish-done
+  set -U __done_notification_command "echo -e \"\033]777;notify;\$title;\$message\007\""
+
+  {{ if lookPath "starship" -}}
+  # starship
+  starship init fish | source
+  {{- end }}
+
+  {{ if lookPath "asdf" -}}
+  # ASDF configuration code
+  if test -z $ASDF_DATA_DIR
+    set _asdf_shims "$HOME/.asdf/shims"
+  else
+    set _asdf_shims "$ASDF_DATA_DIR/shims"
+  end
+
+  # Do not use fish_add_path (added in Fish 3.2) because it
+  # potentially changes the order of items in PATH
+  if not contains $_asdf_shims $PATH
+    set -gx --prepend PATH $_asdf_shims
+  end
+  set --erase _asdf_shims
+  {{- end }}
+end

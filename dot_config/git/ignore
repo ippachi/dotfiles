@@ -8,3 +8,4 @@ wt
 *.avanterules
 
 **/.claude/settings.local.json
+.solargraph.yml

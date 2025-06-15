@@ -69,9 +69,9 @@ vim.lsp.config('*', {
   root_markers = { '.git' },
 })
 
-vim.lsp.config("rubocop-lsp", {
+vim.lsp.config("solargraph", {
   root_markers = { 'Gemfile' },
-  cmd = { "rubocop", "--lsp" },
+  cmd = { "solargraph", "stdio" },
   filetypes = { "ruby" },
 })
 
@@ -107,7 +107,7 @@ vim.lsp.config("lua-ls", {
   end
 })
 
-vim.lsp.enable({ "rubocop-lsp", "ts-ls", "lua-ls" })
+vim.lsp.enable({ "solargraph", "ts-ls", "lua-ls" })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
