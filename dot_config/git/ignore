@@ -9,3 +9,5 @@ wt
 
 **/.claude/settings.local.json
 .solargraph.yml
+
+**/CLAUDE.local.md
