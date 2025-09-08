@@ -305,14 +305,13 @@ require("lazy").setup({
         })
       end
     },
-    -- {
-    --   "github/copilot.vim",
-    --   event = { "InsertEnter" },
-    --   init = function()
-    --     vim.g.copilot_settings = { selectedCompletionModel = 'gpt-4o-copilot' }
-    --     vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
-    --   end
-    -- },
+    {
+      "github/copilot.vim",
+      event = { "InsertEnter" },
+      init = function()
+        vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+      end
+    },
     {
       'folke/snacks.nvim',
       priority = 1000,
