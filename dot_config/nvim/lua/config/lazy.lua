@@ -109,7 +109,19 @@ require("lazy").setup({
         -- C-k: Toggle signature help (if signature.enabled = true)
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        keymap = { preset = 'default' },
+        keymap = {
+          preset = 'default',
+          ["<Tab>"] = {
+            "snippet_forward",
+            function() -- sidekick next edit suggestion
+              return require("sidekick").nes_jump_or_apply()
+            end,
+            function() -- if you are using Neovim's native inline completions
+              -- return vim.lsp.inline_completion.get()
+            end,
+            "fallback",
+          },
+        },
 
         appearance = {
           -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -307,7 +319,6 @@ require("lazy").setup({
     },
     {
       "github/copilot.vim",
-      event = { "InsertEnter" },
       init = function()
         vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
       end
@@ -361,6 +372,63 @@ require("lazy").setup({
         -- Diff management
         { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
         { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
+      },
+    },
+    {
+      "folke/sidekick.nvim",
+      opts = {
+        -- add any options here
+        cli = {
+          mux = {
+            backend = "tmux",
+            enabled = true,
+          },
+        },
+      },
+      keys = {
+        {
+          "<tab>",
+          function()
+            -- if there is a next edit, jump to it, otherwise apply it if any
+            if not require("sidekick").nes_jump_or_apply() then
+              return "<Tab>" -- fallback to normal tab
+            end
+          end,
+          expr = true,
+          desc = "Goto/Apply Next Edit Suggestion",
+        },
+        -- {
+        --   "<c-.>",
+        --   function()
+        --     require("sidekick.cli").focus()
+        --   end,
+        --   mode = { "n", "x", "i", "t" },
+        --   desc = "Sidekick Switch Focus",
+        -- },
+        -- {
+        --   "<leader>aa",
+        --   function()
+        --     require("sidekick.cli").toggle({ focus = true })
+        --   end,
+        --   desc = "Sidekick Toggle CLI",
+        --   mode = { "n", "v" },
+        -- },
+        -- {
+        --   "<leader>ac",
+        --   function()
+        --     require("sidekick.cli").toggle({ name = "claude", focus = true })
+        --   end,
+        --   desc = "Sidekick Claude Toggle",
+        --   mode = { "n", "v" },
+        -- },
+        -- {
+        --   "<leader>ap",
+        --   function()
+        --     require("sidekick.cli").select_prompt()
+        --   end,
+        --   desc = "Sidekick Ask Prompt",
+        --   mode = { "n", "v" },
+        -- },
       },
     }
   },
