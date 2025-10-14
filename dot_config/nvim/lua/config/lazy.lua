@@ -111,16 +111,6 @@ require("lazy").setup({
         -- See :h blink-cmp-config-keymap for defining your own keymap
         keymap = {
           preset = 'default',
-          ["<Tab>"] = {
-            "snippet_forward",
-            function() -- sidekick next edit suggestion
-              return require("sidekick").nes_jump_or_apply()
-            end,
-            function() -- if you are using Neovim's native inline completions
-              -- return vim.lsp.inline_completion.get()
-            end,
-            "fallback",
-          },
         },
 
         appearance = {
@@ -318,12 +308,6 @@ require("lazy").setup({
       end
     },
     {
-      "github/copilot.vim",
-      init = function()
-        vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
-      end
-    },
-    {
       'folke/snacks.nvim',
       priority = 1000,
       lazy = false,
@@ -374,63 +358,6 @@ require("lazy").setup({
         { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
       },
     },
-    {
-      "folke/sidekick.nvim",
-      opts = {
-        -- add any options here
-        cli = {
-          mux = {
-            backend = "tmux",
-            enabled = true,
-          },
-        },
-      },
-      keys = {
-        {
-          "<tab>",
-          function()
-            -- if there is a next edit, jump to it, otherwise apply it if any
-            if not require("sidekick").nes_jump_or_apply() then
-              return "<Tab>" -- fallback to normal tab
-            end
-          end,
-          expr = true,
-          desc = "Goto/Apply Next Edit Suggestion",
-        },
-        -- {
-        --   "<c-.>",
-        --   function()
-        --     require("sidekick.cli").focus()
-        --   end,
-        --   mode = { "n", "x", "i", "t" },
-        --   desc = "Sidekick Switch Focus",
-        -- },
-        -- {
-        --   "<leader>aa",
-        --   function()
-        --     require("sidekick.cli").toggle({ focus = true })
-        --   end,
-        --   desc = "Sidekick Toggle CLI",
-        --   mode = { "n", "v" },
-        -- },
-        -- {
-        --   "<leader>ac",
-        --   function()
-        --     require("sidekick.cli").toggle({ name = "claude", focus = true })
-        --   end,
-        --   desc = "Sidekick Claude Toggle",
-        --   mode = { "n", "v" },
-        -- },
-        -- {
-        --   "<leader>ap",
-        --   function()
-        --     require("sidekick.cli").select_prompt()
-        --   end,
-        --   desc = "Sidekick Ask Prompt",
-        --   mode = { "n", "v" },
-        -- },
-      },
-    }
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
