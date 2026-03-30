@@ -34,7 +34,7 @@ vim.opt.formatoptions:append({
   m = true,
   M = true,
 })
-vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
+-- vim.opt.diffopt = { "internal", "filler", "algorithm:histogram", "indent-heuristic", "linematch:60" }
 vim.opt.updatetime = 300
 vim.opt.completeopt = { "menu", "menuone", "noselect", "popup", "fuzzy" }
 vim.opt.exrc = true
@@ -114,7 +114,13 @@ vim.lsp.config("lua-ls", {
   end
 })
 
-vim.lsp.enable({ "ruby-lsp", "ts-ls", "lua-ls" })
+vim.lsp.config("tailwindcss-language-server", {
+  root_markers = { 'package.json' },
+  cmd = { "tailwindcss-language-server", "--stdio" },
+  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "html" },
+})
+
+vim.lsp.enable({ "ruby-lsp", "ts-ls", "lua-ls", "tailwindcss-language-server" })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -124,16 +130,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
       function() vim.lsp.buf.format({ async = true }) end, {})
 
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-    if client:supports_method("textDocument/completion") then
-      vim.bo.completefunc = "v:lua.MiniCompletion.completefunc_lsp"
-    end
+    if client:supports_method('textDocument/completion') then
+      -- Optional: trigger autocompletion on EVERY keypress. May be slow!
+      -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+      -- client.server_capabilities.completionProvider.triggerCharacters = chars
 
-    vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-      buffer = args.buf,
-      callback = function()
-        vim.lsp.codelens.refresh({ bufnr = args.buf })
-      end
-    })
+      vim.lsp.completion.enable(true, client.id, args.buf, {autotrigger = true})
+    end
   end,
 })
 

@@ -1,4 +1,5 @@
 typescript
 typescript-language-server
+@tailwindcss/language-server
 eslint_d
 @fsouza/prettierd
