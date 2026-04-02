@@ -8,6 +8,7 @@
   algorithm = histogram
   colorMoved = default
   colorMovedWS = allow-indentation-change
+  tool = nvim_difftool
 [branch]
   sort = -committerdate
 [pull]
@@ -17,9 +18,8 @@
   enabled = true
 [merge]
   conflictStyle = diff3
-  tool = nvimdiff
-[mergetool "nvimdiff"]
-  cmd = nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l' -c 'wincmd J'
+[mergetool "nvim_difftool"]
+  cmd = nvim -c \"packadd nvim.difftool\" -d \"$LOCAL\" \"$REMOTE\"
 [gpg]
   format = ssh
 [commit]
