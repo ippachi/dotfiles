@@ -8,7 +8,6 @@ local gh = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
   gh("rebelot/kanagawa.nvim"),
   gh("lewis6991/gitsigns.nvim"),
-  gh("nvim-treesitter/nvim-treesitter"),
   gh("tpope/vim-fugitive"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("dlyongemallo/diffview.nvim"),
@@ -24,6 +23,11 @@ vim.pack.add({
   gh("tpope/vim-dispatch"),
   gh("stevearc/quicker.nvim"),
   gh("tpope/vim-rails"),
+  {
+    src = gh("saghen/blink.cmp"),
+    version = vim.version.range("1.*")
+  },
+  gh("rafamadriz/friendly-snippets"), -- for blink.cmp
 }, {
   load = true,
   confirm = false
@@ -33,14 +37,6 @@ vim.cmd.colorscheme('kanagawa')
 
 require('gitsigns').setup {}
 require("quicker").setup {}
-
-require('nvim-treesitter').setup {}
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'ruby', 'typescriptreact', 'markdown' },
-  callback = function()
-    vim.treesitter.start()
-  end,
-})
 
 vim.keymap.set('n', '<leader>do', '<cmd>DiffviewOpen<cr>')
 require('diffview').setup {
@@ -125,13 +121,50 @@ null_ls.setup({
   end,
 })
 
+require("blink.cmp").setup {
+  -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+  -- 'super-tab' for mappings similar to vscode (tab to accept)
+  -- 'enter' for enter to accept
+  -- 'none' for no mappings
+  --
+  -- All presets have the following mappings:
+  -- C-space: Open menu or open docs if already open
+  -- C-n/C-p or Up/Down: Select next/previous item
+  -- C-e: Hide menu
+  -- C-k: Toggle signature help (if signature.enabled = true)
+  --
+  -- See :h blink-cmp-config-keymap for defining your own keymap
+  keymap = { preset = 'default' },
+
+  appearance = {
+    -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+    -- Adjusts spacing to ensure icons are aligned
+    nerd_font_variant = 'mono'
+  },
+
+  -- (Default) Only show the documentation popup when manually triggered
+  completion = {
+    list = { selection = { preselect = false } },
+    documentation = { auto_show = false }
+  },
+
+  -- Default list of enabled providers defined so that you can extend it
+  -- elsewhere in your config, without redefining it, due to `opts_extend`
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+  },
+
+  -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+  -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+  -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+  --
+  -- See the fuzzy documentation for more information
+  fuzzy = { implementation = "prefer_rust_with_warning" }
+}
+
 local hooks = function(ev)
   -- Use available |event-data|
   local name, kind = ev.data.spec.name, ev.data.kind
-
-  if name == "nvim-treesitter" and (kind =="install" or kind == "update") then
-    vim.cmd("TSUpdate")
-  end
 
   -- Run build script after plugin's code has changed
   -- if name == 'plug-1' and (kind == 'install' or kind == 'update') then
