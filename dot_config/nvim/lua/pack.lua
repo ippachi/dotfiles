@@ -8,6 +8,8 @@ vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.surround" },
   { src = "https://github.com/nvim-mini/mini.trailspace" },
   { src = "https://github.com/stevearc/oil.nvim" },
+  { src = "https://github.com/rebelot/kanagawa.nvim" },
+  { src = "https://github.com/vim-test/vim-test" },
 })
 
 -- fzf-lua
@@ -35,6 +37,28 @@ end)
 
 -- diffview-plus
 vim.keymap.set("n", "<leader>do", function() vim.cmd[[DiffviewOpen]] end)
+require("diffview").setup({
+  enhanced_diff_hl = true,
+  keymaps = {
+    file_panel = {
+      {
+        "n", "cc",
+        "<Cmd>Git commit <bar> wincmd J<CR>",
+        { desc = "Commit staged changes" },
+      },
+      {
+        "n", "ca",
+        "<Cmd>Git commit --amend <bar> wincmd J<CR>",
+        { desc = "Amend the last commit" },
+      },
+      {
+        "n", "c<space>",
+        ":Git commit ",
+        { desc = "Populate command line with \":Git commit \"" },
+      },
+    },
+  }
+})
 
 -- conform
 require("conform").setup({
@@ -60,3 +84,11 @@ require('mini.trailspace').setup()
 -- oil.nvim
 require("oil").setup()
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- kanagawa.nvim
+vim.cmd.colorscheme("kanagawa")
+
+-- vim-test
+vim.keymap.set("n", "<leader>tn", ":TestNearest<CR>", { silent = true, desc = "Run nearest test" })
+vim.keymap.set("n", "<leader>tl", ":TestLast<CR>",    { silent = true, desc = "Run last test" })
+vim.keymap.set("n", "<leader>tf", ":TestFile<CR>",    { silent = true, desc = "Run current file tests" })
