@@ -17,6 +17,14 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {
   silent = true,
   desc = "Show diagnostic error message",
 })
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], {
+  desc = "Exit terminal mode",
+})
+vim.filetype.add({
+  extension = {
+    jbuilder = "ruby",
+  },
+})
 
 require("cmdline-autocompletion")
 require("lsp")
