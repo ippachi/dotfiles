@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd("CmdlineChanged", {
 })
 
 vim.opt.wildmode = { "noselect:lastused", "full" }
-vim.opt.wildoptions = { "pum" }
+vim.opt.wildoptions = { "pum", "fuzzy" }
 
 vim.keymap.set("c", "<Up>", function()
   return vim.fn.wildmenumode() == 1 and "<C-E><Up>" or "<Up>"
