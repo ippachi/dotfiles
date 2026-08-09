@@ -26,7 +26,6 @@ vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })
 vim.pack.add({
   { src = "https://github.com/tpope/vim-fugitive" },
   { src = "https://github.com/rbong/vim-flog" },
-  { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/dlyongemallo/diffview-plus.nvim" },
   { src = "https://github.com/stevearc/conform.nvim" },
@@ -39,31 +38,7 @@ vim.pack.add({
   { src = "https://github.com/coder/claudecode.nvim" },
   { src = "https://github.com/folke/snacks.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  { src = "https://github.com/tpope/vim-rails" },
 })
-
--- fzf-lua
-require("fzf-lua").setup()
-vim.keymap.set("n", "<C-p>", function()
-  require("fzf-lua").combine({
-    pickers = "oldfiles;git_files",
-    cwd_only = true,
-    include_current_session = true
-  })
-end)
-
-vim.keymap.set("n", "<leader>gg", function()
-  require("fzf-lua").live_grep({
-    keymap = {
-      fzf = {
-        ["ctrl-q"] = "select-all+accept",
-      },
-    },
-    actions = {
-      ["ctrl-q"] = false,
-    },
-  })
-end)
 
 -- diffview-plus
 vim.keymap.set("n", "<leader>do", function() vim.cmd[[DiffviewOpen]] end)
